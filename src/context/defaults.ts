@@ -4,6 +4,7 @@ import { CanvasItemType, type AppState, type Car, type Road } from "./types";
 import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
 
 import roadIcon from '../../public/road-icon.png'
+import intersectionIcon from '../../public/intersection.png'
 
 export const getDefaultAppState: () => AppState = () => {
   const road1: Road = {
@@ -66,6 +67,11 @@ export const getDefaultAppState: () => AppState = () => {
       src: roadIcon,
       alt: "Road",
       onClick: () => console.log('road icon clicked'),
+    },
+    {
+      src: intersectionIcon,
+      alt: "Intersection",
+      onClick: () => console.log('intersection icon clicked'),
     }
   ];
 
