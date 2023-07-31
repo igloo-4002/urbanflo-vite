@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { RoadDirections, type Road } from "~/context/types";
 import { ColumnStack, RowStack } from "~/components/Stacks";
 
-import useAppContext from '~/hooks/useAppState';
+import { useAppState } from '~/hooks/useAppState';
 
 interface RoadPropertiesEditorProps {
   speedLimit?: number;
@@ -16,7 +16,7 @@ export function RoadPropertiesEditor(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _props: RoadPropertiesEditorProps
 ) {
-  const { appState, setAppState } = useAppContext();
+  const { appState, setAppState } = useAppState();
 
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);

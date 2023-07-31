@@ -1,8 +1,8 @@
-import useAppContext from '~/hooks/useAppState';
+import { useAppState } from '~/hooks/useAppState';
 import { closeSidebar, getView, isSideBarOpen } from "~/context/utils/modal";
 
 export function FloatingSideBar() {
-  const { appState, setAppState } = useAppContext();
+  const { appState, setAppState } = useAppState();
 
   return (
     <div

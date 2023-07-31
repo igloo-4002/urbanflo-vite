@@ -1,9 +1,9 @@
-import useAppContext from '~/hooks/useAppState';
+import { useAppState } from '~/hooks/useAppState';
 import { getToolBarItems, isToolBarOpen } from '~/context/utils/modal';
 import { ToolBarItem } from './ToolBar/ToolBarItem';
 
 export function FloatingToolBar() {
-    const { appState } = useAppContext();
+    const { appState } = useAppState();
 
     return (
       <span
