@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 
-import AppStateContext from "../../context/AppStateContext";
-import { RoadDirections, type Road } from "../../context/types";
-import { ColumnStack, RowStack } from "../Stacks";
+import AppStateContext from "~/context/AppStateContext";
+import { RoadDirections, type Road } from "~/context/types";
+import { ColumnStack, RowStack } from "~/Stacks";
 
 interface RoadPropertiesEditorProps {
   speedLimit?: number;

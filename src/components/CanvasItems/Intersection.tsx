@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Image } from "react-konva";
 
-import intersectionImage from "../../assets/intersection.png";
-import { type IntersectionFields } from "../../context/types";
+import intersectionImage from "~/assets/intersection.png";
+import { type IntersectionFields } from "~/context/types";
 import { type CanvasItemProps } from "./types";
 
 export interface IntersectionProps {

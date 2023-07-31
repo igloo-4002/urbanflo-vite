@@ -4,7 +4,7 @@ import {
   type Car,
   type Intersection,
   type Road,
-} from "../../context/types";
+} from "~/context/types";
 import { Car as CarComponent } from "./Car";
 import { Road as RoadComponent } from "./Road";
 

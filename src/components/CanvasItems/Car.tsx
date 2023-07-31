@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Image } from "react-konva";
 
-import carImage from "../../assets/car.png";
-import { type CarFields } from "../../context/types";
+import carImage from "~/assets/car.png";
+import { type CarFields } from "~/context/types";
 import { type CanvasItemProps } from "./types";
 
 export interface CarProps {
