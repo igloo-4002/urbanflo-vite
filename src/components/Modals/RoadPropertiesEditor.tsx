@@ -11,7 +11,7 @@ interface RoadPropertiesEditorProps {
 }
 
 // TODO: check if we need the props parameter
-export default function RoadPropertiesEditor(
+export function RoadPropertiesEditor(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _props: RoadPropertiesEditorProps
 ) {

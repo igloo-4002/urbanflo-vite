@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import AppStateContext from "~/context/AppStateContext";
 
-export default function FloatingPlayPause() {
+export function FloatingPlayPause() {
   const { appState, setAppState } = useContext(AppStateContext);
 
   function playPause() {

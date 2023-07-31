@@ -3,7 +3,7 @@ import AppStateContext from "~/context/AppStateContext";
 import { getToolBarItems, isToolBarOpen } from '~/context/utils/modal';
 import { ToolBarItem } from './ToolBar/ToolBarItem';
 
-export default function FloatingToolBar() {
+export function FloatingToolBar() {
     const { appState } = useContext(AppStateContext);
 
     return (

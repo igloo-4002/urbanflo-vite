@@ -1,7 +1,7 @@
 import { type Dispatch, type SetStateAction } from "react";
 
-import IntersectionPropertiesEditor from "~/components/Modals/IntersectionPropertiesEditor";
-import RoadPropertiesEditor from "~/components/Modals/RoadPropertiesEditor";
+import { IntersectionPropertiesEditor } from "~/components/Modals/IntersectionPropertiesEditor";
+import { RoadPropertiesEditor } from "~/components/Modals/RoadPropertiesEditor";
 import { ModalViewNames, type AppState, type CanvasItemTypes } from "~/context/types";
 
 export function openSidebar(
