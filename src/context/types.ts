@@ -1,3 +1,5 @@
+import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
+
 export const CanvasItemType = {
   ROAD: "road",
   CAR: "car",
@@ -79,5 +81,6 @@ export type AppState = {
   };
   toolBarState: {
     isOpen: boolean;
+    items: ToolBarItem[];
   }
 };
