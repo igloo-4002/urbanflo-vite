@@ -139,7 +139,7 @@ function App() {
   useEffect(() => {
     if (appState.canvasState.isPlaying) {
       const eventSource = new EventSource(
-        "http://localhost:3000/start-simulation",
+        "http://localhost:8080/start-simulation",
       );
 
       eventSource.onmessage = (event) => {
