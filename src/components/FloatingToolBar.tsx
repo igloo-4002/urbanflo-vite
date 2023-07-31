@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import AppStateContext from "~/context/AppStateContext";
-import { isToolBarOpen } from '~/context/utils/modal';
+import { getToolBarItems, isToolBarOpen } from '~/context/utils/modal';
+import { ToolBarItem } from './ToolBar/ToolBarItem';
 
 export default function FloatingToolBar() {
     const { appState } = useContext(AppStateContext);
@@ -15,12 +16,16 @@ export default function FloatingToolBar() {
           transform: "translateX(-50%)",
           zIndex: 1000,
           backgroundColor: "#FAF9F6",
-          padding: "8px 18px",
+          padding: "8px",
           borderRadius: "10px",
           boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
         }}
       >
-        Tool bar items component - not yet implemented
+        {getToolBarItems(appState).map((item, idx) => {
+          return (
+            <ToolBarItem src={item.src} alt={item.alt} onClick={item.onClick} key={idx}/>
+          )
+        })}
       </span>
     );
   }
