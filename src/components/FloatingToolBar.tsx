@@ -1,8 +1,15 @@
+import { useContext } from 'react';
+import AppStateContext from "~/context/AppStateContext";
+import { isToolBarOpen } from '~/context/utils/modal';
+
 export default function FloatingToolBar() {
+    const { appState } = useContext(AppStateContext);
+
     return (
       <span
         style={{
           position: "fixed",
+          display: isToolBarOpen(appState) ? "flex" : "none",
           top: 15,
           left: "50%",
           transform: "translateX(-50%)",
