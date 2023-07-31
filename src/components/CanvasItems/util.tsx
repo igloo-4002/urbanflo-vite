@@ -13,7 +13,7 @@ export function isRoad(canvasItem: CanvasItemTypes): canvasItem is Road {
 }
 
 export function isIntersection(
-  canvasItem: CanvasItemTypes,
+  canvasItem: CanvasItemTypes
 ): canvasItem is Intersection {
   return canvasItem.info.type === CanvasItemType.TRAFFIC_LIGHT;
 }
@@ -29,7 +29,7 @@ type CanvasItemRenderElement<T> = {
 
 function filterCanvasItems<T>(
   canvasItems: CanvasItemTypes[],
-  predicate: (item: CanvasItemTypes) => boolean,
+  predicate: (item: CanvasItemTypes) => boolean
 ): CanvasItemRenderElement<T>[] {
   const items: CanvasItemRenderElement<T>[] = [];
 
@@ -45,7 +45,7 @@ function filterCanvasItems<T>(
 export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
   const cars = filterCanvasItems<Car>(canvasItems, isCar);
   const roads = filterCanvasItems<Road>(canvasItems, isRoad);
-  const _intersections = filterCanvasItems<Road>(canvasItems, isIntersection);
+  // const _intersections = filterCanvasItems<Road>(canvasItems, isIntersection);
 
   return (
     <>

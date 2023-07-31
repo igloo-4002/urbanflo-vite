@@ -1,4 +1,3 @@
-import React from "react";
 import { Circle, Layer, Line, Stage } from "react-konva";
 
 const MAP_RATIO = 2; // This ratio is used to scale the network to fit the canvas size
@@ -7,7 +6,7 @@ function mapCoordinates(
   x: number,
   y: number,
   canvasWidth = window.innerWidth,
-  canvasHeight = window.innerHeight,
+  canvasHeight = window.innerHeight
 ) {
   return {
     x: x * MAP_RATIO + canvasWidth / 2,

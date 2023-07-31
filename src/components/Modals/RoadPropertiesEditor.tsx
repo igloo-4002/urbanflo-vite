@@ -11,8 +11,10 @@ interface RoadPropertiesEditorProps {
 }
 
 // TODO: check if we need the props parameter
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function RoadPropertiesEditor(props: RoadPropertiesEditorProps) {
+export default function RoadPropertiesEditor(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _props: RoadPropertiesEditorProps
+) {
   const { appState, setAppState } = useContext(AppStateContext);
 
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
