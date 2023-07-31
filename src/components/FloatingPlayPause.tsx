@@ -1,9 +1,8 @@
-import { useContext } from "react";
+import useAppContext from '~/hooks/useAppState';
 
-import AppStateContext from "~/context/AppStateContext";
 
 export function FloatingPlayPause() {
-  const { appState, setAppState } = useContext(AppStateContext);
+  const { appState, setAppState } = useAppContext();
 
   function playPause() {
     setAppState({
