@@ -1,10 +1,8 @@
-import { useContext } from "react";
-
-import AppStateContext from "~/context/AppStateContext";
+import { useAppState } from '~/hooks/useAppState';
 import { closeSidebar, getView, isSideBarOpen } from "~/context/utils/modal";
 
-export default function FloatingSideBar() {
-  const { appState, setAppState } = useContext(AppStateContext);
+export function FloatingSideBar() {
+  const { appState, setAppState } = useAppState();
 
   return (
     <div

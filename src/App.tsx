@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-import Canvas from "./components/Canvas";
-import FloatingPlayPause from "./components/FloatingPlayPause";
-import FloatingSideBar from "./components/FloatingSidebar";
-import FloatingToolBar from "./components/FloatingToolBar";
-import AppStateContext from "./context/AppStateContext";
+import { Canvas } from "./components/Canvas";
+import { FloatingPlayPause } from "./components/FloatingPlayPause";
+import { FloatingSideBar } from "./components/FloatingSidebar";
+import { FloatingToolBar } from "./components/FloatingToolBar";
+import { AppStateContext } from "./context/AppStateContext";
 import { getDefaultAppState } from "./context/defaults";
 import { type AppState } from "./context/types";
 

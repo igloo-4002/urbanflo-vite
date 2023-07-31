@@ -3,7 +3,7 @@ import { createContext, type Dispatch, type SetStateAction } from "react";
 import { getDefaultAppState } from "./defaults";
 import { type AppState } from "./types";
 
-type AppStateContextType = {
+export type AppStateContextType = {
   appState: AppState;
   setAppState: Dispatch<SetStateAction<AppState>>;
 };
@@ -15,7 +15,5 @@ const AppStateContextState = {
   },
 };
 
-const AppStateContext =
+export const AppStateContext =
   createContext<AppStateContextType>(AppStateContextState);
-
-export default AppStateContext;
