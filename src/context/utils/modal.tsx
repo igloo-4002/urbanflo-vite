@@ -41,6 +41,15 @@ export function isSideBarOpen(appState: AppState) {
   return appState.leftSideBarState.isOpen;
 }
 
+export function isToolBarOpen(appState: AppState) {
+  return appState.toolBarState.isOpen;
+}
+
+export function getToolBarItems(appState: AppState) {
+  return appState.toolBarState.items;
+
+}
+
 export function getView(appState: AppState) {
   switch (appState.leftSideBarState.viewName) {
     case null:
