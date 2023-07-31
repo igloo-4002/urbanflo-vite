@@ -77,4 +77,7 @@ export type AppState = {
     viewName: string | null;
     isOpen: boolean;
   };
+  toolBarState: {
+    isOpen: boolean;
+  }
 };

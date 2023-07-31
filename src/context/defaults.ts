@@ -74,5 +74,8 @@ export const getDefaultAppState: () => AppState = () => {
       isOpen: false,
       viewName: null,
     },
+    toolBarState: {
+      isOpen: true,
+    }
   };
 };
