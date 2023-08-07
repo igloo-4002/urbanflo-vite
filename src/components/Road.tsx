@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Road() {
+export function Road() {
   const [speedLimit, setSpeedLimit] = useState('');
   const [numLanes, setNumLanes] = useState('');
   const [direction, setDirection] = useState('north');
@@ -80,5 +80,3 @@ function Road() {
     </div>
   );
 }
-
-export default Road;

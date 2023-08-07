@@ -1,15 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
 
 import roadImageHorizontal from '~/assets/roadHorizontal.png';
 import roadImageVertical from '~/assets/roadVertical.png';
-import AppStateContext from '~/context/AppStateContext';
 import {
   ModalViewNames,
   RoadDirections,
   type RoadFields,
 } from '~/context/types';
 import { openSidebar } from '~/context/utils/modal';
+import { useAppState } from '~/hooks/useAppState';
 
 import { type CanvasItemProps } from './types';
 
@@ -19,7 +19,7 @@ export interface RoadProps {
 }
 
 export function Road(props: RoadProps) {
-  const { appState, setAppState } = useContext(AppStateContext);
+  const { appState, setAppState } = useAppState();
 
   const canvasProps: CanvasItemProps = props.canvasProps;
   const roadFields: RoadFields = props.roadFields;

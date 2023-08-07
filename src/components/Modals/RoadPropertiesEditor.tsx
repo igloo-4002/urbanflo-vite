@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { ColumnStack, RowStack } from '~/Stacks';
-import AppStateContext from '~/context/AppStateContext';
+import { ColumnStack, RowStack } from '~/components/Stacks';
 import { type Road, RoadDirections } from '~/context/types';
+import { useAppState } from '~/hooks/useAppState';
 
 interface RoadPropertiesEditorProps {
   speedLimit?: number;
@@ -11,11 +11,11 @@ interface RoadPropertiesEditorProps {
 }
 
 // TODO: check if we need the props parameter
-export default function RoadPropertiesEditor(
+export function RoadPropertiesEditor(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _props: RoadPropertiesEditorProps,
 ) {
-  const { appState, setAppState } = useContext(AppStateContext);
+  const { appState, setAppState } = useAppState();
 
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);

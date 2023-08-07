@@ -1,9 +1,8 @@
-import { useContext } from 'react';
+import { useAppState } from '~/hooks/useAppState';
 
-import AppStateContext from '~/context/AppStateContext';
 
-export default function FloatingPlayPause() {
-  const { appState, setAppState } = useContext(AppStateContext);
+export function FloatingPlayPause() {
+  const { appState, setAppState } = useAppState();
 
   function playPause() {
     setAppState({
@@ -20,7 +19,11 @@ export default function FloatingPlayPause() {
       style={{
         position: 'fixed',
         top: 15,
+<<<<<<< HEAD
         left: '50%',
+=======
+        right: 15,
+>>>>>>> c65a6dc62dd3cf39b16e06fdb67ce59cf643936e
         zIndex: 1000,
         backgroundColor: '#FAF9F6',
         padding: '8px 18px',

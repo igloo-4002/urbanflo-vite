@@ -14,7 +14,7 @@ function mapCoordinates(
   };
 }
 
-export default function Canvas({
+export function Canvas({
   x,
   y,
   color,

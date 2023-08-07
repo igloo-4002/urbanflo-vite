@@ -1,6 +1,14 @@
 import { createId } from '@paralleldrive/cuid2';
 
+<<<<<<< HEAD
 import { type AppState, CanvasItemType, type Car, type Road } from './types';
+=======
+import { CanvasItemType, type AppState, type Car, type Road } from "./types";
+import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
+
+import roadIcon from '../../public/road-icon.png'
+import intersectionIcon from '../../public/intersection.png'
+>>>>>>> c65a6dc62dd3cf39b16e06fdb67ce59cf643936e
 
 export const getDefaultAppState: () => AppState = () => {
   const road1: Road = {
@@ -58,6 +66,19 @@ export const getDefaultAppState: () => AppState = () => {
     direction: 'vertical',
   };
 
+  const toolBarItems: ToolBarItem[] = [
+    {
+      src: roadIcon,
+      alt: "Road",
+      onClick: () => console.log('road icon clicked'),
+    },
+    {
+      src: intersectionIcon,
+      alt: "Intersection",
+      onClick: () => console.log('intersection icon clicked'),
+    }
+  ];
+
   return {
     projectInfo: {
       name: 'untitled',
@@ -74,5 +95,9 @@ export const getDefaultAppState: () => AppState = () => {
       isOpen: false,
       viewName: null,
     },
+    toolBarState: {
+      isOpen: true,
+      items: toolBarItems,
+    }
   };
 };
