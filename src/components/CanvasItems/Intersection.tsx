@@ -25,6 +25,8 @@ export function Intersection(props: IntersectionProps) {
     };
   }, []);
 
+  function handleClick() {}
+
   return image ? (
     <Image
       alt={'intersection'}
@@ -35,6 +37,7 @@ export function Intersection(props: IntersectionProps) {
       draggable={canvasProps.draggable}
       offsetX={canvasProps.offsetX}
       offsetY={canvasProps.offsetY}
+      onClick={handleClick}
     />
   ) : null;
 }
