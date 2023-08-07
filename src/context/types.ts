@@ -5,6 +5,7 @@ export const CanvasItemType = {
   ROAD: 'road',
   CAR: 'car',
   TRAFFIC_LIGHT: 'traffic-light',
+  INTERSECTION: 'intersection',
 } as const;
 
 export const ModalViewNames = {
@@ -28,7 +29,7 @@ export const RoadDirections = {
 export interface CanvasItem {
   id: string;
   info: {
-    type: string;
+    type: ToolBarItemOptions;
   };
   props: {
     image: HTMLImageElement;
