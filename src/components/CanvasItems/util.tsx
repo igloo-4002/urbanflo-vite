@@ -7,6 +7,7 @@ import {
 } from '~/context/types';
 
 import { Car as CarComponent } from './Car';
+import { Intersection as IntersectionComponent } from './Intersection';
 import { Road as RoadComponent } from './Road';
 
 export function isRoad(canvasItem: CanvasItemTypes): canvasItem is Road {
@@ -16,7 +17,7 @@ export function isRoad(canvasItem: CanvasItemTypes): canvasItem is Road {
 export function isIntersection(
   canvasItem: CanvasItemTypes,
 ): canvasItem is Intersection {
-  return canvasItem.info.type === CanvasItemType.TRAFFIC_LIGHT;
+  return canvasItem.info.type === CanvasItemType.INTERSECTION;
 }
 
 export function isCar(canvasItem: CanvasItemTypes): canvasItem is Car {
@@ -46,7 +47,10 @@ function filterCanvasItems<T>(
 export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
   const cars = filterCanvasItems<Car>(canvasItems, isCar);
   const roads = filterCanvasItems<Road>(canvasItems, isRoad);
-  // const _intersections = filterCanvasItems<Road>(canvasItems, isIntersection);
+  const intersections = filterCanvasItems<Intersection>(
+    canvasItems,
+    isIntersection,
+  );
 
   return (
     <>
@@ -96,6 +100,31 @@ export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
           ></CarComponent>
         );
       })}
+
+      {intersections.map(
+        (intersection: CanvasItemRenderElement<Intersection>) => {
+          const currentIntersection = canvasItems[
+            intersection.canvasItemsIndex
+          ] as Intersection;
+
+          return (
+            <IntersectionComponent
+              key={intersection.canvasItemsIndex}
+              intersectionProps={{
+                connectingRoads: currentIntersection.connectingRoads,
+              }}
+              canvasProps={{
+                index: intersection.canvasItemsIndex,
+                x: intersection.element.props.x,
+                y: intersection.element.props.y,
+                draggable: intersection.element.props.draggable,
+                offsetX: intersection.element.props.offsetX,
+                offsetY: intersection.element.props.offsetY,
+              }}
+            ></IntersectionComponent>
+          );
+        },
+      )}
     </>
   );
 }
