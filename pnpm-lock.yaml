@@ -1,13 +1,12 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@paralleldrive/cuid2':
     specifier: ^2.2.1
     version: 2.2.1
+  konva:
+    specifier: ^9.2.0
+    version: 9.2.0
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2285,3 +2284,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
