@@ -1,14 +1,12 @@
 import { type Dispatch, type SetStateAction } from 'react';
 
-<<<<<<< HEAD
-import IntersectionPropertiesEditor from '~/components/Modals/IntersectionPropertiesEditor';
-import RoadPropertiesEditor from '~/components/Modals/RoadPropertiesEditor';
-import { type AppState, type CanvasItemTypes, ModalViewNames } from '~/types';
-=======
-import { IntersectionPropertiesEditor } from "~/components/Modals/IntersectionPropertiesEditor";
-import { RoadPropertiesEditor } from "~/components/Modals/RoadPropertiesEditor";
-import { ModalViewNames, type AppState, type CanvasItemTypes } from "~/context/types";
->>>>>>> c65a6dc62dd3cf39b16e06fdb67ce59cf643936e
+import { IntersectionPropertiesEditor } from '~/components/Modals/IntersectionPropertiesEditor';
+import { RoadPropertiesEditor } from '~/components/Modals/RoadPropertiesEditor';
+import {
+  type AppState,
+  type CanvasItemTypes,
+  ModalViewNames,
+} from '~/context/types';
 
 export function openSidebar(
   appState: AppState,
@@ -53,7 +51,6 @@ export function isToolBarOpen(appState: AppState) {
 
 export function getToolBarItems(appState: AppState) {
   return appState.toolBarState.items;
-
 }
 
 export function getView(appState: AppState) {

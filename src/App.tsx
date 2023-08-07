@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Canvas } from "./components/Canvas";
-import { FloatingPlayPause } from "./components/FloatingPlayPause";
-import { FloatingSideBar } from "./components/FloatingSidebar";
-import { FloatingToolBar } from "./components/FloatingToolBar";
-import { AppStateContext } from "./context/AppStateContext";
-import { getDefaultAppState } from "./context/defaults";
-import { type AppState } from "./context/types";
+import { Canvas } from './components/Canvas';
+import { FloatingPlayPause } from './components/FloatingPlayPause';
+import { FloatingSideBar } from './components/FloatingSidebar';
+import { FloatingToolBar } from './components/FloatingToolBar';
+import { AppStateContext } from './context/AppStateContext';
+import { getDefaultAppState } from './context/defaults';
+import { type AppState } from './context/types';
 
 let count = 0;
 
@@ -139,11 +139,7 @@ function App() {
   useEffect(() => {
     if (appState.canvasState.isPlaying) {
       const eventSource = new EventSource(
-<<<<<<< HEAD
         'http://localhost:3000/start-simulation',
-=======
-        "http://localhost:8080/start-simulation",
->>>>>>> c65a6dc62dd3cf39b16e06fdb67ce59cf643936e
       );
 
       eventSource.onmessage = event => {
@@ -174,7 +170,7 @@ function App() {
   return (
     <AppStateContext.Provider value={{ appState, setAppState }}>
       <FloatingSideBar />
-      <FloatingToolBar/>
+      <FloatingToolBar />
       <FloatingPlayPause />
       <div className="flex h-screen w-screen items-center justify-center bg-white">
         <Canvas
