@@ -39,6 +39,7 @@ export const getDefaultAppState: () => AppState = () => {
     toolBarState: {
       isOpen: true,
       items: toolBarItems,
+      selectedToolBarItem: null,
     },
   };
 };

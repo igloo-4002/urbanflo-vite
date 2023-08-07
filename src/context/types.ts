@@ -72,6 +72,12 @@ export type CanvasItemTypes = Road | Car | Intersection;
 
 export type GraphItem = Road | Intersection;
 
+export type ToolBarItemOptions =
+  | 'road'
+  | 'intersection'
+  | 'car'
+  | 'traffic-light';
+
 export type AppState = {
   projectInfo: {
     name: string; // Normal Project settings, e.g. name, description, etc.
@@ -92,5 +98,6 @@ export type AppState = {
   toolBarState: {
     isOpen: boolean;
     items: ToolBarItem[];
+    selectedToolBarItem: ToolBarItemOptions | null;
   };
 };
