@@ -65,10 +65,11 @@ export class TrafficGraph {
       case 'road':
         existingNode.graphInfo.exits[0] = newNode;
         break;
-      case 'intersection':
+      case 'intersection': {
         const idx = Object.keys(existingNode.graphInfo.exits).length;
         existingNode.graphInfo.exits[idx] = newNode;
         break;
+      }
       default:
         break;
     }
