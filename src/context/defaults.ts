@@ -10,11 +10,13 @@ export const getDefaultAppState: () => AppState = () => {
     {
       src: roadIcon,
       alt: 'Road',
+      optionName: 'road',
       onClick: () => console.log('road icon clicked'),
     },
     {
       src: intersectionIcon,
       alt: 'Intersection',
+      optionName: 'intersection',
       onClick: () => console.log('intersection icon clicked'),
     },
   ];
