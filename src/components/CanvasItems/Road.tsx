@@ -71,8 +71,6 @@ export function Road(props: RoadProps) {
       x={canvasProps.x}
       y={canvasProps.y}
       draggable={false}
-      offsetX={canvasProps.offsetX}
-      offsetY={canvasProps.offsetY}
       onClick={handleClick}
     />
   ) : null;

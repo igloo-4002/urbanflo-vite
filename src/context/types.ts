@@ -35,9 +35,6 @@ export interface CanvasItem {
     image: HTMLImageElement;
     x: number;
     y: number;
-    draggable: boolean;
-    offsetX: number;
-    offsetY: number;
   };
   graphInfo?: GraphInfo;
 }

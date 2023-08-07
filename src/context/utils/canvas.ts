@@ -27,9 +27,6 @@ export function createNewCanvasItem(args: createNewCanvasItemArgs) {
     props: {
       x: args.x,
       y: args.y,
-      draggable: true,
-      offsetX: 0,
-      offsetY: 0,
       image: new window.Image(),
     },
     info: {

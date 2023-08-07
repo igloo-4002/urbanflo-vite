@@ -70,9 +70,6 @@ export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
               index: road.canvasItemsIndex,
               x: road.element.props.x,
               y: road.element.props.y,
-              draggable: road.element.props.draggable,
-              offsetX: road.element.props.offsetX,
-              offsetY: road.element.props.offsetY,
             }}
           ></RoadComponent>
         );
@@ -93,9 +90,6 @@ export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
               index: car.canvasItemsIndex,
               x: car.element.props.x,
               y: car.element.props.y,
-              draggable: car.element.props.draggable,
-              offsetX: car.element.props.offsetX,
-              offsetY: car.element.props.offsetY,
             }}
           ></CarComponent>
         );
@@ -117,9 +111,6 @@ export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
                 index: intersection.canvasItemsIndex,
                 x: intersection.element.props.x,
                 y: intersection.element.props.y,
-                draggable: intersection.element.props.draggable,
-                offsetX: intersection.element.props.offsetX,
-                offsetY: intersection.element.props.offsetY,
               }}
             ></IntersectionComponent>
           );
