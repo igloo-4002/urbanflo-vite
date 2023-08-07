@@ -11,6 +11,10 @@ export class TrafficGraph {
     this.edges = [];
   }
 
+  isEmpty() {
+    return this.edges.length === 0 && Object.keys(this.nodes).length === 0;
+  }
+
   private isLeafNode(nodeId: string) {
     const node = this.nodes[nodeId];
 
