@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 function Road() {
-  const [speedLimit, setSpeedLimit] = useState("");
-  const [numLanes, setNumLanes] = useState("");
-  const [direction, setDirection] = useState("north");
+  const [speedLimit, setSpeedLimit] = useState('');
+  const [numLanes, setNumLanes] = useState('');
+  const [direction, setDirection] = useState('north');
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -33,20 +33,20 @@ function Road() {
     <div>
       <div
         style={{
-          backgroundColor: "#F7B326",
-          width: "100px",
-          height: "20px",
+          backgroundColor: '#F7B326',
+          width: '100px',
+          height: '20px',
         }}
         onClick={handleSidebarToggle}
       ></div>
       {sidebarOpen && (
         <div
           style={{
-            position: "absolute",
-            top: "0",
-            right: "0",
-            backgroundColor: "white",
-            padding: "10px",
+            position: 'absolute',
+            top: '0',
+            right: '0',
+            backgroundColor: 'white',
+            padding: '10px',
           }}
         >
           <h2>Set Road Properties</h2>

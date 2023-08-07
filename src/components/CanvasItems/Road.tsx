@@ -1,16 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import { Image } from "react-konva";
+import { useContext, useEffect, useState } from 'react';
+import { Image } from 'react-konva';
 
-import roadImageHorizontal from "~/assets/roadHorizontal.png";
-import roadImageVertical from "~/assets/roadVertical.png";
-import AppStateContext from "~/context/AppStateContext";
+import roadImageHorizontal from '~/assets/roadHorizontal.png';
+import roadImageVertical from '~/assets/roadVertical.png';
+import AppStateContext from '~/context/AppStateContext';
 import {
   ModalViewNames,
   RoadDirections,
   type RoadFields,
-} from "~/context/types";
-import { openSidebar } from "~/context/utils/modal";
-import { type CanvasItemProps } from "./types";
+} from '~/context/types';
+import { openSidebar } from '~/context/utils/modal';
+
+import { type CanvasItemProps } from './types';
 
 export interface RoadProps {
   roadFields: RoadFields;
@@ -51,14 +52,14 @@ export function Road(props: RoadProps) {
         appState,
         setAppState,
         ModalViewNames.ROAD_PROPERTIES_EDITOR,
-        appState.canvasState.canvasItems[index]
+        appState.canvasState.canvasItems[index],
       );
     }
   }
 
   return image ? (
     <Image
-      alt={"road"}
+      alt={'road'}
       key={canvasProps.index}
       image={image}
       x={canvasProps.x}

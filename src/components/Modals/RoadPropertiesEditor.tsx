@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from 'react';
 
-import AppStateContext from "~/context/AppStateContext";
-import { RoadDirections, type Road } from "~/context/types";
-import { ColumnStack, RowStack } from "~/Stacks";
+import { ColumnStack, RowStack } from '~/Stacks';
+import AppStateContext from '~/context/AppStateContext';
+import { type Road, RoadDirections } from '~/context/types';
 
 interface RoadPropertiesEditorProps {
   speedLimit?: number;
@@ -13,13 +13,13 @@ interface RoadPropertiesEditorProps {
 // TODO: check if we need the props parameter
 export default function RoadPropertiesEditor(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _props: RoadPropertiesEditorProps
+  _props: RoadPropertiesEditorProps,
 ) {
   const { appState, setAppState } = useContext(AppStateContext);
 
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);
-  const [newDirection, setNewDirection] = useState<string>("up");
+  const [newDirection, setNewDirection] = useState<string>('up');
 
   useEffect(() => {
     const { speedLimit, lanes, direction } = appState.canvasState
@@ -42,7 +42,7 @@ export default function RoadPropertiesEditor(
       ...updatedProperties,
     };
 
-    const updatedCanvasItems = appState.canvasState.canvasItems.map((item) => {
+    const updatedCanvasItems = appState.canvasState.canvasItems.map(item => {
       if (item.id === appState.canvasState.selectedCanvasItem?.id) {
         return updatedRoad;
       }
@@ -60,30 +60,30 @@ export default function RoadPropertiesEditor(
   }
 
   return (
-    <ColumnStack style={{ gap: "8px" }}>
+    <ColumnStack style={{ gap: '8px' }}>
       <RowStack>
         <p>Speed Limit</p>
         <input
-          style={{ width: "30%" }}
+          style={{ width: '30%' }}
           type="number"
           value={newSpeedLimit}
-          onChange={(e) => setNewSpeedLimit(parseInt(e.target.value))}
+          onChange={e => setNewSpeedLimit(parseInt(e.target.value))}
         />
       </RowStack>
       <RowStack>
         <p>Number of Lanes</p>
         <input
-          style={{ width: "30%" }}
+          style={{ width: '30%' }}
           type="number"
           value={newLanes}
-          onChange={(e) => setNewLanes(parseInt(e.target.value))}
+          onChange={e => setNewLanes(parseInt(e.target.value))}
         />
       </RowStack>
       <RowStack>
         <p>Direction</p>
         <select
           value={newDirection}
-          onChange={(e) => setNewDirection(e.target.value)}
+          onChange={e => setNewDirection(e.target.value)}
         >
           <option value={`${RoadDirections.UP}`}>Up</option>
           <option value={`${RoadDirections.DOWN}`}>Down</option>

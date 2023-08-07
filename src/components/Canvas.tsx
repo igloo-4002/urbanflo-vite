@@ -1,4 +1,4 @@
-import { Circle, Layer, Line, Stage } from "react-konva";
+import { Circle, Layer, Line, Stage } from 'react-konva';
 
 const MAP_RATIO = 2; // This ratio is used to scale the network to fit the canvas size
 
@@ -6,7 +6,7 @@ function mapCoordinates(
   x: number,
   y: number,
   canvasWidth = window.innerWidth,
-  canvasHeight = window.innerHeight
+  canvasHeight = window.innerHeight,
 ) {
   return {
     x: x * MAP_RATIO + canvasWidth / 2,
@@ -24,30 +24,30 @@ export default function Canvas({
   color: string;
 }) {
   const nodes = [
-    { id: "south", x: 0.0, y: -100.0 },
-    { id: "north", x: 0.0, y: 100.0 },
-    { id: "east", x: 100.0, y: 0.0 },
-    { id: "center", x: 0.0, y: 0.0 },
+    { id: 'south', x: 0.0, y: -100.0 },
+    { id: 'north', x: 0.0, y: 100.0 },
+    { id: 'east', x: 100.0, y: 0.0 },
+    { id: 'center', x: 0.0, y: 0.0 },
   ];
 
   const edges = [
-    { id: "center_south", from: "center", to: "south" },
-    { id: "center_north", from: "center", to: "north" },
-    { id: "east_center", from: "east", to: "center" },
+    { id: 'center_south', from: 'center', to: 'south' },
+    { id: 'center_north', from: 'center', to: 'north' },
+    { id: 'east_center', from: 'east', to: 'center' },
   ];
 
-  const getNodeById = (id: string) => nodes.find((node) => node.id === id);
+  const getNodeById = (id: string) => nodes.find(node => node.id === id);
 
   const redDotCoordinates = mapCoordinates(x, y);
 
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>
-        {edges.map((edge) => {
+        {edges.map(edge => {
           const fromNode = getNodeById(edge.from);
           const toNode = getNodeById(edge.to);
 
-          if (!fromNode || !toNode) throw new Error("Invalid edge");
+          if (!fromNode || !toNode) throw new Error('Invalid edge');
 
           const fromCoordinates = mapCoordinates(fromNode.x, fromNode.y);
           const toCoordinates = mapCoordinates(toNode.x, toNode.y);
@@ -67,7 +67,7 @@ export default function Canvas({
           );
         })}
 
-        {nodes.map((node) => {
+        {nodes.map(node => {
           const coordinates = mapCoordinates(node.x, node.y);
 
           return (

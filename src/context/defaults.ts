@@ -1,6 +1,6 @@
-import { createId } from "@paralleldrive/cuid2";
+import { createId } from '@paralleldrive/cuid2';
 
-import { CanvasItemType, type AppState, type Car, type Road } from "./types";
+import { type AppState, CanvasItemType, type Car, type Road } from './types';
 
 export const getDefaultAppState: () => AppState = () => {
   const road1: Road = {
@@ -19,7 +19,7 @@ export const getDefaultAppState: () => AppState = () => {
     speedLimit: 60,
     lanes: 1,
     length: 200,
-    direction: "up",
+    direction: 'up',
   };
 
   const road2: Road = {
@@ -38,7 +38,7 @@ export const getDefaultAppState: () => AppState = () => {
     speedLimit: 40,
     lanes: 1,
     length: 150,
-    direction: "left",
+    direction: 'left',
   };
 
   const car: Car = {
@@ -55,12 +55,12 @@ export const getDefaultAppState: () => AppState = () => {
       offsetY: 62.5,
     },
     speed: 0,
-    direction: "vertical",
+    direction: 'vertical',
   };
 
   return {
     projectInfo: {
-      name: "untitled",
+      name: 'untitled',
     },
     canvasState: {
       canvasItems: [road1, road2, car],

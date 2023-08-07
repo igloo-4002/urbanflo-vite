@@ -1,14 +1,14 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from 'react';
 
-import IntersectionPropertiesEditor from "~/components/Modals/IntersectionPropertiesEditor";
-import RoadPropertiesEditor from "~/components/Modals/RoadPropertiesEditor";
-import { ModalViewNames, type AppState, type CanvasItemTypes } from "~/types";
+import IntersectionPropertiesEditor from '~/components/Modals/IntersectionPropertiesEditor';
+import RoadPropertiesEditor from '~/components/Modals/RoadPropertiesEditor';
+import { type AppState, type CanvasItemTypes, ModalViewNames } from '~/types';
 
 export function openSidebar(
   appState: AppState,
   setAppState: Dispatch<SetStateAction<AppState>>,
   viewName: string,
-  selectedCanvasItem: CanvasItemTypes | null = null
+  selectedCanvasItem: CanvasItemTypes | null = null,
 ) {
   setAppState({
     ...appState,
@@ -23,7 +23,7 @@ export function openSidebar(
 export function closeSidebar(
   appState: AppState,
   setAppState: Dispatch<SetStateAction<AppState>>,
-  setSelectedCanvasItemToNull = false
+  setSelectedCanvasItemToNull = false,
 ) {
   setAppState({
     ...appState,

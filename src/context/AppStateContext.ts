@@ -1,7 +1,7 @@
-import { createContext, type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction, createContext } from 'react';
 
-import { getDefaultAppState } from "./defaults";
-import { type AppState } from "./types";
+import { getDefaultAppState } from './defaults';
+import { type AppState } from './types';
 
 type AppStateContextType = {
   appState: AppState;
@@ -11,7 +11,7 @@ type AppStateContextType = {
 const AppStateContextState = {
   appState: getDefaultAppState(),
   setAppState: () => {
-    console.warn("unitialized setAppState context!");
+    console.warn('unitialized setAppState context!');
   },
 };
 

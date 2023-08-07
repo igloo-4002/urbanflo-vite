@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { Image } from "react-konva";
+import { useEffect, useState } from 'react';
+import { Image } from 'react-konva';
 
-import intersectionImage from "~/assets/intersection.png";
-import { type IntersectionFields } from "~/context/types";
-import { type CanvasItemProps } from "./types";
+import intersectionImage from '~/assets/intersection.png';
+import { type IntersectionFields } from '~/context/types';
+
+import { type CanvasItemProps } from './types';
 
 export interface IntersectionProps {
   intersectionProps: IntersectionFields;
@@ -26,7 +27,7 @@ export function Intersection(props: IntersectionProps) {
 
   return image ? (
     <Image
-      alt={"intersection"}
+      alt={'intersection'}
       key={canvasProps.index}
       image={image}
       x={canvasProps.x}
