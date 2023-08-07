@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
 
-import intersectionImage from '~/assets/intersection.png';
+import intersectionImage from '~/assets/roadIntersection.jpeg';
 import { type IntersectionFields } from '~/context/types';
 
 import { type CanvasItemProps } from './types';
@@ -19,7 +19,7 @@ export function Intersection(props: IntersectionProps) {
     const img = new window.Image();
     img.src = intersectionImage;
     img.width = 250;
-    img.height = 100;
+    img.height = 250;
     img.onload = () => {
       setImage(img);
     };
@@ -32,7 +32,7 @@ export function Intersection(props: IntersectionProps) {
       image={image}
       x={canvasProps.x}
       y={canvasProps.y}
-      draggable
+      draggable={canvasProps.draggable}
       offsetX={canvasProps.offsetX}
       offsetY={canvasProps.offsetY}
     />
