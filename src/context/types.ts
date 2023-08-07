@@ -1,4 +1,5 @@
 import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
+import { TrafficGraph } from '~/graph';
 
 export const CanvasItemType = {
   ROAD: 'road',
@@ -37,6 +38,12 @@ export interface CanvasItem {
     offsetX: number;
     offsetY: number;
   };
+  graphInfo?: GraphInfo;
+}
+
+export interface GraphInfo {
+  exits: { [key: number]: Road | Intersection };
+  maxExits: number;
 }
 
 export interface RoadFields {
@@ -46,7 +53,7 @@ export interface RoadFields {
   direction: string;
 }
 
-export type Road = CanvasItem & RoadFields;
+export type Road = Required<CanvasItem> & RoadFields;
 
 export interface CarFields {
   speed: number;
@@ -59,9 +66,11 @@ export interface IntersectionFields {
   connectingRoads: number[];
 }
 
-export type Intersection = IntersectionFields & CanvasItem;
+export type Intersection = Required<CanvasItem> & IntersectionFields;
 
 export type CanvasItemTypes = Road | Car | Intersection;
+
+export type GraphItem = Road | Intersection;
 
 export type AppState = {
   projectInfo: {
@@ -69,6 +78,7 @@ export type AppState = {
   };
   canvasState: {
     canvasItems: CanvasItemTypes[]; // Roads, Cars, traffic lights, etc.
+    graph: TrafficGraph;
     selectedCanvasItem: CanvasItemTypes | null;
     isPlaying: boolean;
   };
@@ -82,5 +92,5 @@ export type AppState = {
   toolBarState: {
     isOpen: boolean;
     items: ToolBarItem[];
-  }
+  };
 };

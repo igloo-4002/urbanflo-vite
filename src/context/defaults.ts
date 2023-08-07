@@ -1,14 +1,19 @@
 import { createId } from '@paralleldrive/cuid2';
 
-<<<<<<< HEAD
-import { type AppState, CanvasItemType, type Car, type Road } from './types';
-=======
-import { CanvasItemType, type AppState, type Car, type Road } from "./types";
 import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
+import { TrafficGraph } from '~/graph';
 
-import roadIcon from '../../public/road-icon.png'
-import intersectionIcon from '../../public/intersection.png'
->>>>>>> c65a6dc62dd3cf39b16e06fdb67ce59cf643936e
+import intersectionIcon from '../../public/intersection.png';
+import roadIcon from '../../public/road-icon.png';
+import {
+  type AppState,
+  CanvasItemType,
+  type Car,
+  GraphInfo,
+  type Road,
+} from './types';
+
+const emptyRoadGraphInfo: GraphInfo = { exits: {}, maxExits: 1 };
 
 export const getDefaultAppState: () => AppState = () => {
   const road1: Road = {
@@ -28,6 +33,7 @@ export const getDefaultAppState: () => AppState = () => {
     lanes: 1,
     length: 200,
     direction: 'up',
+    graphInfo: emptyRoadGraphInfo,
   };
 
   const road2: Road = {
@@ -47,6 +53,7 @@ export const getDefaultAppState: () => AppState = () => {
     lanes: 1,
     length: 150,
     direction: 'left',
+    graphInfo: emptyRoadGraphInfo,
   };
 
   const car: Car = {
@@ -69,14 +76,14 @@ export const getDefaultAppState: () => AppState = () => {
   const toolBarItems: ToolBarItem[] = [
     {
       src: roadIcon,
-      alt: "Road",
+      alt: 'Road',
       onClick: () => console.log('road icon clicked'),
     },
     {
       src: intersectionIcon,
-      alt: "Intersection",
+      alt: 'Intersection',
       onClick: () => console.log('intersection icon clicked'),
-    }
+    },
   ];
 
   return {
@@ -85,6 +92,7 @@ export const getDefaultAppState: () => AppState = () => {
     },
     canvasState: {
       canvasItems: [road1, road2, car],
+      graph: new TrafficGraph(),
       selectedCanvasItem: null,
       isPlaying: false,
     },
@@ -98,6 +106,6 @@ export const getDefaultAppState: () => AppState = () => {
     toolBarState: {
       isOpen: true,
       items: toolBarItems,
-    }
+    },
   };
 };
