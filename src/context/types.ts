@@ -1,14 +1,14 @@
 import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
 
 export const CanvasItemType = {
-  ROAD: "road",
-  CAR: "car",
-  TRAFFIC_LIGHT: "traffic-light",
+  ROAD: 'road',
+  CAR: 'car',
+  TRAFFIC_LIGHT: 'traffic-light',
 } as const;
 
 export const ModalViewNames = {
-  ROAD_PROPERTIES_EDITOR: "road-properties-editor",
-  INTERSECTION_PROPERTIES_EDITOR: "intersection-properties-editor",
+  ROAD_PROPERTIES_EDITOR: 'road-properties-editor',
+  INTERSECTION_PROPERTIES_EDITOR: 'intersection-properties-editor',
 } as const;
 
 /**
@@ -18,10 +18,10 @@ export const ModalViewNames = {
  * For example, RoadDirections.UP would mean that the road is travelling from bottom to top.
  */
 export const RoadDirections = {
-  UP: "up",
-  DOWN: "down",
-  LEFT: "left",
-  RIGHT: "right",
+  UP: 'up',
+  DOWN: 'down',
+  LEFT: 'left',
+  RIGHT: 'right',
 } as const;
 
 export interface CanvasItem {
@@ -50,7 +50,7 @@ export type Road = CanvasItem & RoadFields;
 
 export interface CarFields {
   speed: number;
-  direction: "horizontal" | "vertical";
+  direction: 'horizontal' | 'vertical';
 }
 
 export type Car = CanvasItem & CarFields;

@@ -1,10 +1,14 @@
-import { createId } from "@paralleldrive/cuid2";
+import { createId } from '@paralleldrive/cuid2';
 
+<<<<<<< HEAD
+import { type AppState, CanvasItemType, type Car, type Road } from './types';
+=======
 import { CanvasItemType, type AppState, type Car, type Road } from "./types";
 import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarItem';
 
 import roadIcon from '../../public/road-icon.png'
 import intersectionIcon from '../../public/intersection.png'
+>>>>>>> c65a6dc62dd3cf39b16e06fdb67ce59cf643936e
 
 export const getDefaultAppState: () => AppState = () => {
   const road1: Road = {
@@ -23,7 +27,7 @@ export const getDefaultAppState: () => AppState = () => {
     speedLimit: 60,
     lanes: 1,
     length: 200,
-    direction: "up",
+    direction: 'up',
   };
 
   const road2: Road = {
@@ -42,7 +46,7 @@ export const getDefaultAppState: () => AppState = () => {
     speedLimit: 40,
     lanes: 1,
     length: 150,
-    direction: "left",
+    direction: 'left',
   };
 
   const car: Car = {
@@ -59,7 +63,7 @@ export const getDefaultAppState: () => AppState = () => {
       offsetY: 62.5,
     },
     speed: 0,
-    direction: "vertical",
+    direction: 'vertical',
   };
 
   const toolBarItems: ToolBarItem[] = [
@@ -77,7 +81,7 @@ export const getDefaultAppState: () => AppState = () => {
 
   return {
     projectInfo: {
-      name: "untitled",
+      name: 'untitled',
     },
     canvasState: {
       canvasItems: [road1, road2, car],

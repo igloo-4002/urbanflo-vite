@@ -4,16 +4,17 @@ import {
   type Car,
   type Intersection,
   type Road,
-} from "~/context/types";
-import { Car as CarComponent } from "./Car";
-import { Road as RoadComponent } from "./Road";
+} from '~/context/types';
+
+import { Car as CarComponent } from './Car';
+import { Road as RoadComponent } from './Road';
 
 export function isRoad(canvasItem: CanvasItemTypes): canvasItem is Road {
   return canvasItem.info.type === CanvasItemType.ROAD;
 }
 
 export function isIntersection(
-  canvasItem: CanvasItemTypes
+  canvasItem: CanvasItemTypes,
 ): canvasItem is Intersection {
   return canvasItem.info.type === CanvasItemType.TRAFFIC_LIGHT;
 }
@@ -29,7 +30,7 @@ type CanvasItemRenderElement<T> = {
 
 function filterCanvasItems<T>(
   canvasItems: CanvasItemTypes[],
-  predicate: (item: CanvasItemTypes) => boolean
+  predicate: (item: CanvasItemTypes) => boolean,
 ): CanvasItemRenderElement<T>[] {
   const items: CanvasItemRenderElement<T>[] = [];
 
