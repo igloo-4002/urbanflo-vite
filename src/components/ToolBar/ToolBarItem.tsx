@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 
 import { ToolBarItemOptions } from '~/context/types';
+import { isSideBarOpen } from '~/context/utils/modal';
 import { useAppState } from '~/hooks/useAppState';
 
 export interface ToolBarItemProps {
@@ -20,6 +21,17 @@ export function ToolBarItem(props: ToolBarItemProps) {
       ? null
       : props.optionName;
 
+    let closeSidebar = {};
+
+    if (isSideBarOpen(appState)) {
+      closeSidebar = {
+        leftSideBarState: {
+          viewName: null,
+          isOpen: false,
+        },
+      };
+    }
+
     setAppState(prev => {
       return {
         ...prev,
@@ -27,6 +39,7 @@ export function ToolBarItem(props: ToolBarItemProps) {
           ...prev.toolBarState,
           selectedToolBarItem: optionNameOrNull,
         },
+        ...closeSidebar,
       };
     });
   }
