@@ -15,6 +15,7 @@ function mapCoordinates(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 function Canvas({ x, y, color }: { x: number; y: number; color: string }) {
   const nodes = [
     { id: 'south', x: 0.0, y: -100.0 },
@@ -84,3 +85,5 @@ function Canvas({ x, y, color }: { x: number; y: number; color: string }) {
     </Stage>
   );
 }
+
+Canvas({ x: 1, y: 1, color: 'red' });
