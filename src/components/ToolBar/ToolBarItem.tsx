@@ -15,12 +15,17 @@ export function ToolBarItem(props: ToolBarItemProps) {
 
   function handleClick() {
     props.onClick();
+
+    const optionNameOrNull = appState.toolBarState.selectedToolBarItem
+      ? null
+      : props.optionName;
+
     setAppState(prev => {
       return {
         ...prev,
         toolBarState: {
           ...prev.toolBarState,
-          selectedToolBarItem: props.optionName,
+          selectedToolBarItem: optionNameOrNull,
         },
       };
     });
