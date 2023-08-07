@@ -57,6 +57,12 @@ export function Road(props: RoadProps) {
     }
   }
 
+  function handleClick() {
+    if (appState.toolBarState.selectedToolBarItem === null) {
+      updateSelectedItem(canvasProps.index);
+    }
+  }
+
   return image ? (
     <Image
       alt={'road'}
@@ -67,7 +73,7 @@ export function Road(props: RoadProps) {
       draggable={false}
       offsetX={canvasProps.offsetX}
       offsetY={canvasProps.offsetY}
-      onClick={() => updateSelectedItem(canvasProps.index)}
+      onClick={handleClick}
     />
   ) : null;
 }
