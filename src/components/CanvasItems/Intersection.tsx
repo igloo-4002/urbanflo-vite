@@ -34,9 +34,6 @@ export function Intersection(props: IntersectionProps) {
       image={image}
       x={canvasProps.x}
       y={canvasProps.y}
-      draggable={canvasProps.draggable}
-      offsetX={canvasProps.offsetX}
-      offsetY={canvasProps.offsetY}
       onClick={handleClick}
     />
   ) : null;
