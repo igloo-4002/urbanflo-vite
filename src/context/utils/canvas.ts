@@ -2,13 +2,12 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { createId } from '@paralleldrive/cuid2';
 
+import { isGraphItem } from '~/components/CanvasItems/util';
+
 import {
   AppState,
   CanvasItem,
   CanvasItemTypes,
-  Car,
-  Intersection,
-  Road,
   RoadDirections,
   ToolBarItemOptions,
 } from '../types';
@@ -38,7 +37,7 @@ export function createNewCanvasItem(args: createNewCanvasItemArgs) {
 
   switch (args.itemType) {
     case 'road': {
-      const roadItem: Road = {
+      itemToAdd = {
         ...baseCanvasItem,
         graphInfo: baseRoadGraphInfo,
         speedLimit: 60,
@@ -46,31 +45,30 @@ export function createNewCanvasItem(args: createNewCanvasItemArgs) {
         length: 100,
         direction: RoadDirections.UP,
       };
-      args.appState.canvasState.graph.addNode(roadItem);
-      itemToAdd = roadItem;
       break;
     }
     case 'car': {
-      const carItem: Car = {
+      itemToAdd = {
         ...baseCanvasItem,
         speed: 50,
         direction: 'horizontal',
       };
-      itemToAdd = carItem;
       break;
     }
     case 'intersection': {
-      const intersectionItem: Intersection = {
+      itemToAdd = {
         ...baseCanvasItem,
         graphInfo: baseIntersectionGraphInfo,
         connectingRoads: [],
       };
-      args.appState.canvasState.graph.addNode(intersectionItem);
-      itemToAdd = intersectionItem;
       break;
     }
     default:
       return;
+  }
+
+  if (isGraphItem(itemToAdd)) {
+    args.appState.canvasState.graph.addNode(itemToAdd);
   }
 
   args.setAppState({
