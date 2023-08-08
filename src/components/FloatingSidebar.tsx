@@ -25,6 +25,7 @@ export function FloatingSideBar() {
       }}
     >
       <button
+        className="hover:bg-gray-300 duration-200 rounded-md"
         style={{ width: '100%', marginBottom: '8px' }}
         onClick={() => closeSidebar(appState, setAppState, true)}
       >
