@@ -8,7 +8,7 @@ import {
   RoadDirections,
   type RoadFields,
 } from '~/context/types';
-import { openSidebar } from '~/context/utils/modal';
+import { updateSelectedItem } from '~/context/utils/modal';
 import { useAppState } from '~/hooks/useAppState';
 
 import { type CanvasItemProps } from './types';
@@ -46,20 +46,14 @@ export function Road(props: RoadProps) {
     };
   }, [isHorizontal, roadFields.direction, verticalHeight, verticalWidth]);
 
-  function updateSelectedItem(index: number): void {
-    if (index >= 0 && index < appState.canvasState.canvasItems.length) {
-      openSidebar(
-        appState,
-        setAppState,
-        ModalViewNames.ROAD_PROPERTIES_EDITOR,
-        appState.canvasState.canvasItems[index],
-      );
-    }
-  }
-
   function handleClick() {
     if (appState.toolBarState.selectedToolBarItem === null) {
-      updateSelectedItem(canvasProps.index);
+      updateSelectedItem({
+        index: canvasProps.index,
+        viewName: ModalViewNames.ROAD_PROPERTIES_EDITOR,
+        appState,
+        setAppState,
+      });
     }
   }
 
