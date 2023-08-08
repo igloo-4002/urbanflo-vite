@@ -2,6 +2,7 @@ import {
   CanvasItemType,
   type CanvasItemTypes,
   type Car,
+  GraphItem,
   type Intersection,
   type Road,
 } from '~/context/types';
@@ -22,6 +23,12 @@ export function isIntersection(
 
 export function isCar(canvasItem: CanvasItemTypes): canvasItem is Car {
   return canvasItem.info.type === CanvasItemType.CAR;
+}
+
+export function isGraphItem(
+  canvasItem: CanvasItemTypes,
+): canvasItem is GraphItem {
+  return isIntersection(canvasItem) || isRoad(canvasItem);
 }
 
 type CanvasItemRenderElement<T> = {
