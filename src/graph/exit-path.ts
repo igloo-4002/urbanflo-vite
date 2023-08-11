@@ -1,11 +1,13 @@
-import { GraphItem } from '~/context/types';
+import { Intersection, Road } from '~/context/types';
 
 export class ExitPath {
-  start: GraphItem;
-  end: GraphItem;
+  start: Intersection;
+  end: Intersection;
+  connector: Road;
 
-  constructor(start: GraphItem, end: GraphItem) {
+  constructor(start: Intersection, end: Intersection, connector: Road) {
     this.start = start;
     this.end = end;
+    this.connector = connector;
   }
 }
