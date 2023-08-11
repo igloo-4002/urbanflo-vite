@@ -2,10 +2,10 @@ import { ToolBarItemProps as ToolBarItem } from '~/components/ToolBar/ToolBarIte
 import { TrafficGraph } from '~/graph';
 
 export const CanvasItemType = {
-  ROAD: 'road',
-  CAR: 'car',
-  TRAFFIC_LIGHT: 'traffic-light',
-  INTERSECTION: 'intersection',
+  ROAD: 'ROAD',
+  CAR: 'CAR',
+  TRAFFIC_LIGHT: 'TRAFFIC_LIGHT',
+  INTERSECTION: 'INTERSECTION',
 } as const;
 
 export const ModalViewNames = {
@@ -29,7 +29,7 @@ export const RoadDirections = {
 export interface CanvasItem {
   id: string;
   info: {
-    type: ToolBarItemOptions;
+    type: keyof typeof CanvasItemType;
   };
   props: {
     image: HTMLImageElement;
@@ -70,11 +70,7 @@ export type CanvasItemTypes = Road | Car | Intersection;
 
 export type GraphItem = Road | Intersection;
 
-export type ToolBarItemOptions =
-  | 'road'
-  | 'intersection'
-  | 'car'
-  | 'traffic-light';
+export type ToolBarItemOptions = keyof typeof CanvasItemType;
 
 export type AppState = {
   projectInfo: {

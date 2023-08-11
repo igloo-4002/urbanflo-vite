@@ -7,6 +7,7 @@ import { isGraphItem } from '~/components/CanvasItems/util';
 import {
   AppState,
   CanvasItem,
+  CanvasItemType,
   CanvasItemTypes,
   RoadDirections,
   ToolBarItemOptions,
@@ -36,7 +37,7 @@ export function createNewCanvasItem(args: createNewCanvasItemArgs) {
   let itemToAdd: CanvasItemTypes;
 
   switch (args.itemType) {
-    case 'road': {
+    case CanvasItemType.ROAD: {
       itemToAdd = {
         ...baseCanvasItem,
         graphInfo: baseRoadGraphInfo,
@@ -47,7 +48,7 @@ export function createNewCanvasItem(args: createNewCanvasItemArgs) {
       };
       break;
     }
-    case 'car': {
+    case CanvasItemType.CAR: {
       itemToAdd = {
         ...baseCanvasItem,
         speed: 50,
@@ -55,7 +56,7 @@ export function createNewCanvasItem(args: createNewCanvasItemArgs) {
       };
       break;
     }
-    case 'intersection': {
+    case CanvasItemType.INTERSECTION: {
       itemToAdd = {
         ...baseCanvasItem,
         graphInfo: baseIntersectionGraphInfo,
