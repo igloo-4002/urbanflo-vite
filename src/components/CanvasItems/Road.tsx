@@ -8,7 +8,7 @@ import {
   RoadDirections,
   type RoadFields,
 } from '~/context/types';
-import { openSidebar } from '~/context/utils/modal';
+import { updateSelectedItem } from '~/context/utils/modal';
 import { useAppState } from '~/hooks/useAppState';
 
 import { type CanvasItemProps } from './types';
@@ -46,14 +46,14 @@ export function Road(props: RoadProps) {
     };
   }, [isHorizontal, roadFields.direction, verticalHeight, verticalWidth]);
 
-  function updateSelectedItem(index: number): void {
-    if (index >= 0 && index < appState.canvasState.canvasItems.length) {
-      openSidebar(
+  function handleClick() {
+    if (appState.toolBarState.selectedToolBarItem === null) {
+      updateSelectedItem({
+        index: canvasProps.index,
+        viewName: ModalViewNames.ROAD_PROPERTIES_EDITOR,
         appState,
         setAppState,
-        ModalViewNames.ROAD_PROPERTIES_EDITOR,
-        appState.canvasState.canvasItems[index],
-      );
+      });
     }
   }
 
@@ -65,9 +65,7 @@ export function Road(props: RoadProps) {
       x={canvasProps.x}
       y={canvasProps.y}
       draggable={false}
-      offsetX={canvasProps.offsetX}
-      offsetY={canvasProps.offsetY}
-      onClick={() => updateSelectedItem(canvasProps.index)}
+      onClick={handleClick}
     />
   ) : null;
 }

@@ -91,7 +91,12 @@ export function RoadPropertiesEditor(
           <option value={`${RoadDirections.RIGHT}`}>Right</option>
         </select>
       </RowStack>
-      <button onClick={submitRoadProperties}>Update road properties</button>
+      <button
+        className="hover:bg-gray-300 duration-200 rounded-md"
+        onClick={submitRoadProperties}
+      >
+        Update road properties
+      </button>
     </ColumnStack>
   );
 }

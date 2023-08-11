@@ -2,11 +2,13 @@ import {
   CanvasItemType,
   type CanvasItemTypes,
   type Car,
+  GraphItem,
   type Intersection,
   type Road,
 } from '~/context/types';
 
 import { Car as CarComponent } from './Car';
+import { Intersection as IntersectionComponent } from './Intersection';
 import { Road as RoadComponent } from './Road';
 
 export function isRoad(canvasItem: CanvasItemTypes): canvasItem is Road {
@@ -16,11 +18,17 @@ export function isRoad(canvasItem: CanvasItemTypes): canvasItem is Road {
 export function isIntersection(
   canvasItem: CanvasItemTypes,
 ): canvasItem is Intersection {
-  return canvasItem.info.type === CanvasItemType.TRAFFIC_LIGHT;
+  return canvasItem.info.type === CanvasItemType.INTERSECTION;
 }
 
 export function isCar(canvasItem: CanvasItemTypes): canvasItem is Car {
   return canvasItem.info.type === CanvasItemType.CAR;
+}
+
+export function isGraphItem(
+  canvasItem: CanvasItemTypes,
+): canvasItem is GraphItem {
+  return isIntersection(canvasItem) || isRoad(canvasItem);
 }
 
 type CanvasItemRenderElement<T> = {
@@ -46,7 +54,10 @@ function filterCanvasItems<T>(
 export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
   const cars = filterCanvasItems<Car>(canvasItems, isCar);
   const roads = filterCanvasItems<Road>(canvasItems, isRoad);
-  // const _intersections = filterCanvasItems<Road>(canvasItems, isIntersection);
+  const intersections = filterCanvasItems<Intersection>(
+    canvasItems,
+    isIntersection,
+  );
 
   return (
     <>
@@ -66,9 +77,6 @@ export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
               index: road.canvasItemsIndex,
               x: road.element.props.x,
               y: road.element.props.y,
-              draggable: road.element.props.draggable,
-              offsetX: road.element.props.offsetX,
-              offsetY: road.element.props.offsetY,
             }}
           ></RoadComponent>
         );
@@ -89,13 +97,32 @@ export function renderCanvasItems(canvasItems: CanvasItemTypes[]) {
               index: car.canvasItemsIndex,
               x: car.element.props.x,
               y: car.element.props.y,
-              draggable: car.element.props.draggable,
-              offsetX: car.element.props.offsetX,
-              offsetY: car.element.props.offsetY,
             }}
           ></CarComponent>
         );
       })}
+
+      {intersections.map(
+        (intersection: CanvasItemRenderElement<Intersection>) => {
+          const currentIntersection = canvasItems[
+            intersection.canvasItemsIndex
+          ] as Intersection;
+
+          return (
+            <IntersectionComponent
+              key={intersection.canvasItemsIndex}
+              intersectionProps={{
+                connectingRoads: currentIntersection.connectingRoads,
+              }}
+              canvasProps={{
+                index: intersection.canvasItemsIndex,
+                x: intersection.element.props.x,
+                y: intersection.element.props.y,
+              }}
+            ></IntersectionComponent>
+          );
+        },
+      )}
     </>
   );
 }

@@ -68,3 +68,24 @@ export function getView(appState: AppState) {
       return <IntersectionPropertiesEditor />;
   }
 }
+
+interface updateSelectedItemArgs {
+  index: number;
+  viewName: string;
+  appState: AppState;
+  setAppState: Dispatch<SetStateAction<AppState>>;
+}
+
+export function updateSelectedItem(args: updateSelectedItemArgs): void {
+  if (
+    args.index >= 0 &&
+    args.index < args.appState.canvasState.canvasItems.length
+  ) {
+    openSidebar(
+      args.appState,
+      args.setAppState,
+      args.viewName,
+      args.appState.canvasState.canvasItems[args.index],
+    );
+  }
+}

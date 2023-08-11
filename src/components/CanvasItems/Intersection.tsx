@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
 
-import intersectionImage from '~/assets/intersection.png';
-import { type IntersectionFields } from '~/context/types';
+import intersectionImage from '~/assets/roadIntersection.jpeg';
+import { type IntersectionFields, ModalViewNames } from '~/context/types';
+import { updateSelectedItem } from '~/context/utils/modal';
+import { useAppState } from '~/hooks/useAppState';
 
 import { type CanvasItemProps } from './types';
 
@@ -15,15 +17,28 @@ export function Intersection(props: IntersectionProps) {
   const canvasProps: CanvasItemProps = props.canvasProps;
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
+  const { appState, setAppState } = useAppState();
+
   useEffect(() => {
     const img = new window.Image();
     img.src = intersectionImage;
     img.width = 250;
-    img.height = 100;
+    img.height = 250;
     img.onload = () => {
       setImage(img);
     };
   }, []);
+
+  function handleClick() {
+    if (appState.toolBarState.selectedToolBarItem === null) {
+      updateSelectedItem({
+        index: canvasProps.index,
+        viewName: ModalViewNames.INTERSECTION_PROPERTIES_EDITOR,
+        appState,
+        setAppState,
+      });
+    }
+  }
 
   return image ? (
     <Image
@@ -32,9 +47,7 @@ export function Intersection(props: IntersectionProps) {
       image={image}
       x={canvasProps.x}
       y={canvasProps.y}
-      draggable
-      offsetX={canvasProps.offsetX}
-      offsetY={canvasProps.offsetY}
+      onClick={handleClick}
     />
   ) : null;
 }

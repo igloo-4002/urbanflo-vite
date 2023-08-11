@@ -32,9 +32,6 @@ export function Car(props: CarProps) {
       image={image}
       x={canvasProps.x}
       y={canvasProps.y}
-      draggable={false}
-      offsetX={canvasProps.offsetX}
-      offsetY={canvasProps.offsetY}
     />
   ) : null;
 }

@@ -1,4 +1,4 @@
-import { GraphItem } from '~/context/types';
+import { CanvasItemType, GraphItem } from '~/context/types';
 
 import { ExitPath } from './exit-path';
 
@@ -9,6 +9,10 @@ export class TrafficGraph {
   constructor() {
     this.nodes = {};
     this.edges = [];
+  }
+
+  isEmpty() {
+    return this.edges.length === 0 && Object.keys(this.nodes).length === 0;
   }
 
   private isLeafNode(nodeId: string) {
@@ -62,10 +66,10 @@ export class TrafficGraph {
 
   private addNewExitToNode(existingNode: GraphItem, newNode: GraphItem) {
     switch (existingNode.info.type) {
-      case 'road':
+      case CanvasItemType.ROAD:
         existingNode.graphInfo.exits[0] = newNode;
         break;
-      case 'intersection': {
+      case CanvasItemType.INTERSECTION: {
         const idx = Object.keys(existingNode.graphInfo.exits).length;
         existingNode.graphInfo.exits[idx] = newNode;
         break;
