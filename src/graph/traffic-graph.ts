@@ -3,7 +3,7 @@ import { CanvasItemType, GraphItem } from '~/context/types';
 import { ExitPath } from './exit-path';
 
 export class TrafficGraph {
-  nodes: { [key: string]: GraphItem };
+  nodes: Record<string, GraphItem>;
   edges: ExitPath[];
 
   constructor() {
