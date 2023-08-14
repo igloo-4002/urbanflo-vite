@@ -58,7 +58,6 @@ export default function App() {
       });
 
       if (selectedNodes.length > 0) {
-        // TODO: add edge from selected to selectedNodes[0]
         const from = network.nodes[selector.selected];
         const to = selectedNodes[0];
         network.drawEdge(from, to);
