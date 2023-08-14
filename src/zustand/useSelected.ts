@@ -8,7 +8,6 @@ type Selected = {
 
 export const useSelector = create<Selected>(set => ({
   selected: null,
-  type: 'none',
   select: (id: string) => set({ selected: id }),
   deselect: () => set({ selected: null }),
 }));
