@@ -1,12 +1,9 @@
 import { create } from 'zustand';
 
-export function isNode(elem: Node | Edge): elem is Node {
-  return 'x' in elem && 'y' in elem;
-}
-
-export function isEdge(elem: Node | Edge): elem is Edge {
-  return 'from' in elem && 'to' in elem;
-}
+export type Point = {
+  x: number;
+  y: number;
+};
 
 export type Node = {
   id: string;
