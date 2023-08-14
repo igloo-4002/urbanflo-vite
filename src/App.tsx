@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Arrow, Circle, Layer, Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -23,6 +24,24 @@ export default function App() {
   const network = useNetworkStore();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const isCommandDelete = (e.metaKey || e.ctrlKey) && e.key === 'Backspace';
+      if (isCommandDelete && selector.selected) {
+        if (network.nodes[selector.selected]) {
+          network.deleteNode(selector.selected);
+        } else if (network.edges[selector.selected]) {
+          network.deleteEdge(selector.selected);
+        } else {
+          throw new Error("cannot delete selected because it doesn't exist");
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [selector, network]);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">

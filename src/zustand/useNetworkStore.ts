@@ -26,6 +26,8 @@ export type Network = {
   edges: Record<string, Edge>;
   addNode: (node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
+  deleteNode: (id: string) => void;
+  deleteEdge: (id: string) => void;
 };
 
 export const useNetworkStore = create<Network>(set => ({
@@ -55,6 +57,30 @@ export const useNetworkStore = create<Network>(set => ({
         return { edges: { ...state.edges, [newId]: newEdge } };
       }
     }),
+  deleteNode: (id: string) => {
+    set(state => {
+      const newNodes = { ...state.nodes };
+      delete newNodes[id];
+      for (const edgeId in state.edges) {
+        const edge = state.edges[edgeId];
+        if (edge.from === id || edge.to === id) {
+          delete state.edges[edgeId];
+        }
+      }
+      return {
+        nodes: newNodes,
+      };
+    });
+  },
+  deleteEdge: (id: string) => {
+    set(state => {
+      const newEdges = { ...state.edges };
+      delete newEdges[id];
+      return {
+        edges: newEdges,
+      };
+    });
+  },
 }));
 
 function onSegment(p: Point, q: Point, r: Point): boolean {
