@@ -31,8 +31,10 @@ export default function App() {
       if (isCommandDelete && selector.selected) {
         if (network.nodes[selector.selected]) {
           network.deleteNode(selector.selected);
+          selector.deselect();
         } else if (network.edges[selector.selected]) {
           network.deleteEdge(selector.selected);
+          selector.deselect();
         } else {
           throw new Error("cannot delete selected because it doesn't exist");
         }
@@ -128,7 +130,7 @@ export default function App() {
                 pointerLength={10}
                 pointerWidth={10}
                 fill={edge.id === selector.selected ? 'green' : 'black'}
-                stroke="black"
+                stroke={edge.id === selector.selected ? 'green' : 'black'}
                 strokeWidth={2}
                 onClick={() => {
                   selector.select(edge.id);
