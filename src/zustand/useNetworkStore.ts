@@ -46,37 +46,16 @@ export const useNetworkStore = create<Network>(set => ({
         speed: 13.89,
       };
 
-      if (edgeDoesIntersect(state, from, to)) {
+      const pointA = { x: from.x, y: from.y };
+      const pointB = { x: to.x, y: to.y };
+
+      if (edgeDoesIntersect(state, pointA, pointB)) {
         return state;
       } else {
         return { edges: { ...state.edges, [newId]: newEdge } };
       }
     }),
-  /**
-       * ({
-      edges: {
-        ...state.edges,
-        [`${from.id}${to.id}`]: {
-          id: `${from.id}${to.id}`,
-          from: from.id,
-          to: to.id,
-          priority: -1,
-          numLanes: 1,
-          speed: 13.89,
-        },
-      },
-    })
-       */
 }));
-
-function orientation(p: Point, q: Point, r: Point): number {
-  const value = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-
-  if (value === 0) {
-    return 0;
-  } // colinear
-  return value > 0 ? 1 : 2; // clock or counterclock wise
-}
 
 function onSegment(p: Point, q: Point, r: Point): boolean {
   return (
@@ -87,49 +66,78 @@ function onSegment(p: Point, q: Point, r: Point): boolean {
   );
 }
 
-function doIntersect(p1: Point, q1: Point, p2: Point, q2: Point): boolean {
-  const o1 = orientation(p1, q1, p2);
-  const o2 = orientation(p1, q1, q2);
-  const o3 = orientation(p2, q2, p1);
-  const o4 = orientation(p2, q2, q1);
+function orientation(p: Point, q: Point, r: Point): number {
+  const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+  if (val === 0) {
+    return 0;
+  } // colinear
+  return val > 0 ? 1 : 2; // clockwise or counterclockwise
+}
+
+function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
+  const o1 = orientation(A, B, C);
+  const o2 = orientation(A, B, D);
+  const o3 = orientation(C, D, A);
+  const o4 = orientation(C, D, B);
 
   if (o1 !== o2 && o3 !== o4) {
     return true;
   }
 
-  if (o1 === 0 && onSegment(p1, p2, q1)) {
-    return true;
-  }
-  if (o2 === 0 && onSegment(p1, q2, q1)) {
-    return true;
-  }
-  if (o3 === 0 && onSegment(p2, p1, q2)) {
-    return true;
-  }
-  if (o4 === 0 && onSegment(p2, q1, q2)) {
+  // Special cases
+  // A, B, and C are colinear and C lies on segment AB
+  if (o1 === 0 && onSegment(A, C, B)) {
     return true;
   }
 
+  // A, B, and D are colinear and D lies on segment AB
+  if (o2 === 0 && onSegment(A, D, B)) {
+    return true;
+  }
+
+  // C, D, and A are colinear and A lies on segment CD
+  if (o3 === 0 && onSegment(C, A, D)) {
+    return true;
+  }
+
+  // C, D, and B are colinear and B lies on segment CD
+  if (o4 === 0 && onSegment(C, B, D)) {
+    return true;
+  }
+  // Doesn't fall in any of the above cases
   return false;
 }
 
-export function edgeDoesIntersect(
-  network: Network,
-  nodeA: Node,
-  nodeB: Node,
-): boolean {
+function arePointsEqual(p1: Point, p2: Point) {
+  return p1.x === p2.x && p1.y === p2.y;
+}
+
+/**
+ * Given pointA and pointB and a line drawn between edges from C to D
+ * find if the line intersects with the hypothetical line drawn between A and B
+ */
+function edgeDoesIntersect(network: Network, pointA: Point, pointB: Point) {
   for (const edgeId in network.edges) {
     const edge = network.edges[edgeId];
-    const existingFromNode = network.nodes[edge.from];
-    const existingToNode = network.nodes[edge.to];
 
-    const pointA = { x: nodeA.x, y: nodeA.y };
-    const pointB = { x: nodeB.x, y: nodeB.y };
+    const from = network.nodes[edge.from];
+    const to = network.nodes[edge.to];
 
-    if (doIntersect(pointA, pointB, existingFromNode, existingToNode)) {
+    const pointC = { x: from.x, y: from.y };
+    const pointD = { x: to.x, y: to.y };
+
+    if (
+      arePointsEqual(pointA, pointC) ||
+      arePointsEqual(pointA, pointD) ||
+      arePointsEqual(pointB, pointC) ||
+      arePointsEqual(pointB, pointD)
+    ) {
+      continue;
+    }
+
+    if (doIntersect(pointA, pointB, pointC, pointD)) {
       return true;
     }
   }
-
   return false;
 }
