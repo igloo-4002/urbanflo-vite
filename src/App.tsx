@@ -3,7 +3,7 @@ import { Arrow, Circle, Layer, Stage } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
 
-import { useNetworkStore } from './zustand/useNetworkStore';
+import { type Node, useNetworkStore } from './zustand/useNetworkStore';
 import { useSelector } from './zustand/useSelected';
 
 /**
@@ -18,6 +18,16 @@ import { useSelector } from './zustand/useSelected';
  *      - offer to delete node
  */
 
+function selectNodes(
+  nodes: Node[],
+  { x, y }: { x: number; y: number },
+): Node[] {
+  return nodes.filter(node => {
+    const dist = Math.sqrt(Math.pow(node.x - x, 2) + Math.pow(node.y - y, 2));
+    return dist < 32;
+  });
+}
+
 export default function App() {
   const selector = useSelector();
   const network = useNetworkStore();
@@ -26,16 +36,40 @@ export default function App() {
 
   async function onClick(event: KonvaEventObject<MouseEvent>) {
     if (selector.selected === null) {
-      const result = network.addNode({
-        id: v4(),
+      const selectedNodes = selectNodes(nodes, {
         x: event.evt.clientX,
         y: event.evt.clientY,
-        type: 'priority',
       });
 
-      if (result.status === 'error') {
-        console.error(result.error);
+      if (selectedNodes.length > 0) {
+        selector.select(selectedNodes[0].id);
+      } else {
+        network.addNode({
+          id: v4(),
+          x: event.evt.clientX,
+          y: event.evt.clientY,
+          type: 'priority',
+        });
       }
+    } else if (network.nodes[selector.selected]) {
+      const selectedNodes = selectNodes(nodes, {
+        x: event.evt.clientX,
+        y: event.evt.clientY,
+      });
+
+      if (selectedNodes.length > 0) {
+        // TODO: add edge from selected to selectedNodes[0]
+        const from = network.nodes[selector.selected];
+        const to = selectedNodes[0];
+        network.drawEdge(from, to);
+        selector.deselect();
+      } else {
+        selector.deselect();
+      }
+    } else if (network.edges[selector.selected]) {
+      console.log(`edge ${selector.selected} selected`);
+    } else {
+      throw new Error('Unknown selection');
     }
   }
 
@@ -53,7 +87,7 @@ export default function App() {
                 key={index}
                 x={node.x}
                 y={node.y}
-                fill={'red'}
+                fill={node.id === selector.selected ? 'blue' : 'red'}
                 width={32}
                 height={32}
               />
