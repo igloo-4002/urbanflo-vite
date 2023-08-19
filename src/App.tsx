@@ -28,6 +28,8 @@ export default function App() {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       const isCommandDelete = (e.metaKey || e.ctrlKey) && e.key === 'Backspace';
+      const isEsc = e.key === 'Escape';
+
       if (isCommandDelete && selector.selected) {
         if (network.nodes[selector.selected]) {
           network.deleteNode(selector.selected);
@@ -38,6 +40,10 @@ export default function App() {
         } else {
           throw new Error("cannot delete selected because it doesn't exist");
         }
+      }
+
+      if (isEsc && selector.selected) {
+        selector.deselect();
       }
     }
 
