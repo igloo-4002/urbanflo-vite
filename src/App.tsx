@@ -133,7 +133,11 @@ export default function App() {
                 stroke={edge.id === selector.selected ? 'green' : 'black'}
                 strokeWidth={2}
                 onClick={() => {
-                  selector.select(edge.id);
+                  if (selector.selected !== edge.id) {
+                    selector.select(edge.id);
+                  } else if (selector.selected === edge.id) {
+                    selector.deselect();
+                  }
                 }}
               />
             );
