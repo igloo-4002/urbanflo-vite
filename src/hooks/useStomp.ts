@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
   Client,
@@ -11,22 +11,12 @@ import {
  * USAGE
  *
  * connect to the socket URL by const {} = useStomp({ brokerURL: SIMULATION_SOCKET_URL })
- * subscribe to the simulation topic to receive updates while the simulation is running
- * subscribe to the simulation error topic to receive errors which might have occurred during the simulation
- * publish START or STOP to the topic
+ * subscribe to the topic
+ * publish SUBSCRIBE or UNSUBSCRIBE to the topic
  */
 
-// use to connect to web socket
 export const SIMULATION_SOCKET_URL = 'ws://localhost:8080/simulation-socket';
-
-// use to receive data from the server
-export const SIMULATION_DATA_TOPIC = '/topic/simulation/demo';
-
-// use to receive errors which might have happened during the simulation§
-export const SIMULATION_ERROR_TOPIC = '/topic/simulation/demo/error';
-
-// use to send a message to the server using the socket to start or stop the simulation
-export const SIMULATION_DESTINATION_PATH = '/app/simulation/demo';
+export const SIMULATION_DATA_TOPIC = '/topic/simulation-data';
 
 // the data returned from the server for each car
 export type VehicleData = {
@@ -39,10 +29,29 @@ export type VehicleData = {
 };
 
 let stompClient: Client;
-let isConnected = false;
 const subscriptions: { [key: string]: StompSubscription } = {};
 
+type ErrorType =
+  | {
+      name: 'WEBSOCKET_ERROR';
+      message: string;
+    }
+  | {
+      name: 'STOMP_ERROR';
+      message: string;
+    }
+  | {
+      name: 'MAX_RETRIES_REACHED';
+      message: string;
+    };
+
+const MAX_RECONNECT_TRIES = 5;
+
 export function useStomp(config: StompConfig, callback?: () => void) {
+  const [isConnected, setIsConnected] = useState(false);
+  const [error, setError] = useState<ErrorType | null>(null);
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+
   const connect = useCallback(() => {
     if (!stompClient) {
       stompClient = new Client(config);
@@ -50,15 +59,47 @@ export function useStomp(config: StompConfig, callback?: () => void) {
     }
 
     stompClient.onConnect = () => {
-      isConnected = true;
+      setIsConnected(true);
+      setReconnectAttempts(0);
       callback && callback();
+    };
+
+    stompClient.onDisconnect = () => {
+      setIsConnected(false);
+
+      if (reconnectAttempts < MAX_RECONNECT_TRIES) {
+        setTimeout(() => {
+          setReconnectAttempts(c => c + 1);
+          connect();
+        }, 1000);
+      } else {
+        setError({
+          name: 'MAX_RETRIES_REACHED',
+          message: 'Maximum reconnect attmepts reached.',
+        });
+      }
+    };
+
+    stompClient.onStompError = frame => {
+      setError({
+        name: 'STOMP_ERROR',
+        message: frame.headers.message,
+      });
+    };
+
+    stompClient.onWebSocketError = event => {
+      setError({
+        name: 'WEBSOCKET_ERROR',
+        message:
+          event.message || 'Cannot connect to the websocket. Please try again.',
+      });
     };
 
     // uncomment this block of code to see the debug messages for the websocket
     // stompClient.debug = (msg) => {
     //   console.warn(msg);
     // };
-  }, []);
+  }, [callback, config, reconnectAttempts]);
 
   const publish = useCallback(
     (
@@ -72,15 +113,19 @@ export function useStomp(config: StompConfig, callback?: () => void) {
         headers,
       });
     },
-    [stompClient],
+    [],
   );
 
   const subscribe = useCallback(
-    // TODO: message type needs to looked at
+    // TODO: make the message type more specific, make it the same as in the server
     (path: string, callback: (msg: string) => void) => {
-      if (!stompClient) return;
+      if (!stompClient) {
+        return;
+      }
 
-      if (subscriptions[path]) return;
+      if (subscriptions[path]) {
+        return;
+      }
 
       const subscription = stompClient.subscribe(path, message => {
         const body: string = message.body;
@@ -98,17 +143,18 @@ export function useStomp(config: StompConfig, callback?: () => void) {
 
   const deactivate = useCallback(() => {
     stompClient.deactivate();
-  }, [stompClient]);
+  }, []);
 
-  useEffect(connect, []);
+  useEffect(connect, [connect]);
 
   return {
     connect,
     deactivate,
-    subscribe,
-    unsubscribe,
-    subscriptions,
+    error,
     isConnected,
     publish,
+    subscribe,
+    subscriptions,
+    unsubscribe,
   };
 }
