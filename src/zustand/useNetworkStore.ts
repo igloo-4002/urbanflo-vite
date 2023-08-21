@@ -33,32 +33,32 @@ export type Route = {
   edges: string;
 };
 
-// export type VType = {
-//   id: string; 
-//   accel: number;
-//   decel: number; 
-//   sigma: number;
-//   length: number;
-//   minGap: number; 
-//   maxSpeed: number;
-// };
+export type VType = {
+  id: string; 
+  accel: number;
+  decel: number; 
+  sigma: number;
+  length: number;
+  minGap: number; 
+  maxSpeed: number;
+};
 
-// export type Flow = {
-//   id: string;
-//   type: string;
-//   route: string;
-//   begin: number;
-//   end: number;
-//   period: number;
-// };
+export type Flow = {
+  id: string;
+  type: string;
+  route: string;
+  begin: number;
+  end: number;
+  period: number;
+};
 
 export type Network = {
   nodes: Record<string, Node>;
   edges: Record<string, Edge>;
   connections: Record<string, Connection>;
-  // vType: Record<string, VType>;
-  // route: Record<string, Route>;
-  // flow: Record<string, Flow>;
+  vType: Record<string, VType>;
+  route: Record<string, Route>;
+  flow: Record<string, Flow>;
   addNode: (node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
   deleteNode: (id: string) => void;
@@ -69,6 +69,10 @@ export type Network = {
 export const useNetworkStore = create<Network>(set => ({
   nodes: {},
   edges: {},
+  connections: {},
+  vType: {},
+  route: {},
+  flow: {},
   grid: {},
   addNode: (node: Node) =>
     set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),

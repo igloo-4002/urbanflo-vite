@@ -26,6 +26,9 @@ export default function App() {
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
   const connections = Object.values(network.connections);
+  const vType = Object.values(network.vType);
+  const route = Object.values(network.route);
+  const flow = Object.values(network.flow);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -84,7 +87,7 @@ export default function App() {
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
-      <FloatingPlayPause nodes={nodes} edges={edges} connections={connections}/>
+      <FloatingPlayPause nodes={nodes} edges={edges} connections={connections} vType={vType} route={route} flow={flow} />
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}

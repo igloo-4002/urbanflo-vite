@@ -1,9 +1,9 @@
 import React from "react";
 
-const FloatingPlayPause = ({ nodes, edges, connections }) => {
-  
+const FloatingPlayPause = ({ nodes, edges, connections, vType, route, flow}) => {
+
   const handleDownload = () => {
-    console.log("Send the data to SUMO")
+    console.log("Send these files")
   };
 
   return (
