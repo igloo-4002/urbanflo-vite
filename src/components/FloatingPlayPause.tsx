@@ -1,9 +1,33 @@
 import React from "react";
+import { Network } from "~/zustand/useNetworkStore";
 
-const FloatingPlayPause = ({ nodes, edges, connections, vType, route, flow}) => {
+const FloatingPlayPause = ({ nodes, edges, connections, vType, route, flow}: Network) => {
 
-  const handleDownload = () => {
-    console.log("Send these files")
+  const handleDownload = async () => {
+    const requestBody = {
+      nodes,
+      edges,
+      connections,
+      vType,
+      route,
+      flow
+    };
+  
+    const response = await fetch('http://localhost:8080/simulation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    })
+    
+
+    if (!response.ok) {
+      console.error(response)
+    }
+
+
+    console.log(await response.json())
   };
 
   return (
