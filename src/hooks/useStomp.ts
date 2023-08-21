@@ -60,10 +60,7 @@ export function useStomp(config: StompConfig, callback?: () => void) {
 
     stompClient.onConnect = () => {
       setIsConnected(true);
-      setReconnectAttempts(0);
-      callback && callback();
-    };
-
+callback?.();
     stompClient.onDisconnect = () => {
       setIsConnected(false);
 
