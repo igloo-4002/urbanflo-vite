@@ -145,5 +145,5 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     subscribe,
     subscriptions,
     unsubscribe,
-  };
+  } as const;
 }
