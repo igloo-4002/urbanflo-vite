@@ -31,7 +31,7 @@ import FloatingPlayPause from './components/FloatingPlayPause';
 export default function App() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const playing = usePlaying();
+  const {isPlaying, play, pause} = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
   const connections = Object.values(network.connections);
@@ -39,7 +39,7 @@ export default function App() {
   const route = Object.values(network.route);
   const flow = Object.values(network.flow);
 
-  const { subscribe, publish, isConnected, deactivate } = useSimulation({
+  const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
@@ -99,7 +99,8 @@ export default function App() {
   }, [network.edges]);
 
   useEffect(() => {
-    if (playing.isPlaying && isConnected) {
+    if (isPlaying && isConnected) {
+
       console.warn('Subscribing to simulation data');
 
       subscribe(SIMULATION_DATA_TOPIC, message => {
@@ -110,20 +111,19 @@ export default function App() {
       });
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
-    } else if (!playing.isPlaying && isConnected) {
+    } else if (!isPlaying && isConnected) {
       console.warn('Unsubscribing from simulation data');
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
     }
-
-    return () => {
-      deactivate();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing.isPlaying]);
+  }, [isPlaying]);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <FloatingPlayPause nodes={nodes} edges={edges} connections={connections} vType={vType} route={route} flow={flow} />
+      <button className='z-10 absolute border rounded-full top-0 right-0 w-1/6 h-12' onClick={() => {
+        isPlaying ? pause() : play()
+      }}>Test</button>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
