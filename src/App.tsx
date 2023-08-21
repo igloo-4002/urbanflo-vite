@@ -65,7 +65,7 @@ export default function App() {
   }, [selector, network]);
 
   useEffect(() => {
-    if (playing.playing && isConnected) {
+    if (playing.isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
 
       subscribe(SIMULATION_DATA_TOPIC, message => {
@@ -76,7 +76,7 @@ export default function App() {
       });
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
-    } else if (!playing.playing && isConnected) {
+    } else if (!playing.isPlaying && isConnected) {
       console.warn('Unsubscribing from simulation data');
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
     }
@@ -85,7 +85,7 @@ export default function App() {
       deactivate();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing.playing]);
+  }, [playing.isPlaying]);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
