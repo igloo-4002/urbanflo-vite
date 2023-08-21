@@ -30,21 +30,10 @@ export type VehicleData = {
 
 let stompClient: Client;
 const subscriptions: Record<string, StompSubscription> = {};
-
-type ErrorType =
-  | {
-      name: 'WEBSOCKET_ERROR';
-      message: string;
-    }
-  | {
-      name: 'STOMP_ERROR';
-      message: string;
-    }
-  | {
-      name: 'MAX_RETRIES_REACHED';
-      message: string;
-    };
-
+type ErrorType = {
+  name: 'WEBSOCKET_ERROR' | 'STOMP_ERROR' | 'MAX_RETRIES_REACHED';
+  message: string;
+};
 const MAX_RECONNECT_TRIES = 5;
 
 export function useStomp(config: StompConfig, callback?: () => void) {
