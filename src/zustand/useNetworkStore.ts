@@ -26,6 +26,7 @@ export type Network = {
   edges: Record<string, Edge>;
   addNode: (node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
+  updateEdge: (edgeId: string, edge: Edge) => void;
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
 };
@@ -57,6 +58,16 @@ export const useNetworkStore = create<Network>(set => ({
         return { edges: { ...state.edges, [newId]: newEdge } };
       }
     }),
+  updateEdge: (edgeId, edge) => {
+    set(state => {
+      return {
+        edges: {
+          ...state.edges,
+          [edgeId]: edge,
+        },
+      };
+    });
+  },
   deleteNode: (id: string) => {
     set(state => {
       const newNodes = { ...state.nodes };
