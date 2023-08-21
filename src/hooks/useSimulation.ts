@@ -36,7 +36,7 @@ type ErrorType = {
 };
 const MAX_RECONNECT_TRIES = 5;
 
-export function useStomp(config: StompConfig, callback?: () => void) {
+export function useSimulation(config: StompConfig, callback?: () => void) {
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<ErrorType | null>(null);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
