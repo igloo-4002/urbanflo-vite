@@ -146,12 +146,17 @@ export function Canvas() {
                     selector.deselect();
                   }
                   // if another node is selected, then draw an edge
-                  else if (selector.selected !== node.id) {
+                  else if (
+                    selector.selected !== node.id &&
+                    network.nodes[selector.selected]
+                  ) {
                     network.drawEdge(
                       network.nodes[selector.selected],
                       network.nodes[node.id],
                     );
                     selector.deselect();
+                  } else {
+                    selector.select(node.id);
                   }
                 }}
               />
