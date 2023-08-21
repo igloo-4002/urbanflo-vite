@@ -21,13 +21,49 @@ export type Edge = {
   speed: number;
 };
 
+export type Connection = {
+  from: string;
+  to: string;
+  fromLane: number;
+  toLane: number;
+};
+
+export type Route = {
+  id: string;
+  edges: string;
+};
+
+// export type VType = {
+//   id: string; 
+//   accel: number;
+//   decel: number; 
+//   sigma: number;
+//   length: number;
+//   minGap: number; 
+//   maxSpeed: number;
+// };
+
+// export type Flow = {
+//   id: string;
+//   type: string;
+//   route: string;
+//   begin: number;
+//   end: number;
+//   period: number;
+// };
+
 export type Network = {
   nodes: Record<string, Node>;
   edges: Record<string, Edge>;
+  connections: Record<string, Connection>;
+  // vType: Record<string, VType>;
+  // route: Record<string, Route>;
+  // flow: Record<string, Flow>;
   addNode: (node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
+  addConnection: (from: Edge, to: Edge) => void;
 };
 
 export const useNetworkStore = create<Network>(set => ({
@@ -81,6 +117,18 @@ export const useNetworkStore = create<Network>(set => ({
       };
     });
   },
+  addConnection: (from, to) =>
+    set((state) => ({
+      connections: {
+        ...state.connections,
+        [`${from.id}${to.id}`]: {
+          from: from.id,
+          to: to.id,
+          fromLane: 0,
+          toLane: 0,
+        },
+      }
+    }))
 }));
 
 function onSegment(p: Point, q: Point, r: Point): boolean {

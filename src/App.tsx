@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 
 import { useNetworkStore } from './zustand/useNetworkStore';
 import { useSelector } from './zustand/useSelected';
+import FloatingPlayPause from './components/FloatingPlayPause';
 
 /**
  * Interface modes
@@ -24,6 +25,7 @@ export default function App() {
   const network = useNetworkStore();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
+  const connections = Object.values(network.connections);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -51,8 +53,38 @@ export default function App() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [selector, network]);
 
+  useEffect(() => {
+    if (edges.length > 1) {
+      const lastEdge = edges[edges.length - 1];
+      const updatedConnections = [];
+  
+      for (let i = 0; i < edges.length; i++) {
+        if (lastEdge.to === edges[i].from) {
+          const fromEdge = edges[edges.length - 1];
+          const toEdge = edges[i];
+          updatedConnections.push({ from: fromEdge, to: toEdge });
+        }
+  
+        if (lastEdge.from === edges[i].to) {
+          const fromEdge = edges[i];
+          const toEdge = lastEdge;
+          updatedConnections.push({ from: fromEdge, to: toEdge });
+        }
+      }
+  
+      if (updatedConnections.length > 0) {
+        // Use your set function from useNetworkStore to update connections
+        // Example: network.addConnection(fromEdge, toEdge);
+        updatedConnections.forEach((connection) => {
+          network.addConnection(connection.from, connection.to);
+        });
+      }
+    }
+  }, [network.edges]);
+
   return (
     <div className="h-screen w-screen items-center justify-center flex">
+      <FloatingPlayPause nodes={nodes} edges={edges} connections={connections}/>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
