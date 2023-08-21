@@ -3,15 +3,15 @@ import { create } from 'zustand';
 type LeftSideBar = {
   isOpen: boolean;
   viewName: ModalViewNamesValues | null;
-  open: () => void;
+  open: (viewName: ModalViewNamesValues) => void;
   close: () => void;
 };
 
 export const useLeftSideBar = create<LeftSideBar>(set => ({
   isOpen: false,
   viewName: null,
-  open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
+  open: (viewName: ModalViewNamesValues) => set({ viewName, isOpen: true }),
+  close: () => set({ viewName: null, isOpen: false }),
 }));
 
 export const ModalViewNames = {
