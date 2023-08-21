@@ -12,7 +12,7 @@ export function RoadPropertiesEditor() {
   const network = useNetworkStore();
 
   useEffect(() => {
-    if (selected.selected === null || network.edges[selected.selected]) {
+    if (selected.selected === null || !network.edges[selected.selected]) {
       return;
     }
 
@@ -25,7 +25,7 @@ export function RoadPropertiesEditor() {
   }, [selected.selected]);
 
   function submitRoadProperties() {
-    if (selected.selected === null || network.edges[selected.selected]) {
+    if (selected.selected === null || !network.edges[selected.selected]) {
       return;
     }
 
