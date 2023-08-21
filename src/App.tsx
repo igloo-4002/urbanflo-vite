@@ -4,7 +4,15 @@ import { Arrow, Circle, Layer, Stage } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
 
+import { useSimulation } from './hooks/useSimulation';
+import {
+  SIMULATION_DATA_TOPIC,
+  SIMULATION_DESTINATION_PATH,
+  SIMULATION_ERROR_TOPIC,
+  SIMULATION_SOCKET_URL,
+} from './simulation-urls';
 import { useNetworkStore } from './zustand/useNetworkStore';
+import { usePlaying } from './zustand/usePlaying';
 import { useSelector } from './zustand/useSelected';
 
 /**
@@ -22,8 +30,13 @@ import { useSelector } from './zustand/useSelected';
 export default function App() {
   const selector = useSelector();
   const network = useNetworkStore();
+  const playing = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
+
+  const { subscribe, publish, isConnected, deactivate } = useSimulation({
+    brokerURL: SIMULATION_SOCKET_URL,
+  });
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -50,6 +63,29 @@ export default function App() {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [selector, network]);
+
+  useEffect(() => {
+    if (playing.playing && isConnected) {
+      console.warn('Subscribing to simulation data');
+
+      subscribe(SIMULATION_DATA_TOPIC, message => {
+        console.log(message);
+      });
+      subscribe(SIMULATION_ERROR_TOPIC, message => {
+        console.error(message);
+      });
+
+      publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
+    } else if (!playing.playing && isConnected) {
+      console.warn('Unsubscribing from simulation data');
+      publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
+    }
+
+    return () => {
+      deactivate();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing.playing]);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
