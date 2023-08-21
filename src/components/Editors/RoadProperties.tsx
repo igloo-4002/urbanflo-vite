@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
-import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
 export function RoadPropertiesEditor() {
@@ -29,7 +29,7 @@ export function RoadPropertiesEditor() {
       return;
     }
 
-    const updatedEdge: Edge = {
+    const updatedEdge = {
       ...network.edges[selected.selected],
       numLanes: newLanes,
       speed: newSpeedLimit,
