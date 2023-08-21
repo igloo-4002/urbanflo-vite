@@ -4,8 +4,6 @@ import { Arrow, Circle, Layer, Stage } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
 
-import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
-
 import { useSimulation } from '../hooks/useSimulation';
 import {
   SIMULATION_DATA_TOPIC,
@@ -35,7 +33,6 @@ export function Canvas() {
   const playing = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
-  const leftSideBar = useLeftSideBar();
 
   const { subscribe, publish, isConnected, deactivate } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
@@ -180,10 +177,8 @@ export function Canvas() {
                 onClick={() => {
                   if (selector.selected !== edge.id) {
                     selector.select(edge.id);
-                    leftSideBar.open(ModalViewNames.ROAD_PROPERTIES_EDITOR);
                   } else if (selector.selected === edge.id) {
                     selector.deselect();
-                    leftSideBar.close();
                   }
                 }}
               />
