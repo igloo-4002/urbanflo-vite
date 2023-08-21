@@ -29,7 +29,7 @@ export type VehicleData = {
 };
 
 let stompClient: Client;
-const subscriptions: { [key: string]: StompSubscription } = {};
+const subscriptions: Record<string, StompSubscription> = {};
 
 type ErrorType =
   | {
