@@ -159,7 +159,7 @@ export function Canvas() {
                     );
                     selector.deselect();
                   } else {
-                    selector.deselect();
+                    selector.select(node.id);
                   }
                 }}
               />
