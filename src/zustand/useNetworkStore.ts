@@ -83,6 +83,36 @@ export const useNetworkStore = create<Network>(set => ({
   },
 }));
 
+/**
+ * Given pointA and pointB and a line drawn between edges from C to D
+ * find if the line intersects with the hypothetical line drawn between A and B
+ */
+function edgeDoesIntersect(network: Network, pointA: Point, pointB: Point) {
+  for (const edgeId in network.edges) {
+    const edge = network.edges[edgeId];
+
+    const from = network.nodes[edge.from];
+    const to = network.nodes[edge.to];
+
+    const pointC = { x: from.x, y: from.y };
+    const pointD = { x: to.x, y: to.y };
+
+    if (
+      arePointsEqual(pointA, pointC) ||
+      arePointsEqual(pointA, pointD) ||
+      arePointsEqual(pointB, pointC) ||
+      arePointsEqual(pointB, pointD)
+    ) {
+      continue;
+    }
+
+    if (doIntersect(pointA, pointB, pointC, pointD)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function onSegment(p: Point, q: Point, r: Point): boolean {
   return (
     q.x <= Math.max(p.x, r.x) &&
@@ -136,34 +166,4 @@ function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
 
 function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
-}
-
-/**
- * Given pointA and pointB and a line drawn between edges from C to D
- * find if the line intersects with the hypothetical line drawn between A and B
- */
-function edgeDoesIntersect(network: Network, pointA: Point, pointB: Point) {
-  for (const edgeId in network.edges) {
-    const edge = network.edges[edgeId];
-
-    const from = network.nodes[edge.from];
-    const to = network.nodes[edge.to];
-
-    const pointC = { x: from.x, y: from.y };
-    const pointD = { x: to.x, y: to.y };
-
-    if (
-      arePointsEqual(pointA, pointC) ||
-      arePointsEqual(pointA, pointD) ||
-      arePointsEqual(pointB, pointC) ||
-      arePointsEqual(pointB, pointD)
-    ) {
-      continue;
-    }
-
-    if (doIntersect(pointA, pointB, pointC, pointD)) {
-      return true;
-    }
-  }
-  return false;
 }
