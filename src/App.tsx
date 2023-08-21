@@ -58,19 +58,19 @@ export default function App() {
       const lastEdge = edges[edges.length - 1];
       const updatedConnections = [];
   
-      for (let i = 0; i < edges.length; i++) {
-        if (lastEdge.to === edges[i].from) {
-          const fromEdge = edges[edges.length - 1];
-          const toEdge = edges[i];
-          updatedConnections.push({ from: fromEdge, to: toEdge });
+        for (let i = 0; i < edges.length; i++) {
+          if (lastEdge.to === edges[i].from) {
+            const fromEdge = edges[edges.length - 1];
+            const toEdge = edges[i];
+            updatedConnections.push({ from: fromEdge, to: toEdge });
+          }
+    
+          if (lastEdge.from === edges[i].to) {
+            const fromEdge = edges[i];
+            const toEdge = lastEdge;
+            updatedConnections.push({ from: fromEdge, to: toEdge });
+          }
         }
-  
-        if (lastEdge.from === edges[i].to) {
-          const fromEdge = edges[i];
-          const toEdge = lastEdge;
-          updatedConnections.push({ from: fromEdge, to: toEdge });
-        }
-      }
   
       if (updatedConnections.length > 0) {
         // Use your set function from useNetworkStore to update connections
