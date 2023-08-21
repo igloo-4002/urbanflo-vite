@@ -15,9 +15,6 @@ import {
  * publish SUBSCRIBE or UNSUBSCRIBE to the topic
  */
 
-export const SIMULATION_SOCKET_URL = 'ws://localhost:8080/simulation-socket';
-export const SIMULATION_DATA_TOPIC = '/topic/simulation-data';
-
 // the data returned from the server for each car
 export type VehicleData = {
   id: string;
