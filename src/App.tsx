@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { Arrow, Circle, Layer, Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
 
+import FloatingPlayPause from './components/FloatingPlayPause';
 import { useSimulation } from './hooks/useSimulation';
 import {
   SIMULATION_DATA_TOPIC,
@@ -14,7 +16,6 @@ import {
 import { useNetworkStore } from './zustand/useNetworkStore';
 import { usePlaying } from './zustand/usePlaying';
 import { useSelector } from './zustand/useSelected';
-import FloatingPlayPause from './components/FloatingPlayPause';
 
 /**
  * Interface modes
@@ -31,7 +32,7 @@ import FloatingPlayPause from './components/FloatingPlayPause';
 export default function App() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const {isPlaying, play, pause} = usePlaying();
+  const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
   const connections = Object.values(network.connections);
@@ -73,25 +74,25 @@ export default function App() {
     if (edges.length > 1) {
       const lastEdge = edges[edges.length - 1];
       const updatedConnections = [];
-  
-        for (let i = 0; i < edges.length; i++) {
-          if (lastEdge.to === edges[i].from) {
-            const fromEdge = edges[edges.length - 1];
-            const toEdge = edges[i];
-            updatedConnections.push({ from: fromEdge, to: toEdge });
-          }
-    
-          if (lastEdge.from === edges[i].to) {
-            const fromEdge = edges[i];
-            const toEdge = lastEdge;
-            updatedConnections.push({ from: fromEdge, to: toEdge });
-          }
+
+      for (let i = 0; i < edges.length; i++) {
+        if (lastEdge.to === edges[i].from) {
+          const fromEdge = edges[edges.length - 1];
+          const toEdge = edges[i];
+          updatedConnections.push({ from: fromEdge, to: toEdge });
         }
-  
+
+        if (lastEdge.from === edges[i].to) {
+          const fromEdge = edges[i];
+          const toEdge = lastEdge;
+          updatedConnections.push({ from: fromEdge, to: toEdge });
+        }
+      }
+
       if (updatedConnections.length > 0) {
         // Use your set function from useNetworkStore to update connections
         // Example: network.addConnection(fromEdge, toEdge);
-        updatedConnections.forEach((connection) => {
+        updatedConnections.forEach(connection => {
           network.addConnection(connection.from, connection.to);
         });
       }
@@ -100,7 +101,6 @@ export default function App() {
 
   useEffect(() => {
     if (isPlaying && isConnected) {
-
       console.warn('Subscribing to simulation data');
 
       subscribe(SIMULATION_DATA_TOPIC, message => {
@@ -120,10 +120,14 @@ export default function App() {
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
-      <FloatingPlayPause nodes={nodes} edges={edges} connections={connections} vType={vType} route={route} flow={flow} />
-      <button className='z-10 absolute border rounded-full top-0 right-0 w-1/6 h-12' onClick={() => {
-        isPlaying ? pause() : play()
-      }}>Test</button>
+      <FloatingPlayPause
+        nodes={nodes}
+        edges={edges}
+        connections={connections}
+        vType={vType}
+        route={route}
+        flow={flow}
+      />
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
