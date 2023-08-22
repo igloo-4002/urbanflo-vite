@@ -45,7 +45,9 @@ export function Canvas() {
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
-  useEffect(deactivate, []);
+  useEffect(() => {
+    return deactivate;
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
