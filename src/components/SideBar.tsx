@@ -1,6 +1,5 @@
+import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
-
-import { RoadPropertiesEditor } from './Editors/RoadProperties';
 
 export function LeftSideBar() {
   const leftSideBar = useLeftSideBar();
