@@ -94,12 +94,7 @@ export function Canvas() {
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <FloatingPlayPause
-        nodes={nodes}
-        edges={edges}
-        connections={connections}
-        vType={vType}
-        route={route}
-        flow={flow}
+        network={{ nodes, edges, connections, vType, route, flow }}
       />
       <Stage
         width={window.innerWidth}

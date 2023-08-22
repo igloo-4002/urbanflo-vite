@@ -7,21 +7,20 @@ import {
   VType,
 } from '~/zustand/useNetworkStore';
 
+type FloatingPlayPauseProps = {
+  network: {
+    nodes: Node[];
+    edges: Edge[];
+    connections: Connection[];
+    vType: VType[];
+    route: Route[];
+    flow: Flow[];
+  };
+};
+
 const FloatingPlayPause = ({
-  nodes,
-  edges,
-  connections,
-  vType,
-  route,
-  flow,
-}: {
-  nodes: Node[];
-  edges: Edge[];
-  connections: Connection[];
-  vType: VType[];
-  route: Route[];
-  flow: Flow[];
-}) => {
+  network: { nodes, edges, connections, vType, route, flow },
+}: FloatingPlayPauseProps) => {
   const handleUpload = async () => {
     const requestBody = {
       nodes,
