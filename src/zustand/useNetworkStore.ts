@@ -34,12 +34,12 @@ export type Route = {
 };
 
 export type VType = {
-  id: string; 
+  id: string;
   accel: number;
-  decel: number; 
+  decel: number;
   sigma: number;
   length: number;
-  minGap: number; 
+  minGap: number;
   maxSpeed: number;
 };
 
@@ -133,7 +133,7 @@ export const useNetworkStore = create<Network>(set => ({
     });
   },
   addConnection: (from, to) =>
-    set((state) => ({
+    set(state => ({
       connections: {
         ...state.connections,
         [`${from.id}${to.id}`]: {
@@ -142,8 +142,8 @@ export const useNetworkStore = create<Network>(set => ({
           fromLane: 0,
           toLane: 0,
         },
-      }
-    }))
+      },
+    })),
 }));
 
 /**
@@ -229,4 +229,19 @@ function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
 
 function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
+}
+
+export function getAllEdgeIdsForNode(
+  nodeId: string,
+  edges: Record<string, Edge>,
+): string[] {
+  const edgeIds: string[] = [];
+
+  for (const edgeId in edges) {
+    if (edgeId.startsWith(nodeId) || edgeId.endsWith(nodeId)) {
+      edgeIds.push(edgeId);
+    }
+  }
+
+  return edgeIds;
 }

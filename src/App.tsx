@@ -1,4 +1,4 @@
-import { Canvas } from './components/Canvas';
+import { Canvas } from './components/Canvas/Canvas';
 import FloatingPlayPause from './components/FloatingPlayPause';
 import { LeftSideBar } from './components/SideBar';
 
