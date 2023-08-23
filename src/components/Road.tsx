@@ -40,7 +40,7 @@ export function Road({ edge }: RoadProps) {
     <Group onClick={handleRoadClick}>
       {/* Highlight for selected road */}
       <Arrow
-        key={`road-${edge.id}`}
+        key={`road-selected-stroke-${edge.id}`}
         x={from.x}
         y={from.y}
         stroke={isSelected ? highlightColor : 'transparent'}
