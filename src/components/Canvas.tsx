@@ -18,18 +18,6 @@ import { useSelector } from '~/zustand/useSelected';
 
 import { Road } from './Road';
 
-/**
- * Interface modes
- *  - clicking on blank space creates a node
- *  - clicking on node selects node
- *  - clicking on edge selects edge
- *
- *  - on node select:
- *      - clicking on another node draws an edge
- *      - clicking on blank space or edge deselects node
- *      - offer to delete node
- */
-
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
