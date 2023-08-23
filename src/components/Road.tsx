@@ -1,3 +1,4 @@
+import { KonvaEventObject } from 'konva/lib/Node';
 import { Arrow, Group } from 'react-konva';
 
 import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
@@ -21,7 +22,8 @@ export function Road({ edge }: RoadProps) {
   const centerlineColor = 'white';
   const highlightColor = '#FFAE42';
 
-  function handleRoadClick() {
+  function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
+    event.cancelBubble = true;
     if (selector.selected !== edge.id) {
       selector.select(edge.id);
     } else if (selector.selected === edge.id) {

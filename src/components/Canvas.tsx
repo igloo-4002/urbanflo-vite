@@ -80,40 +80,61 @@ export function Canvas() {
     return deactivate;
   }, []);
 
+  function onNodeClick(event: KonvaEventObject<MouseEvent>, nodeId: string) {
+    event.cancelBubble = true;
+
+    // if nothing is selected, then select this node
+    if (selector.selected === null) {
+      selector.select(nodeId);
+    }
+    // if this node is selected, then deselect this node
+    else if (selector.selected === nodeId) {
+      selector.deselect();
+    }
+    // if another node is selected, then draw an edge
+    else if (selector.selected !== nodeId && network.nodes[selector.selected]) {
+      network.drawEdge(network.nodes[selector.selected], network.nodes[nodeId]);
+      selector.deselect();
+    } else {
+      selector.select(nodeId);
+    }
+  }
+
+  function onStageClick(event: KonvaEventObject<MouseEvent>) {
+    event.cancelBubble = true;
+
+    const point = { x: event.evt.clientX, y: event.evt.clientY };
+
+    const conflict = nodes.find(node => {
+      const distance = Math.sqrt(
+        (node.x - point.x) ** 2 + (node.y - point.y) ** 2,
+      );
+
+      return distance < 32;
+    });
+
+    if (conflict === undefined) {
+      const newNode = {
+        id: v4(),
+        x: point.x,
+        y: point.y,
+        type: 'priority',
+      };
+      network.addNode(newNode);
+      // if another node is selected, then draw an edge
+      if (selector.selected !== null && network.nodes[selector.selected]) {
+        network.drawEdge(network.nodes[selector.selected], newNode);
+        selector.deselect();
+      }
+    }
+  }
+
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
-        onClick={(event: KonvaEventObject<MouseEvent>) => {
-          const point = { x: event.evt.clientX, y: event.evt.clientY };
-
-          const conflict = nodes.find(node => {
-            const distance = Math.sqrt(
-              (node.x - point.x) ** 2 + (node.y - point.y) ** 2,
-            );
-
-            return distance < 32;
-          });
-
-          if (conflict === undefined) {
-            const newNode = {
-              id: v4(),
-              x: point.x,
-              y: point.y,
-              type: 'priority',
-            };
-            network.addNode(newNode);
-            // if another node is selected, then draw an edge
-            if (
-              selector.selected !== null &&
-              network.nodes[selector.selected]
-            ) {
-              network.drawEdge(network.nodes[selector.selected], newNode);
-              selector.deselect();
-            }
-          }
-        }}
+        onClick={onStageClick}
       >
         <Layer>
           {nodes.map((node, index) => {
@@ -125,28 +146,8 @@ export function Canvas() {
                 fill={node.id === selector.selected ? 'blue' : 'red'}
                 width={32}
                 height={32}
-                onClick={() => {
-                  // if nothing is selected, then select this node
-                  if (selector.selected === null) {
-                    selector.select(node.id);
-                  }
-                  // if this node is selected, then deselect this node
-                  else if (selector.selected === node.id) {
-                    selector.deselect();
-                  }
-                  // if another node is selected, then draw an edge
-                  else if (
-                    selector.selected !== node.id &&
-                    network.nodes[selector.selected]
-                  ) {
-                    network.drawEdge(
-                      network.nodes[selector.selected],
-                      network.nodes[node.id],
-                    );
-                    selector.deselect();
-                  } else {
-                    selector.select(node.id);
-                  }
+                onClick={e => {
+                  onNodeClick(e, node.id);
                 }}
               />
             );
