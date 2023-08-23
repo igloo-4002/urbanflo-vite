@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
-import { Circle, Layer, Stage } from 'react-konva';
+import { Layer, Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
@@ -16,6 +16,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 
+import { Intersection } from './Intersection';
 import { Road } from './Road';
 
 export function Canvas() {
@@ -137,25 +138,13 @@ export function Canvas() {
         onClick={onStageClick}
       >
         <Layer>
-          {nodes.map((node, index) => {
-            return (
-              <Circle
-                key={index}
-                x={node.x}
-                y={node.y}
-                fill={node.id === selector.selected ? 'blue' : 'red'}
-                width={32}
-                height={32}
-                onClick={e => {
-                  onNodeClick(e, node.id);
-                }}
-              />
-            );
+          {edges.map((edge, index) => {
+            return <Road edge={edge} key={index} />;
           })}
         </Layer>
         <Layer>
-          {edges.map((edge, index) => {
-            return <Road edge={edge} key={index} />;
+          {nodes.map((node, index) => {
+            return <Intersection node={node} key={index}></Intersection>;
           })}
         </Layer>
       </Stage>
