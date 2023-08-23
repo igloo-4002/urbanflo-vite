@@ -2,6 +2,7 @@ import { Arrow, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
+import { centerlineColor, highlightColor, roadColor } from '~/colors';
 import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
@@ -18,10 +19,7 @@ export function Road({ edge }: RoadProps) {
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
 
-  const roadColor = 'grey';
   const laneWidth = 25;
-  const centerlineColor = 'white';
-  const highlightColor = '#FFAE42';
 
   function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
