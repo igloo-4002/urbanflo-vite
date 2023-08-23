@@ -10,6 +10,8 @@ interface RoadProps {
   edge: Edge;
 }
 
+export const laneWidth = 25;
+
 export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
@@ -18,8 +20,6 @@ export function Road({ edge }: RoadProps) {
 
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
-
-  const laneWidth = 25;
 
   function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
