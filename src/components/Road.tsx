@@ -1,5 +1,7 @@
 import { Arrow, Group } from 'react-konva';
 
+import { KonvaEventObject } from 'konva/lib/Node';
+
 import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
@@ -21,7 +23,8 @@ export function Road({ edge }: RoadProps) {
   const centerlineColor = 'white';
   const highlightColor = '#FFAE42';
 
-  function handleRoadClick() {
+  function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
+    event.cancelBubble = true;
     if (selector.selected !== edge.id) {
       selector.select(edge.id);
     } else if (selector.selected === edge.id) {
@@ -40,7 +43,7 @@ export function Road({ edge }: RoadProps) {
     <Group onClick={handleRoadClick}>
       {/* Highlight for selected road */}
       <Arrow
-        key={`road-${edge.id}`}
+        key={`road-selected-stroke-${edge.id}`}
         x={from.x}
         y={from.y}
         stroke={isSelected ? highlightColor : 'transparent'}

@@ -16,20 +16,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 
-import FloatingPlayPause from './FloatingPlayPause';
 import { Road } from './Road';
-
-/**
- * Interface modes
- *  - clicking on blank space creates a node
- *  - clicking on node selects node
- *  - clicking on edge selects edge
- *
- *  - on node select:
- *      - clicking on another node draws an edge
- *      - clicking on blank space or edge deselects node
- *      - offer to delete node
- */
 
 export function Canvas() {
   const selector = useSelector();
@@ -37,19 +24,12 @@ export function Canvas() {
   const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
-  const connections = Object.values(network.connections);
-  const vType = Object.values(network.vType);
-  const route = Object.values(network.route);
-  const flow = Object.values(network.flow);
 
   const { subscribe, publish, isConnected, deactivate } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
-  useEffect(() => {
-    return deactivate;
-  }, []);
-
+  // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       const isCommandDelete = (e.metaKey || e.ctrlKey) && e.key === 'Backspace';
@@ -76,6 +56,7 @@ export function Canvas() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [selector, network]);
 
+  // Streaming of simulation data
   useEffect(() => {
     if (isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
@@ -94,52 +75,66 @@ export function Canvas() {
     }
   }, [isPlaying]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return deactivate;
+  }, []);
+
+  function onNodeClick(event: KonvaEventObject<MouseEvent>, nodeId: string) {
+    event.cancelBubble = true;
+
+    // if nothing is selected, then select this node
+    if (selector.selected === null) {
+      selector.select(nodeId);
+    }
+    // if this node is selected, then deselect this node
+    else if (selector.selected === nodeId) {
+      selector.deselect();
+    }
+    // if another node is selected, then draw an edge
+    else if (selector.selected !== nodeId && network.nodes[selector.selected]) {
+      network.drawEdge(network.nodes[selector.selected], network.nodes[nodeId]);
+      selector.deselect();
+    } else {
+      selector.select(nodeId);
+    }
+  }
+
+  function onStageClick(event: KonvaEventObject<MouseEvent>) {
+    event.cancelBubble = true;
+
+    const point = { x: event.evt.clientX, y: event.evt.clientY };
+
+    const conflict = nodes.find(node => {
+      const distance = Math.sqrt(
+        (node.x - point.x) ** 2 + (node.y - point.y) ** 2,
+      );
+
+      return distance < 32;
+    });
+
+    if (conflict === undefined) {
+      const newNode = {
+        id: v4(),
+        x: point.x,
+        y: point.y,
+        type: 'priority',
+      };
+      network.addNode(newNode);
+      // if another node is selected, then draw an edge
+      if (selector.selected !== null && network.nodes[selector.selected]) {
+        network.drawEdge(network.nodes[selector.selected], newNode);
+        selector.deselect();
+      }
+    }
+  }
+
   return (
     <div className="h-screen w-screen items-center justify-center flex">
-      <FloatingPlayPause
-        nodes={nodes}
-        edges={edges}
-        connections={connections}
-        vType={vType}
-        route={route}
-        flow={flow}
-      />
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
-        onClick={(event: KonvaEventObject<MouseEvent>) => {
-          const point = { x: event.evt.clientX, y: event.evt.clientY };
-
-          // add new node when
-          // 1. there is nothing selected; AND
-          // 2. there is no node at the clicked point 32 euclidean distance
-
-          const conflict = nodes.find(node => {
-            const distance = Math.sqrt(
-              (node.x - point.x) ** 2 + (node.y - point.y) ** 2,
-            );
-
-            return distance < 32;
-          });
-
-          if (conflict === undefined) {
-            const newNode = {
-              id: v4(),
-              x: point.x,
-              y: point.y,
-              type: 'priority',
-            };
-            network.addNode(newNode);
-            // if another node is selected, then draw an edge
-            if (
-              selector.selected !== null &&
-              network.nodes[selector.selected]
-            ) {
-              network.drawEdge(network.nodes[selector.selected], newNode);
-              selector.deselect();
-            }
-          }
-        }}
+        onClick={onStageClick}
       >
         <Layer>
           {nodes.map((node, index) => {
@@ -151,28 +146,8 @@ export function Canvas() {
                 fill={node.id === selector.selected ? 'blue' : 'red'}
                 width={32}
                 height={32}
-                onClick={() => {
-                  // if nothing is selected, then select this node
-                  if (selector.selected === null) {
-                    selector.select(node.id);
-                  }
-                  // if this node is selected, then deselect this node
-                  else if (selector.selected === node.id) {
-                    selector.deselect();
-                  }
-                  // if another node is selected, then draw an edge
-                  else if (
-                    selector.selected !== node.id &&
-                    network.nodes[selector.selected]
-                  ) {
-                    network.drawEdge(
-                      network.nodes[selector.selected],
-                      network.nodes[node.id],
-                    );
-                    selector.deselect();
-                  } else {
-                    selector.select(node.id);
-                  }
+                onClick={e => {
+                  onNodeClick(e, node.id);
                 }}
               />
             );
