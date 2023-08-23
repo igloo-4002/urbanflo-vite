@@ -1,4 +1,5 @@
 import { Canvas } from './components/Canvas';
+import FloatingPlayPause from './components/FloatingPlayPause';
 import { LeftSideBar } from './components/SideBar';
 
 export default function App() {
@@ -6,6 +7,7 @@ export default function App() {
     <>
       <Canvas />
       <LeftSideBar />
+      <FloatingPlayPause />
     </>
   );
 }

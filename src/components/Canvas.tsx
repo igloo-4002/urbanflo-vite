@@ -15,8 +15,6 @@ import {
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
-
-import FloatingPlayPause from './FloatingPlayPause';
 import { Road } from './Road';
 
 /**
@@ -37,10 +35,6 @@ export function Canvas() {
   const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
-  const connections = Object.values(network.connections);
-  const vType = Object.values(network.vType);
-  const route = Object.values(network.route);
-  const flow = Object.values(network.flow);
 
   const { subscribe, publish, isConnected, deactivate } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
@@ -96,14 +90,6 @@ export function Canvas() {
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
-      <FloatingPlayPause
-        nodes={nodes}
-        edges={edges}
-        connections={connections}
-        vType={vType}
-        route={route}
-        flow={flow}
-      />
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
