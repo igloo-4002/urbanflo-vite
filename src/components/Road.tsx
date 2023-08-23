@@ -1,58 +1,82 @@
-import { useEffect, useState } from 'react';
-import { Image } from 'react-konva';
+import { Arrow, Group } from 'react-konva';
 
+import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
-import { Edge, useNetworkStore } from '../zustand/useNetworkStore';
-
-type RoadProps = Edge;
-
-// https://chat.openai.com/c/1adcf0c5-0efc-4f2f-8536-8b653aa1acc8
-const roadSvgString = `<svg width="400" height="100" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="35" width="400" height="30" fill="grey" />
-<line x1="0" y1="50" x2="400" y2="50" stroke="white" stroke-width="2" stroke-dasharray="10,10"/>
-</svg>`;
-
-function loadSvgStringAsImage(
-  svgString: string,
-  callback: (image: HTMLImageElement) => void,
-): void {
-  const img = new window.Image();
-  const blob = new Blob([svgString], { type: 'image/svg+xml' });
-  const url = URL.createObjectURL(blob);
-
-  img.onload = function () {
-    callback(img);
-    URL.revokeObjectURL(url);
-  };
-
-  img.src = url;
+interface RoadProps {
+  edge: Edge;
 }
 
-export function Road(props: RoadProps) {
-  const [roadImage, setRoadImage] = useState<HTMLImageElement | null>(null);
-
+export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
-  const from = network.nodes[props.from];
-  const to = network.nodes[props.to];
+  const isSelected = selector.selected === edge.id;
 
-  useEffect(() => {
-    loadSvgStringAsImage(roadSvgString, image => {
-      setRoadImage(image);
-    });
-  }, []);
+  const from = network.nodes[edge.from];
+  const to = network.nodes[edge.to];
+
+  const roadColor = 'grey';
+  const laneWidth = 25;
+  const centerlineColor = 'white';
+  const highlightColor = '#FFAE42';
 
   function handleRoadClick() {
-    if (selector.selected !== props.id) {
-      selector.select(props.id);
-    } else if (selector.selected === props.id) {
+    if (selector.selected !== edge.id) {
+      selector.select(edge.id);
+    } else if (selector.selected === edge.id) {
       selector.deselect();
     }
   }
 
+  const commonProps = {
+    points: [0, 0, to.x - from.x, to.y - from.y],
+    pointerLength: 0,
+    pointerWidth: 0,
+    zIndex: -1,
+  };
+
   return (
-    <>{roadImage && <Image image={roadImage} onClick={handleRoadClick} />}</>
+    <Group onClick={handleRoadClick}>
+      {/* Highlight for selected road */}
+      <Arrow
+        key={`road-${edge.id}`}
+        x={from.x}
+        y={from.y}
+        stroke={isSelected ? highlightColor : 'transparent'}
+        strokeWidth={laneWidth * edge.numLanes + 8}
+        {...commonProps}
+      />
+
+      {/* Grey Road */}
+      <Arrow
+        key={`road-${edge.id}`}
+        x={from.x}
+        y={from.y}
+        fill={roadColor}
+        stroke={roadColor}
+        strokeWidth={laneWidth * edge.numLanes}
+        {...commonProps}
+      />
+
+      {/* Lanes */}
+      {Array.from({ length: edge.numLanes - 1 }).map((_, index) => {
+        const yOffset =
+          (index + 0.5) * laneWidth - (edge.numLanes - 1) * (laneWidth / 2);
+
+        return (
+          <Arrow
+            key={`centerline-${edge.id}-${index}`}
+            x={from.x}
+            y={from.y + yOffset}
+            dash={[10, 10]}
+            fill="transparent"
+            stroke={centerlineColor}
+            strokeWidth={2}
+            {...commonProps}
+          />
+        );
+      })}
+    </Group>
   );
 }
