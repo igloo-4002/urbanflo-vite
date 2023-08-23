@@ -1,5 +1,6 @@
-import { KonvaEventObject } from 'konva/lib/Node';
 import { Arrow, Group } from 'react-konva';
+
+import { KonvaEventObject } from 'konva/lib/Node';
 
 import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
