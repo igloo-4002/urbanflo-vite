@@ -97,10 +97,6 @@ export function Canvas() {
         onClick={(event: KonvaEventObject<MouseEvent>) => {
           const point = { x: event.evt.clientX, y: event.evt.clientY };
 
-          // add new node when
-          // 1. there is nothing selected; AND
-          // 2. there is no node at the clicked point 32 euclidean distance
-
           const conflict = nodes.find(node => {
             const distance = Math.sqrt(
               (node.x - point.x) ** 2 + (node.y - point.y) ** 2,
