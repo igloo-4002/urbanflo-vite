@@ -81,26 +81,6 @@ export function Canvas() {
     return deactivate;
   }, []);
 
-  function onNodeClick(event: KonvaEventObject<MouseEvent>, nodeId: string) {
-    event.cancelBubble = true;
-
-    // if nothing is selected, then select this node
-    if (selector.selected === null) {
-      selector.select(nodeId);
-    }
-    // if this node is selected, then deselect this node
-    else if (selector.selected === nodeId) {
-      selector.deselect();
-    }
-    // if another node is selected, then draw an edge
-    else if (selector.selected !== nodeId && network.nodes[selector.selected]) {
-      network.drawEdge(network.nodes[selector.selected], network.nodes[nodeId]);
-      selector.deselect();
-    } else {
-      selector.select(nodeId);
-    }
-  }
-
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
