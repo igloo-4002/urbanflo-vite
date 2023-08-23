@@ -91,6 +91,12 @@ export function Canvas() {
     }
   }, [isPlaying]);
 
+  /**
+   * connections: create a connection if the 'to' of edge 1 is the 'from' of edge 2
+   * route: create a route for a connection; route.length === connection.length
+   * flow: create a flow for a route; route.length === flow.length
+   */
+
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <FloatingPlayPause
