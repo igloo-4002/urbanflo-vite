@@ -1,38 +1,20 @@
-import {
-  Connection,
-  Edge,
-  Flow,
-  Node,
-  Route,
-  VType,
-} from '~/zustand/useNetworkStore';
+import { BASE_URL } from '~/simulation-urls';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 
-const FloatingPlayPause = ({
-  nodes,
-  edges,
-  connections,
-  vType,
-  route,
-  flow,
-}: {
-  nodes: Node[];
-  edges: Edge[];
-  connections: Connection[];
-  vType: VType[];
-  route: Route[];
-  flow: Flow[];
-}) => {
+const FloatingPlayPause = () => {
+  const network = useNetworkStore();
+
   const handleUpload = async () => {
     const requestBody = {
-      nodes,
-      edges,
-      connections,
-      vType,
-      route,
-      flow,
+      nodes: Object.values(network.nodes),
+      edges: Object.values(network.edges),
+      connections: Object.values(network.connections),
+      vType: Object.values(network.vType),
+      route: Object.values(network.route),
+      flow: Object.values(network.flow),
     };
 
-    const response = await fetch('http://localhost:8080/simulation', {
+    const response = await fetch(`${BASE_URL}/simulation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
