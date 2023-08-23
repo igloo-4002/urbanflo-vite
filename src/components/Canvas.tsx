@@ -29,10 +29,7 @@ export function Canvas() {
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
-  useEffect(() => {
-    return deactivate;
-  }, []);
-
+  // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       const isCommandDelete = (e.metaKey || e.ctrlKey) && e.key === 'Backspace';
@@ -59,6 +56,7 @@ export function Canvas() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [selector, network]);
 
+  // Streaming of simulation data
   useEffect(() => {
     if (isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
@@ -76,6 +74,11 @@ export function Canvas() {
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
     }
   }, [isPlaying]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return deactivate;
+  }, []);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
