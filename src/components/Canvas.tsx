@@ -1,19 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { Circle, Layer, Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
 
-import { useSimulation } from '../hooks/useSimulation';
+import { useSimulation } from '~/hooks/useSimulation';
 import {
   SIMULATION_DATA_TOPIC,
   SIMULATION_DESTINATION_PATH,
   SIMULATION_ERROR_TOPIC,
   SIMULATION_SOCKET_URL,
-} from '../simulation-urls';
-import { useNetworkStore } from '../zustand/useNetworkStore';
-import { usePlaying } from '../zustand/usePlaying';
-import { useSelector } from '../zustand/useSelected';
+} from '~/simulation-urls';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
+import { usePlaying } from '~/zustand/usePlaying';
+import { useSelector } from '~/zustand/useSelected';
+
+import FloatingPlayPause from './FloatingPlayPause';
 import { Road } from './Road';
 
 /**
@@ -31,13 +34,21 @@ import { Road } from './Road';
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const playing = usePlaying();
+  const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
+  const connections = Object.values(network.connections);
+  const vType = Object.values(network.vType);
+  const route = Object.values(network.route);
+  const flow = Object.values(network.flow);
 
   const { subscribe, publish, isConnected, deactivate } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
+
+  useEffect(() => {
+    return deactivate;
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -66,7 +77,7 @@ export function Canvas() {
   }, [selector, network]);
 
   useEffect(() => {
-    if (playing.isPlaying && isConnected) {
+    if (isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
 
       subscribe(SIMULATION_DATA_TOPIC, message => {
@@ -77,19 +88,22 @@ export function Canvas() {
       });
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
-    } else if (!playing.isPlaying && isConnected) {
+    } else if (!isPlaying && isConnected) {
       console.warn('Unsubscribing from simulation data');
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
     }
-
-    return () => {
-      deactivate();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing.isPlaying]);
+  }, [isPlaying]);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
+      <FloatingPlayPause
+        nodes={nodes}
+        edges={edges}
+        connections={connections}
+        vType={vType}
+        route={route}
+        flow={flow}
+      />
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
