@@ -3,8 +3,14 @@ import { Group, Rect } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
-import { Node, useNetworkStore } from '~/zustand/useNetworkStore';
+import {
+  Node,
+  getAllEdgeIdsForNode,
+  useNetworkStore,
+} from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
+
+import { laneWidth } from './Road';
 
 interface IntersectionProps {
   node: Node;
@@ -15,7 +21,7 @@ export function Intersection({ node }: IntersectionProps) {
   const selector = useSelector();
 
   const isSelected = selector.selected === node.id;
-  const size = 50;
+  const baseIntersectionSize = 25;
 
   function handleIntersectionClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
@@ -42,6 +48,17 @@ export function Intersection({ node }: IntersectionProps) {
       selector.select(node.id);
     }
   }
+
+  const edgeIds = getAllEdgeIdsForNode(node.id, network.edges);
+
+  // Compute total width based on maximum number of lanes from all edges
+  let intersectionSize = 0;
+  for (const edgeId of edgeIds) {
+    const edge = network.edges[edgeId];
+    intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
+  }
+
+  const size = edgeIds.length === 0 ? baseIntersectionSize : intersectionSize;
 
   return (
     <Group onClick={handleIntersectionClick}>
