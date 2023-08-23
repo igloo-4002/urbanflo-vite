@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
-import { Arrow, Circle, Layer, Stage } from 'react-konva';
+import { Circle, Layer, Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
@@ -17,6 +17,7 @@ import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 
 import FloatingPlayPause from './FloatingPlayPause';
+import { Road } from './Road';
 
 /**
  * Interface modes
@@ -179,29 +180,7 @@ export function Canvas() {
         </Layer>
         <Layer>
           {edges.map((edge, index) => {
-            const from = network.nodes[edge.from];
-            const to = network.nodes[edge.to];
-
-            return (
-              <Arrow
-                key={index}
-                x={from.x}
-                y={from.y}
-                points={[0, 0, to.x - from.x, to.y - from.y]}
-                pointerLength={10}
-                pointerWidth={10}
-                fill={edge.id === selector.selected ? 'green' : 'black'}
-                stroke={edge.id === selector.selected ? 'green' : 'black'}
-                strokeWidth={2}
-                onClick={() => {
-                  if (selector.selected !== edge.id) {
-                    selector.select(edge.id);
-                  } else if (selector.selected === edge.id) {
-                    selector.deselect();
-                  }
-                }}
-              />
-            );
+            return <Road edge={edge} key={index} />;
           })}
         </Layer>
       </Stage>
