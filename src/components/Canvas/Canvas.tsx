@@ -17,7 +17,6 @@ import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
 
-import { GridLayer } from './Layers/GridLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
 
@@ -160,7 +159,6 @@ export function Canvas() {
         setScale({ x: newScale, y: newScale });
       }}
     >
-      <GridLayer />
       <RoadsLayer />
       <IntersectionsLayer />
     </Stage>
