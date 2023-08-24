@@ -99,6 +99,14 @@ export function Canvas() {
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
+      <button
+        className="absolute top-0 h-12 w-1/3 text-xl border border-black m-2 z-10 rounded-full"
+        onClick={() =>
+          console.log({ nodes, edges, connections, route, flow, vType })
+        }
+      >
+        print network
+      </button>
       <FloatingPlayPause
         network={{ nodes, edges, connections, vType, route, flow }}
       />
@@ -122,7 +130,7 @@ export function Canvas() {
 
           if (conflict === undefined) {
             const newNode = {
-              id: v4(),
+              id: v4().slice(-2),
               x: point.x,
               y: point.y,
               type: 'priority',
@@ -152,6 +160,7 @@ export function Canvas() {
                 onClick={() => {
                   // if nothing is selected, then select this node
                   if (selector.selected === null) {
+                    console.log('selected node', node.id);
                     selector.select(node.id);
                   }
                   // if this node is selected, then deselect this node
@@ -163,6 +172,12 @@ export function Canvas() {
                     selector.selected !== node.id &&
                     network.nodes[selector.selected]
                   ) {
+                    console.log(
+                      'drawing edge from',
+                      selector.selected,
+                      'to',
+                      node.id,
+                    );
                     network.drawEdge(
                       network.nodes[selector.selected],
                       network.nodes[node.id],

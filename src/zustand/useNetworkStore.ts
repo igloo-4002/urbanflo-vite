@@ -66,6 +66,7 @@ export type Network = {
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
   addConnection: (from: Edge, to: Edge) => void;
+  updateFlow: (flowId: string, flow: Flow) => void;
 };
 
 export const useNetworkStore = create<Network>(set => ({
@@ -97,25 +98,43 @@ export const useNetworkStore = create<Network>(set => ({
         return state;
       } else {
         const connectionPossible = Object.values(state.edges).find(
-          e => e.to === newEdge.from,
+          e => e.to === newEdge.from || e.from === newEdge.to,
         );
 
-        if (connectionPossible) {
+        if (!connectionPossible) {
+          return { edges: { ...state.edges, [newEdgeId]: newEdge } };
+        } else {
+          let connectionFrom: string;
+          let connectionTo: string;
+
+          // if edge.to === newEdge.from then put edge.to in the from for the connection
+          // if edge.from === newEdge.to then put edge.to in the to for the connection
+          if (connectionPossible.to === newEdge.from) {
+            connectionFrom = connectionPossible.id;
+            connectionTo = newEdge.id;
+          } else if (connectionPossible.from === newEdge.to) {
+            connectionFrom = newEdge.id;
+            connectionTo = connectionPossible.id;
+          } else {
+            // should never get here if connectionPossible is true
+            return { edges: { ...state.edges, [newEdgeId]: newEdge } };
+          }
+
           const newConnection: Connection = {
-            from: newEdge.to,
-            to: newEdge.from,
+            from: connectionFrom,
+            to: connectionTo,
             fromLane: 0,
             toLane: 0,
           };
 
-          const newRouteId = `${newEdge.to}_${newEdge.from}`;
+          const newRouteId = createRouteId(connectionFrom, connectionTo);
           const newRoute: Route = {
             id: newRouteId,
-            edges: `${newEdge.to} ${newEdge.from}`,
+            edges: `${connectionFrom} ${connectionTo}`,
           };
 
-          const newFlowId = `flow_${newEdge.to}${newEdge.from}`;
-          const flow: Flow = {
+          const newFlowId = `flow_${connectionFrom}${connectionTo}`;
+          const newFlow: Flow = {
             id: newFlowId,
             type: 'car',
             route: newRoute.id,
@@ -132,10 +151,8 @@ export const useNetworkStore = create<Network>(set => ({
               [`${newConnection.from}_${newConnection.to}`]: newConnection,
             },
             route: { ...state.route, [newRouteId]: newRoute },
-            flow: { ...state.flow, [newFlowId]: flow },
+            flow: { ...state.flow, [newFlowId]: newFlow },
           };
-        } else {
-          return { edges: { ...state.edges, [newEdgeId]: newEdge } };
         }
       }
     }),
@@ -249,6 +266,8 @@ export const useNetworkStore = create<Network>(set => ({
         },
       },
     })),
+  updateFlow: (flowId, flow) =>
+    set(state => ({ flow: { ...state.flow, [flowId]: flow } })),
 }));
 
 /**
@@ -334,4 +353,11 @@ function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
 
 function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
+}
+
+function createRouteId(from: string, to: string) {
+  const part1 = from.split('_');
+  const part2 = to.split('_');
+
+  return `${part1[0]}_to_${part2[1]}`;
 }
