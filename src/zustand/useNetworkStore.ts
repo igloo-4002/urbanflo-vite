@@ -97,63 +97,69 @@ export const useNetworkStore = create<Network>(set => ({
       if (edgeDoesIntersect(state, pointA, pointB)) {
         return state;
       } else {
-        const connectionPossible = Object.values(state.edges).find(
+        const possibleConnections = Object.values(state.edges).filter(
           e => e.to === newEdge.from || e.from === newEdge.to,
         );
 
-        if (!connectionPossible) {
-          return { edges: { ...state.edges, [newEdgeId]: newEdge } };
-        } else {
+        const newConnections = { ...state.connections };
+        const newRoutes = { ...state.route };
+        const newFlows = { ...state.flow };
+
+        /**
+         * connections: create a connection if the 'to' of edge 1 is the 'from' of edge 2
+         * route: create a route for a connection; route.length === connection.length
+         * flow: create a flow for a route; route.length === flow.length
+         */
+        for (const possibleConnection of possibleConnections) {
           let connectionFrom: string;
           let connectionTo: string;
 
           // if edge.to === newEdge.from then put edge.to in the from for the connection
           // if edge.from === newEdge.to then put edge.to in the to for the connection
-          if (connectionPossible.to === newEdge.from) {
-            connectionFrom = connectionPossible.id;
+          if (possibleConnection.to === newEdge.from) {
+            connectionFrom = possibleConnection.id;
             connectionTo = newEdge.id;
-          } else if (connectionPossible.from === newEdge.to) {
+          } else if (possibleConnection.from === newEdge.to) {
             connectionFrom = newEdge.id;
-            connectionTo = connectionPossible.id;
+            connectionTo = possibleConnection.id;
           } else {
-            // should never get here if connectionPossible is true
-            return { edges: { ...state.edges, [newEdgeId]: newEdge } };
+            continue;
           }
 
-          const newConnection: Connection = {
-            from: connectionFrom,
-            to: connectionTo,
-            fromLane: 0,
-            toLane: 0,
-          };
+          const connectionKey = `${connectionFrom}_${connectionTo}`;
+          if (!newConnections[connectionKey]) {
+            newConnections[connectionKey] = {
+              from: connectionFrom,
+              to: connectionTo,
+              fromLane: 0,
+              toLane: 0,
+            };
 
-          const newRouteId = createRouteId(connectionFrom, connectionTo);
-          const newRoute: Route = {
-            id: newRouteId,
-            edges: `${connectionFrom} ${connectionTo}`,
-          };
+            const newRouteId = createRouteId(connectionFrom, connectionTo);
+            newRoutes[newRouteId] = {
+              id: newRouteId,
+              edges: `${connectionFrom} ${connectionTo}`,
+            };
 
-          const newFlowId = `flow_${connectionFrom}${connectionTo}`;
-          const newFlow: Flow = {
-            id: newFlowId,
-            type: 'car',
-            route: newRoute.id,
-            begin: 0,
-            end: 86400,
-            period: 1,
-            vehsPerHour: 3600,
-          };
-
-          return {
-            edges: { ...state.edges, [newEdgeId]: newEdge },
-            connections: {
-              ...state.connections,
-              [`${newConnection.from}_${newConnection.to}`]: newConnection,
-            },
-            route: { ...state.route, [newRouteId]: newRoute },
-            flow: { ...state.flow, [newFlowId]: newFlow },
-          };
+            const newFlowId = `flow_${connectionFrom}${connectionTo}`;
+            newFlows[newFlowId] = {
+              id: newFlowId,
+              type: 'car',
+              route: newRouteId,
+              begin: 0,
+              end: 86400,
+              period: 1,
+              vehsPerHour: 3600,
+            };
+          }
         }
+
+        return {
+          edges: { ...state.edges, [newEdgeId]: newEdge },
+          connections: newConnections,
+          flow: newFlows,
+          route: newRoutes,
+        };
       }
     }),
   updateEdge: (edgeId, edge) => {

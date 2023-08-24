@@ -91,12 +91,6 @@ export function Canvas() {
     }
   }, [isPlaying]);
 
-  /**
-   * connections: create a connection if the 'to' of edge 1 is the 'from' of edge 2
-   * route: create a route for a connection; route.length === connection.length
-   * flow: create a flow for a route; route.length === flow.length
-   */
-
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <button
@@ -160,7 +154,6 @@ export function Canvas() {
                 onClick={() => {
                   // if nothing is selected, then select this node
                   if (selector.selected === null) {
-                    console.log('selected node', node.id);
                     selector.select(node.id);
                   }
                   // if this node is selected, then deselect this node
@@ -172,12 +165,6 @@ export function Canvas() {
                     selector.selected !== node.id &&
                     network.nodes[selector.selected]
                   ) {
-                    console.log(
-                      'drawing edge from',
-                      selector.selected,
-                      'to',
-                      node.id,
-                    );
                     network.drawEdge(
                       network.nodes[selector.selected],
                       network.nodes[node.id],
