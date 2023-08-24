@@ -115,57 +115,53 @@ export function Canvas() {
   const { position, ref: stageRef, setPosition, setScale } = useStageState();
 
   return (
-    <div className="h-screen w-screen items-center justify-center flex">
-      <Stage
-        ref={stageRef}
-        x={position.x}
-        y={position.y}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        onClick={onStageClick}
-        draggable
-        onWheel={e => {
-          // Prevent default to disable natural scrolling
-          e.evt.preventDefault();
+    <Stage
+      ref={stageRef}
+      x={position.x}
+      y={position.y}
+      width={window.innerWidth}
+      height={window.innerHeight}
+      onClick={onStageClick}
+      draggable
+      onWheel={e => {
+        // Prevent default to disable natural scrolling
+        e.evt.preventDefault();
 
-          const MIN_SCALE = 2;
-          const MAX_SCALE = 1 / MIN_SCALE;
-          const SCALE_FACTOR = 1.05;
+        const MIN_SCALE = 2;
+        const MAX_SCALE = 1 / MIN_SCALE;
+        const SCALE_FACTOR = 1.05;
 
-          // Determine the scale change based on the wheel event delta
-          const oldScale = e.currentTarget.scaleX();
-          const newScale =
-            e.evt.deltaY < 0
-              ? oldScale * SCALE_FACTOR
-              : oldScale / SCALE_FACTOR;
+        // Determine the scale change based on the wheel event delta
+        const oldScale = e.currentTarget.scaleX();
+        const newScale =
+          e.evt.deltaY < 0 ? oldScale * SCALE_FACTOR : oldScale / SCALE_FACTOR;
 
-          // Prevent zooming out too far
-          if (newScale < MAX_SCALE || newScale > MIN_SCALE) {
-            return;
-          }
+        // Prevent zooming out too far
+        if (newScale < MAX_SCALE || newScale > MIN_SCALE) {
+          return;
+        }
 
-          // const pointer = e.currentTarget.getPointerPosition();
-          const pointer = { x: e.evt.clientX, y: e.evt.clientY };
+        // const pointer = e.currentTarget.getPointerPosition();
+        const pointer = { x: e.evt.clientX, y: e.evt.clientY };
 
-          // Calculate new position to center the zooming around the cursor
-          const mx = pointer.x / oldScale - e.currentTarget.x() / oldScale;
-          const my = pointer.y / oldScale - e.currentTarget.y() / oldScale;
+        // Calculate new position to center the zooming around the cursor
+        const mx = pointer.x / oldScale - e.currentTarget.x() / oldScale;
+        const my = pointer.y / oldScale - e.currentTarget.y() / oldScale;
 
-          const newX = -(mx - pointer.x / newScale) * newScale;
-          const newY = -(my - pointer.y / newScale) * newScale;
+        const newX = -(mx - pointer.x / newScale) * newScale;
+        const newY = -(my - pointer.y / newScale) * newScale;
 
-          e.currentTarget.scale({ x: newScale, y: newScale });
-          e.currentTarget.position({ x: newX, y: newY });
-          setScale({ x: newScale, y: newScale });
-        }}
-        onDragMove={e => {
-          setPosition(e.currentTarget.position());
-        }}
-      >
-        <GridLayer />
-        <RoadsLayer />
-        <IntersectionsLayer />
-      </Stage>
-    </div>
+        e.currentTarget.scale({ x: newScale, y: newScale });
+        e.currentTarget.position({ x: newX, y: newY });
+        setScale({ x: newScale, y: newScale });
+      }}
+      onDragMove={e => {
+        setPosition(e.currentTarget.position());
+      }}
+    >
+      <GridLayer />
+      <RoadsLayer />
+      <IntersectionsLayer />
+    </Stage>
   );
 }
