@@ -124,7 +124,7 @@ export function Canvas() {
 
           if (conflict === undefined) {
             const newNode = {
-              id: v4().slice(-2),
+              id: v4(),
               x: point.x,
               y: point.y,
               type: 'priority',
@@ -154,6 +154,7 @@ export function Canvas() {
                 onClick={() => {
                   // if nothing is selected, then select this node
                   if (selector.selected === null) {
+                    console.log('selected node', node.id);
                     selector.select(node.id);
                   }
                   // if this node is selected, then deselect this node

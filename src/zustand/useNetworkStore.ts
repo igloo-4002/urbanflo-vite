@@ -180,40 +180,40 @@ export const useNetworkStore = create<Network>(set => ({
       const newEdges = { ...state.edges };
       const edgesToDelete: string[] = [];
       for (const edgeId in newEdges) {
-        const edge = state.edges[edgeId];
+        const edge = newEdges[edgeId];
         if (edge.from === id || edge.to === id) {
           edgesToDelete.push(edgeId);
-          delete state.edges[edgeId];
+          delete newEdges[edgeId];
         }
       }
 
       const newConnections = { ...state.connections };
+      const connectionsToDelete: string[] = [];
       for (const connectionId in newConnections) {
         const connection = newConnections[connectionId];
         if (
           edgesToDelete.includes(connection.from) ||
           edgesToDelete.includes(connection.to)
         ) {
+          connectionsToDelete.push(connectionId);
           delete newConnections[connectionId];
         }
       }
 
       const newRoutes = { ...state.route };
       for (const routeId in newRoutes) {
-        const route = state.route[routeId];
-        for (const edgeId of edgesToDelete) {
-          if (route.edges.includes(edgeId)) {
-            delete state.route[routeId];
-            break;
-          }
+        const route = newRoutes[routeId];
+        const routeEdges = route.edges.split(' ');
+        if (routeEdges.some(edge => edgesToDelete.includes(edge))) {
+          delete newRoutes[routeId];
         }
       }
 
-      const newFlows = { ...state.flow };
-      for (const flowId in newFlows) {
-        const flow = newFlows[flowId];
+      const newFlow = { ...state.flow };
+      for (const flowId in newFlow) {
+        const flow = newFlow[flowId];
         if (!newRoutes[flow.route]) {
-          delete newFlows[flowId];
+          delete newFlow[flowId];
         }
       }
 
@@ -221,7 +221,7 @@ export const useNetworkStore = create<Network>(set => ({
         nodes: newNodes,
         route: newRoutes,
         connections: newConnections,
-        flow: newFlows,
+        flow: newFlow,
         edges: newEdges,
       };
     });
