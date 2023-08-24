@@ -85,7 +85,8 @@ export function Canvas() {
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
-    const point = { x: event.evt.clientX, y: event.evt.clientY };
+    // const point = stageRef.current?.getPointerPosition() ?? { x: 0, y: 0 };
+    const point = event.currentTarget.getRelativePointerPosition();
 
     const conflict = nodes.find(node => {
       const distance = Math.sqrt(
@@ -123,6 +124,9 @@ export function Canvas() {
       height={window.innerHeight}
       onClick={onStageClick}
       draggable
+      onDragMove={e => {
+        setPosition(e.currentTarget.position());
+      }}
       onWheel={e => {
         // Prevent default to disable natural scrolling
         e.evt.preventDefault();
@@ -154,9 +158,6 @@ export function Canvas() {
         e.currentTarget.scale({ x: newScale, y: newScale });
         e.currentTarget.position({ x: newX, y: newY });
         setScale({ x: newScale, y: newScale });
-      }}
-      onDragMove={e => {
-        setPosition(e.currentTarget.position());
       }}
     >
       <GridLayer />

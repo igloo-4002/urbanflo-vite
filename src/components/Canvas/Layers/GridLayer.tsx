@@ -1,6 +1,34 @@
 import { Layer, Line } from 'react-konva';
 
-import { useStageState } from '~/zustand/useStage';
+function renderGrid({ width, height }: RenderGridProps) {
+  const sizeX = 100;
+  const sizeY = 100;
+
+  const lines = [];
+  for (let i = 0; i < width; i += sizeX) {
+    lines.push(
+      <Line
+        key={`v${i}`}
+        points={[i, 0, i, height]}
+        stroke="gray"
+        strokeWidth={1}
+      />,
+    );
+  }
+
+  for (let j = 0; j < height; j += sizeY) {
+    lines.push(
+      <Line
+        key={`h${j}`}
+        points={[0, j, width, j]}
+        stroke="gray"
+        strokeWidth={1}
+      />,
+    );
+  }
+
+  return <>{lines}</>;
+}
 
 type RenderGridProps = {
   width: number;
@@ -9,53 +37,6 @@ type RenderGridProps = {
 };
 
 export function GridLayer() {
-  const { position, scale } = useStageState();
-
-  function renderGrid({ width, height, size }: RenderGridProps) {
-    const lines = [];
-
-    const xOffset = position.x % size;
-    const yOffset = position.y % size;
-
-    const adjustedSize = size * scale.x;
-    const strokeWidth = 1 / scale.x;
-    const extraRender = adjustedSize * 5; // you can adjust this to ensure lines are visible further beyond visible area
-
-    // Generate vertical lines
-    for (
-      let i = xOffset - extraRender;
-      i < width + extraRender;
-      i += adjustedSize
-    ) {
-      lines.push(
-        <Line
-          key={`v${i}`}
-          points={[i, -extraRender, i, height + extraRender]}
-          stroke="gray"
-          strokeWidth={strokeWidth}
-        />,
-      );
-    }
-
-    // Generate horizontal lines
-    for (
-      let j = yOffset - extraRender;
-      j < height + extraRender;
-      j += adjustedSize
-    ) {
-      lines.push(
-        <Line
-          key={`h${j}`}
-          points={[-extraRender, j, width + extraRender, j]}
-          stroke="gray"
-          strokeWidth={strokeWidth}
-        />,
-      );
-    }
-
-    return <>{lines}</>;
-  }
-
   return (
     <Layer>
       {renderGrid({
