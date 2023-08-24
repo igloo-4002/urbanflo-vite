@@ -371,3 +371,19 @@ function createRouteId(from: string, to: string) {
 
   return `${part1[0]}_to_${part2[1]}`;
 }
+
+// TODO: Add more data to the store so we can get O(1) retrieval of edges for a node
+export function getAllEdgeIdsForNode(
+  nodeId: string,
+  edges: Record<string, Edge>,
+): string[] {
+  const edgeIds: string[] = [];
+
+  for (const edgeId in edges) {
+    if (edgeId.startsWith(nodeId) || edgeId.endsWith(nodeId)) {
+      edgeIds.push(edgeId);
+    }
+  }
+
+  return edgeIds;
+}
