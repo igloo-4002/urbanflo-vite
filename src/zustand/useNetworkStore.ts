@@ -209,11 +209,11 @@ export const useNetworkStore = create<Network>(set => ({
         }
       }
 
-      const newFlow = { ...state.flow };
-      for (const flowId in newFlow) {
-        const flow = newFlow[flowId];
+      const newFlows = { ...state.flow };
+      for (const flowId in newFlows) {
+        const flow = newFlows[flowId];
         if (!newRoutes[flow.route]) {
-          delete newFlow[flowId];
+          delete newFlows[flowId];
         }
       }
 
@@ -221,7 +221,7 @@ export const useNetworkStore = create<Network>(set => ({
         nodes: newNodes,
         route: newRoutes,
         connections: newConnections,
-        flow: newFlow,
+        flow: newFlows,
         edges: newEdges,
       };
     });
@@ -232,22 +232,26 @@ export const useNetworkStore = create<Network>(set => ({
       delete newEdges[id];
 
       const newConnections = { ...state.connections };
+      const connectionsToDelete: string[] = [];
       for (const [key, connection] of Object.entries(newConnections)) {
         if (connection.from === id || connection.to === id) {
+          connectionsToDelete.push(key);
           delete newConnections[key];
         }
       }
 
       const newRoutes = { ...state.route };
+      const routesToDelete: string[] = [];
       for (const [key, route] of Object.entries(newRoutes)) {
         if (route.edges.includes(id)) {
+          routesToDelete.push(key);
           delete newRoutes[key];
         }
       }
 
       const newFlows = { ...state.flow };
       for (const [key, flow] of Object.entries(newFlows)) {
-        if (flow.route.includes(id)) {
+        if (routesToDelete.includes(flow.route)) {
           delete newFlows[key];
         }
       }
