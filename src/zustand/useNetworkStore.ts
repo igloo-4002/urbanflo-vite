@@ -231,6 +231,7 @@ function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
 }
 
+// TODO: Add more data to the store so we can get O(1) retrieval of edges for a node
 export function getAllEdgeIdsForNode(
   nodeId: string,
   edges: Record<string, Edge>,
