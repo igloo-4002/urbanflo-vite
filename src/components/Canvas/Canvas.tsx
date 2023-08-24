@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -15,6 +15,7 @@ import {
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
+import { useStageState } from '~/zustand/useStage';
 
 import { GridLayer } from './Layers/GridLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
@@ -101,6 +102,7 @@ export function Canvas() {
         y: point.y,
         type: 'priority',
       };
+
       network.addNode(newNode);
       // if another node is selected, then draw an edge
       if (selector.selected !== null && network.nodes[selector.selected]) {
@@ -109,13 +111,15 @@ export function Canvas() {
       }
     }
   }
-  const [stage, setStage] = useState({ x: 0, y: 0 });
+
+  const { position, ref: stageRef, setPosition, setScale } = useStageState();
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <Stage
-        x={stage.x}
-        y={stage.y}
+        ref={stageRef}
+        x={position.x}
+        y={position.y}
         width={window.innerWidth}
         height={window.innerHeight}
         onClick={onStageClick}
@@ -126,12 +130,14 @@ export function Canvas() {
 
           const MIN_SCALE = 2;
           const MAX_SCALE = 1 / MIN_SCALE;
+          const SCALE_FACTOR = 1.05;
 
           // Determine the scale change based on the wheel event delta
-          const scaleBy = 1.05;
           const oldScale = e.currentTarget.scaleX();
           const newScale =
-            e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+            e.evt.deltaY < 0
+              ? oldScale * SCALE_FACTOR
+              : oldScale / SCALE_FACTOR;
 
           // Prevent zooming out too far
           if (newScale < MAX_SCALE || newScale > MIN_SCALE) {
@@ -150,12 +156,13 @@ export function Canvas() {
 
           e.currentTarget.scale({ x: newScale, y: newScale });
           e.currentTarget.position({ x: newX, y: newY });
+          setScale({ x: newScale, y: newScale });
         }}
-        onDragEnd={e => {
-          setStage(e.currentTarget.position());
+        onDragMove={e => {
+          setPosition(e.currentTarget.position());
         }}
       >
-        <GridLayer disabled={false} />
+        <GridLayer />
         <RoadsLayer />
         <IntersectionsLayer />
       </Stage>
