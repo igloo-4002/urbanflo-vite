@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
-import { Layer, Stage } from 'react-konva';
+import { useEffect, useState } from 'react';
+import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
@@ -16,15 +16,15 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 
-import { Intersection } from './Intersection';
-import { Road } from './Road';
+import { GridLayer } from './Layers/GridLayer';
+import { IntersectionsLayer } from './Layers/IntersectionsLayer';
+import { RoadsLayer } from './Layers/RoadsLayer';
 
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
   const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
-  const edges = Object.values(network.edges);
 
   const { subscribe, publish, isConnected, deactivate } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
@@ -109,24 +109,55 @@ export function Canvas() {
       }
     }
   }
+  const [stage, setStage] = useState({ x: 0, y: 0 });
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
       <Stage
+        x={stage.x}
+        y={stage.y}
         width={window.innerWidth}
         height={window.innerHeight}
         onClick={onStageClick}
+        draggable
+        onWheel={e => {
+          // Prevent default to disable natural scrolling
+          e.evt.preventDefault();
+
+          const MIN_SCALE = 2;
+          const MAX_SCALE = 1 / MIN_SCALE;
+
+          // Determine the scale change based on the wheel event delta
+          const scaleBy = 1.05;
+          const oldScale = e.currentTarget.scaleX();
+          const newScale =
+            e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+
+          // Prevent zooming out too far
+          if (newScale < MAX_SCALE || newScale > MIN_SCALE) {
+            return;
+          }
+
+          // const pointer = e.currentTarget.getPointerPosition();
+          const pointer = { x: e.evt.clientX, y: e.evt.clientY };
+
+          // Calculate new position to center the zooming around the cursor
+          const mx = pointer.x / oldScale - e.currentTarget.x() / oldScale;
+          const my = pointer.y / oldScale - e.currentTarget.y() / oldScale;
+
+          const newX = -(mx - pointer.x / newScale) * newScale;
+          const newY = -(my - pointer.y / newScale) * newScale;
+
+          e.currentTarget.scale({ x: newScale, y: newScale });
+          e.currentTarget.position({ x: newX, y: newY });
+        }}
+        onDragEnd={e => {
+          setStage(e.currentTarget.position());
+        }}
       >
-        <Layer>
-          {edges.map((edge, index) => {
-            return <Road edge={edge} key={index} />;
-          })}
-        </Layer>
-        <Layer>
-          {nodes.map((node, index) => {
-            return <Intersection node={node} key={index}></Intersection>;
-          })}
-        </Layer>
+        <GridLayer disabled={false} />
+        <RoadsLayer />
+        <IntersectionsLayer />
       </Stage>
     </div>
   );
