@@ -126,7 +126,7 @@ export const useNetworkStore = create<Network>(set => ({
             continue;
           }
 
-          const connectionKey = `${connectionFrom}_${connectionTo}`;
+          const connectionKey = `${connectionFrom}_${connectionTo}_0_0`;
           if (!newConnections[connectionKey]) {
             newConnections[connectionKey] = {
               from: connectionFrom,
@@ -164,11 +164,80 @@ export const useNetworkStore = create<Network>(set => ({
     }),
   updateEdge: (edgeId, edge) => {
     set(state => {
+      const updatedEdges = {
+        ...state.edges,
+        [edgeId]: edge,
+      };
+
+      const newConnections = { ...state.connections };
+      const newRoutes = { ...state.route };
+      const newFlows = { ...state.flow };
+
+      const affectedConnections = Object.values(updatedEdges).filter(
+        e => e.to === edge.from || e.from === edge.to,
+      );
+
+      for (const connection of affectedConnections) {
+        let connectionFrom: string;
+        let connectionTo: string;
+        let fromNumLanes: number;
+        let toNumLanes: number;
+
+        if (connection.to === edge.from) {
+          connectionFrom = connection.id;
+          connectionTo = edge.id;
+          fromNumLanes = connection.numLanes;
+          toNumLanes = edge.numLanes;
+        } else if (connection.from === edge.to) {
+          connectionFrom = edge.id;
+          connectionTo = connection.id;
+          fromNumLanes = edge.numLanes;
+          toNumLanes = connection.numLanes;
+        } else {
+          continue;
+        }
+
+        for (let fromLane = 0; fromLane < fromNumLanes; fromLane++) {
+          const toLane =
+            fromNumLanes !== toNumLanes
+              ? Math.floor((fromLane * toNumLanes) / fromNumLanes)
+              : fromLane;
+
+          const connectionKey = `${connectionFrom}_${connectionTo}_${fromLane}_${toLane}`;
+
+          if (!newConnections[connectionKey]) {
+            newConnections[connectionKey] = {
+              from: connectionFrom,
+              to: connectionTo,
+              fromLane,
+              toLane,
+            };
+
+            const newRouteId = createRouteId(connectionFrom, connectionTo);
+            newRoutes[newRouteId] = {
+              id: newRouteId,
+              edges: `${connectionFrom} ${connectionTo}`,
+            };
+
+            const newFlowId = `flow_${connectionFrom}${connectionTo}-${fromLane}-${toLane}`;
+            newFlows[newFlowId] = {
+              id: newFlowId,
+              type: 'car',
+              route: newRouteId,
+              begin: 0,
+              end: 86400,
+              period: 1,
+              vehsPerHour: 3600,
+            };
+          }
+        }
+      }
+
       return {
-        edges: {
-          ...state.edges,
-          [edgeId]: edge,
-        },
+        edges: updatedEdges,
+        connections: newConnections,
+        flow: newFlows,
+        route: newRoutes,
       };
     });
   },

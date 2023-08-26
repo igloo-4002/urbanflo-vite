@@ -96,7 +96,7 @@ export function Canvas() {
 
     if (conflict === undefined) {
       const newNode = {
-        id: v4(),
+        id: v4().slice(-2),
         x: point.x,
         y: point.y,
         type: 'priority',
@@ -112,6 +112,12 @@ export function Canvas() {
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
+      <button
+        className="absolute w-1/2 border rounded-full text-xl z-10 top-0 right-0"
+        onClick={() => console.log({ network })}
+      >
+        Print network
+      </button>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
