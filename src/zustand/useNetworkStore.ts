@@ -178,24 +178,22 @@ export const useNetworkStore = create<Network>(set => ({
       delete newNodes[id];
 
       const newEdges = { ...state.edges };
-      const edgesToDelete: string[] = [];
+      const edgesToDelete = new Set<string>();
       for (const edgeId in newEdges) {
         const edge = newEdges[edgeId];
         if (edge.from === id || edge.to === id) {
-          edgesToDelete.push(edgeId);
+          edgesToDelete.add(edgeId);
           delete newEdges[edgeId];
         }
       }
 
       const newConnections = { ...state.connections };
-      const connectionsToDelete: string[] = [];
       for (const connectionId in newConnections) {
         const connection = newConnections[connectionId];
         if (
-          edgesToDelete.includes(connection.from) ||
-          edgesToDelete.includes(connection.to)
+          edgesToDelete.has(connection.from) ||
+          edgesToDelete.has(connection.to)
         ) {
-          connectionsToDelete.push(connectionId);
           delete newConnections[connectionId];
         }
       }
@@ -204,7 +202,7 @@ export const useNetworkStore = create<Network>(set => ({
       for (const routeId in newRoutes) {
         const route = newRoutes[routeId];
         const routeEdges = route.edges.split(' ');
-        if (routeEdges.some(edge => edgesToDelete.includes(edge))) {
+        if (routeEdges.some(edge => edgesToDelete.has(edge))) {
           delete newRoutes[routeId];
         }
       }
@@ -241,17 +239,17 @@ export const useNetworkStore = create<Network>(set => ({
       }
 
       const newRoutes = { ...state.route };
-      const routesToDelete: string[] = [];
+      const routesToDelete = new Set<string>();
       for (const [key, route] of Object.entries(newRoutes)) {
         if (route.edges.includes(id)) {
-          routesToDelete.push(key);
+          routesToDelete.has(key);
           delete newRoutes[key];
         }
       }
 
       const newFlows = { ...state.flow };
       for (const [key, flow] of Object.entries(newFlows)) {
-        if (routesToDelete.includes(flow.route)) {
+        if (routesToDelete.has(flow.route)) {
           delete newFlows[key];
         }
       }
