@@ -97,13 +97,14 @@ export const useNetworkStore = create<Network>(set => ({
       if (edgeDoesIntersect(state, pointA, pointB)) {
         return state;
       } else {
-        const { newConnections, newRoutes, newFlows } = updateNetworkOnDrawEdge(
-          state.edges,
-          state.route,
-          state.connections,
-          state.flow,
-          newEdge,
-        );
+        const { newConnections, newRoutes, newFlows } =
+          updateAssociatesOnNewEdge(
+            state.edges,
+            state.route,
+            state.connections,
+            state.flow,
+            newEdge,
+          );
 
         return {
           edges: { ...state.edges, [newEdgeId]: newEdge },
@@ -155,7 +156,7 @@ export const useNetworkStore = create<Network>(set => ({
             const fromNumLanes = edge.numLanes;
             const toNumLanes = state.edges[connection.to].numLanes;
 
-            connections = updateNetworkOnLaneNum(
+            connections = updateConnectionsOnLaneChange(
               connection.from,
               connection.to,
               fromNumLanes,
@@ -166,7 +167,7 @@ export const useNetworkStore = create<Network>(set => ({
             // create new conneciton with updated toLanes
             const fromNumLanes = state.edges[connection.from].numLanes;
             const toNumLanes = edge.numLanes;
-            connections = updateNetworkOnLaneNum(
+            connections = updateConnectionsOnLaneChange(
               connection.from,
               connection.to,
               fromNumLanes,
@@ -385,10 +386,10 @@ function arePointsEqual(p1: Point, p2: Point) {
 }
 
 function createRouteId(from: string, to: string) {
-  const part1 = from.split('_');
-  const part2 = to.split('_');
+  const source = from.split('_');
+  const sink = to.split('_');
 
-  return `${part1[0]}_to_${part2[1]}`;
+  return `${source[0]}_to_${sink[1]}`;
 }
 
 // TODO: Add more data to the store so we can get O(1) retrieval of edges for a node
@@ -407,7 +408,7 @@ export function getAllEdgeIdsForNode(
   return edgeIds;
 }
 
-function updateNetworkOnDrawEdge(
+function updateAssociatesOnNewEdge(
   edges: Record<string, Edge>,
   routes: Record<string, Route>,
   connections: Record<string, Connection>,
@@ -459,7 +460,7 @@ function updateNetworkOnDrawEdge(
         edges: `${connectionFrom} ${connectionTo}`,
       };
 
-      const newFlowId = `flow_${connectionFrom}${connectionTo}_0_0`;
+      const newFlowId = `flow_${connectionFrom}${connectionTo}`;
       newFlows[newFlowId] = {
         id: newFlowId,
         type: 'car',
@@ -475,7 +476,7 @@ function updateNetworkOnDrawEdge(
   return { newConnections, newRoutes, newFlows };
 }
 
-function updateNetworkOnLaneNum(
+function updateConnectionsOnLaneChange(
   from: string,
   to: string,
   fromNumLanes: number,
