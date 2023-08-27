@@ -121,28 +121,31 @@ export const useNetworkStore = create<Network>(set => ({
         [edgeId]: edge,
       };
 
-      let connections = { ...state.connections };
       const newRoutes = { ...state.route };
       const newFlows = { ...state.flow };
 
       // find all the existing connections which need to be updated
-      const affectedConnections = Object.values(connections).filter(
+      const affectedConnections = Object.values(state.connections).filter(
         c => c.to === edge.id || c.from === edge.id,
       );
 
       // update network if the number of lanes is decreasing
       if (state.edges[edgeId].numLanes > edge.numLanes) {
-        for (const connection of affectedConnections) {
-          // delete connections with outdated lane attributes
-          if (
-            connection.fromLane > edge.numLanes - 1 ||
-            connection.toLane > edge.numLanes - 1
-          ) {
-            delete connections[
-              `${connection.from}_${connection.to}_${connection.fromLane}_${connection.toLane}`
-            ];
-          }
-        }
+        const connections = removeItems(
+          state.connections,
+          c => c.fromLane > edge.numLanes - 1 || c.toLane > edge.numLanes - 1,
+        );
+        // for (const connection of affectedConnections) {
+        //   // delete connections with outdated lane attributes
+        //   if (
+        //     connection.fromLane > edge.numLanes - 1 ||
+        //     connection.toLane > edge.numLanes - 1
+        //   ) {
+        //     delete connections[
+        //       `${connection.from}_${connection.to}_${connection.fromLane}_${connection.toLane}`
+        //     ];
+        //   }
+        // }
 
         return {
           edges: updatedEdges,
@@ -151,6 +154,7 @@ export const useNetworkStore = create<Network>(set => ({
       }
       // update the network if the number of lanes is increasing
       else if (state.edges[edgeId].numLanes < edge.numLanes) {
+        let connections = { ...state.connections };
         for (const connection of affectedConnections) {
           if (connection.from === edge.id) {
             const fromNumLanes = edge.numLanes;
