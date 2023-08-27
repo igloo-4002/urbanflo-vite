@@ -12,6 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@paralleldrive/cuid2": "^2.2.1",
     "@stomp/stompjs": "^7.0.0",
     "classnames": "^2.3.2",
