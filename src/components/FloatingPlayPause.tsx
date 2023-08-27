@@ -31,8 +31,7 @@ const FloatingPlayPause = () => {
 
   return (
     <div
-      className="absolute bottom-4 right-4 items-center justify-center rounded-full flex p-4 z-10"
-      style={{ backgroundColor: 'green' }}
+      className="absolute bottom-4 right-4 items-center justify-center rounded-md flex py-2 px-3 z-10 bg-orange-500"
     >
       <button
         onClick={handleUpload}
