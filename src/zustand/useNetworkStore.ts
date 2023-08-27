@@ -209,33 +209,16 @@ export const useNetworkStore = create<Network>(set => ({
         }
       }
 
-      const newConnections = { ...state.connections };
-      for (const connectionId in newConnections) {
-        const connection = newConnections[connectionId];
-        if (
-          edgesToDelete.has(connection.from) ||
-          edgesToDelete.has(connection.to)
-        ) {
-          delete newConnections[connectionId];
-        }
-      }
+      const newConnections = removeItems(
+        state.connections,
+        c => edgesToDelete.has(c.from) || edgesToDelete.has(c.to),
+      );
 
-      const newRoutes = { ...state.route };
-      for (const routeId in newRoutes) {
-        const route = newRoutes[routeId];
-        const routeEdges = route.edges.split(' ');
-        if (routeEdges.some(edge => edgesToDelete.has(edge))) {
-          delete newRoutes[routeId];
-        }
-      }
+      const newRoutes = removeItems(state.route, r =>
+        r.edges.split(' ').some(edge => edgesToDelete.has(edge)),
+      );
 
-      const newFlows = { ...state.flow };
-      for (const flowId in newFlows) {
-        const flow = newFlows[flowId];
-        if (!newRoutes[flow.route]) {
-          delete newFlows[flowId];
-        }
-      }
+      const newFlows = removeItems(state.flow, f => !newRoutes[f.route]);
 
       return {
         nodes: newNodes,
@@ -251,30 +234,14 @@ export const useNetworkStore = create<Network>(set => ({
       const newEdges = { ...state.edges };
       delete newEdges[id];
 
-      const newConnections = { ...state.connections };
-      const connectionsToDelete: string[] = [];
-      for (const [key, connection] of Object.entries(newConnections)) {
-        if (connection.from === id || connection.to === id) {
-          connectionsToDelete.push(key);
-          delete newConnections[key];
-        }
-      }
+      const newConnections = removeItems(
+        state.connections,
+        c => c.from === id || c.to === id,
+      );
 
-      const newRoutes = { ...state.route };
-      const routesToDelete = new Set<string>();
-      for (const [key, route] of Object.entries(newRoutes)) {
-        if (route.edges.includes(id)) {
-          routesToDelete.has(key);
-          delete newRoutes[key];
-        }
-      }
+      const newRoutes = removeItems(state.route, r => r.edges.includes(id));
 
-      const newFlows = { ...state.flow };
-      for (const [key, flow] of Object.entries(newFlows)) {
-        if (routesToDelete.has(flow.route)) {
-          delete newFlows[key];
-        }
-      }
+      const newFlows = removeItems(state.flow, f => !newRoutes[f.route]);
 
       return {
         edges: newEdges,
@@ -501,4 +468,18 @@ function updateConnectionsOnLaneChange(
   }
 
   return newConnections;
+}
+
+function removeItems<T>(
+  items: { [key: string]: T },
+  condition: (item: T) => boolean,
+) {
+  const newItems = { ...items };
+  for (const key in newItems) {
+    if (condition(newItems[key])) {
+      delete newItems[key];
+    }
+  }
+
+  return newItems;
 }
