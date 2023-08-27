@@ -51,7 +51,6 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     };
 
     stompClient.onDisconnect = () => {
-      console.log('DISCONNECTED');
       setIsConnected(false);
 
       if (reconnectAttempts < MAX_RECONNECT_TRIES) {
