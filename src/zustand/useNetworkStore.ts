@@ -50,6 +50,7 @@ export type Flow = {
   begin: number;
   end: number;
   period: number;
+  // TODO: need to add field in the server
   // vehsPerHour: number;
 };
 
@@ -97,6 +98,7 @@ export const useNetworkStore = create<Network>(set => ({
       if (edgeDoesIntersect(state, pointA, pointB)) {
         return state;
       } else {
+        // update connections, routes, and flows when an edge is being drawn
         const { newConnections, newRoutes, newFlows } =
           updateAssociatesOnNewEdge(
             state.edges,
@@ -129,33 +131,24 @@ export const useNetworkStore = create<Network>(set => ({
         c => c.to === edge.id || c.from === edge.id,
       );
 
-      // update network if the number of lanes is decreasing
+      // update connections if the number of lanes is decreasing
       if (state.edges[edgeId].numLanes > edge.numLanes) {
+        // remove connections with outdated lanes
         const connections = removeItems(
           state.connections,
           c => c.fromLane > edge.numLanes - 1 || c.toLane > edge.numLanes - 1,
         );
-        // for (const connection of affectedConnections) {
-        //   // delete connections with outdated lane attributes
-        //   if (
-        //     connection.fromLane > edge.numLanes - 1 ||
-        //     connection.toLane > edge.numLanes - 1
-        //   ) {
-        //     delete connections[
-        //       `${connection.from}_${connection.to}_${connection.fromLane}_${connection.toLane}`
-        //     ];
-        //   }
-        // }
 
         return {
           edges: updatedEdges,
           connections,
         };
       }
-      // update the network if the number of lanes is increasing
+      // update connections if the number of lanes is increasing
       else if (state.edges[edgeId].numLanes < edge.numLanes) {
         let connections = { ...state.connections };
         for (const connection of affectedConnections) {
+          // if the connection is 'from' the edge being updated
           if (connection.from === edge.id) {
             const fromNumLanes = edge.numLanes;
             const toNumLanes = state.edges[connection.to].numLanes;
@@ -167,8 +160,9 @@ export const useNetworkStore = create<Network>(set => ({
               toNumLanes,
               connections,
             );
-          } else if (connection.to === edge.id) {
-            // create new conneciton with updated toLanes
+          }
+          // if the connection is 'to' the edge being updated
+          else if (connection.to === edge.id) {
             const fromNumLanes = state.edges[connection.from].numLanes;
             const toNumLanes = edge.numLanes;
             connections = updateConnectionsOnLaneChange(
@@ -203,6 +197,7 @@ export const useNetworkStore = create<Network>(set => ({
       const newNodes = { ...state.nodes };
       delete newNodes[id];
 
+      // delete edges with deleted nodes
       const newEdges = { ...state.edges };
       const edgesToDelete = new Set<string>();
       for (const edgeId in newEdges) {
@@ -213,15 +208,18 @@ export const useNetworkStore = create<Network>(set => ({
         }
       }
 
+      // remove connections with deleted edges
       const newConnections = removeItems(
         state.connections,
         c => edgesToDelete.has(c.from) || edgesToDelete.has(c.to),
       );
 
+      // delete routes with deleted edges
       const newRoutes = removeItems(state.route, r =>
         r.edges.split(' ').some(edge => edgesToDelete.has(edge)),
       );
 
+      // delete flows with deleted routes
       const newFlows = removeItems(state.flow, f => !newRoutes[f.route]);
 
       return {
@@ -238,13 +236,16 @@ export const useNetworkStore = create<Network>(set => ({
       const newEdges = { ...state.edges };
       delete newEdges[id];
 
+      // delete connections with deleted edges
       const newConnections = removeItems(
         state.connections,
         c => c.from === id || c.to === id,
       );
 
+      // delete routes with deleted edges
       const newRoutes = removeItems(state.route, r => r.edges.includes(id));
 
+      // delete flows with deleted routes
       const newFlows = removeItems(state.flow, f => !newRoutes[f.route]);
 
       return {
