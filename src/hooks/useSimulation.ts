@@ -83,7 +83,7 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     };
 
     // uncomment this block of code to see the debug messages for the websocket
-    // stompClient.debug = (msg) => {
+    // stompClient.debug = msg => {
     //   console.warn(msg);
     // };
   }, [callback, config, reconnectAttempts]);

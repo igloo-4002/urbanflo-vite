@@ -26,7 +26,7 @@ export function Canvas() {
   const nodes = Object.values(network.nodes);
   const edges = Object.values(network.edges);
 
-  const { subscribe, publish, isConnected, deactivate } = useSimulation({
+  const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
@@ -76,11 +76,6 @@ export function Canvas() {
     }
   }, [isPlaying]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return deactivate;
-  }, []);
-
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
@@ -112,12 +107,6 @@ export function Canvas() {
 
   return (
     <div className="h-screen w-screen items-center justify-center flex">
-      <button
-        className="absolute w-1/2 border rounded-full text-xl z-10 top-0 right-0"
-        onClick={() => console.log({ network })}
-      >
-        Print network
-      </button>
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
