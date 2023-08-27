@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
-import { Layer, Stage } from 'react-konva';
+import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { v4 } from 'uuid';
@@ -15,16 +15,16 @@ import {
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
+import { useStageState } from '~/zustand/useStage';
 
-import { Intersection } from './Intersection';
-import { Road } from './Road';
+import { IntersectionsLayer } from './Layers/IntersectionsLayer';
+import { RoadsLayer } from './Layers/RoadsLayer';
 
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
   const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
-  const edges = Object.values(network.edges);
 
   const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
@@ -79,7 +79,8 @@ export function Canvas() {
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
-    const point = { x: event.evt.clientX, y: event.evt.clientY };
+    // const point = stageRef.current?.getPointerPosition() ?? { x: 0, y: 0 };
+    const point = event.currentTarget.getRelativePointerPosition();
 
     const conflict = nodes.find(node => {
       const distance = Math.sqrt(
@@ -96,6 +97,7 @@ export function Canvas() {
         y: point.y,
         type: 'priority',
       };
+
       network.addNode(newNode);
       // if another node is selected, then draw an edge
       if (selector.selected !== null && network.nodes[selector.selected]) {
@@ -105,24 +107,55 @@ export function Canvas() {
     }
   }
 
+  const { position, ref: stageRef, setPosition, setScale } = useStageState();
+
   return (
-    <div className="h-screen w-screen items-center justify-center flex">
-      <Stage
-        width={window.innerWidth}
-        height={window.innerHeight}
-        onClick={onStageClick}
-      >
-        <Layer>
-          {edges.map((edge, index) => {
-            return <Road edge={edge} key={index} />;
-          })}
-        </Layer>
-        <Layer>
-          {nodes.map((node, index) => {
-            return <Intersection node={node} key={index}></Intersection>;
-          })}
-        </Layer>
-      </Stage>
-    </div>
+    <Stage
+      ref={stageRef}
+      x={position.x}
+      y={position.y}
+      width={window.innerWidth}
+      height={window.innerHeight}
+      onClick={onStageClick}
+      draggable
+      onDragMove={e => {
+        setPosition(e.currentTarget.position());
+      }}
+      onWheel={e => {
+        // Prevent default to disable natural scrolling
+        e.evt.preventDefault();
+
+        const MIN_SCALE = 2;
+        const MAX_SCALE = 1 / MIN_SCALE;
+        const SCALE_FACTOR = 1.05;
+
+        // Determine the scale change based on the wheel event delta
+        const oldScale = e.currentTarget.scaleX();
+        const newScale =
+          e.evt.deltaY < 0 ? oldScale * SCALE_FACTOR : oldScale / SCALE_FACTOR;
+
+        // Prevent zooming out too far
+        if (newScale < MAX_SCALE || newScale > MIN_SCALE) {
+          return;
+        }
+
+        // const pointer = e.currentTarget.getPointerPosition();
+        const pointer = { x: e.evt.clientX, y: e.evt.clientY };
+
+        // Calculate new position to center the zooming around the cursor
+        const mx = pointer.x / oldScale - e.currentTarget.x() / oldScale;
+        const my = pointer.y / oldScale - e.currentTarget.y() / oldScale;
+
+        const newX = -(mx - pointer.x / newScale) * newScale;
+        const newY = -(my - pointer.y / newScale) * newScale;
+
+        e.currentTarget.scale({ x: newScale, y: newScale });
+        e.currentTarget.position({ x: newX, y: newY });
+        setScale({ x: newScale, y: newScale });
+      }}
+    >
+      <RoadsLayer />
+      <IntersectionsLayer />
+    </Stage>
   );
 }
