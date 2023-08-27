@@ -476,7 +476,7 @@ function updateConnectionsOnLaneChange(
 }
 
 function removeItems<T>(
-  items: { [key: string]: T },
+  items: Record<string, T>,
   condition: (item: T) => boolean,
 ) {
   const newItems = { ...items };
