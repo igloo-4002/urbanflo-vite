@@ -22,7 +22,7 @@ export function LeftSideBar() {
     <div
       style={{
         position: 'fixed',
-        top: 15,
+        top: 115,
         left: 15,
         zIndex: 1000,
         maxHeight: 'min-content',
