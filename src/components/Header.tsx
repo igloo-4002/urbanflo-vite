@@ -25,7 +25,7 @@ const callsToAction = [
   { name: 'Contact sales', href: '#', icon: PhoneIcon },
 ]
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
@@ -115,7 +115,7 @@ export default function Example() {
           </a> */}
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <button         onClick='#' className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3">
+          <button className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3">
             Download Network
             <ArrowDownTrayIcon className="h-6 w-6 ml-4" aria-hidden="true" />
           </button>
