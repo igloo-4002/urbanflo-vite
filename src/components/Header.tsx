@@ -37,9 +37,10 @@ export default function Example() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img className="h-12 w-auto" src={Logo} alt="" />
+            <img className="h-10 w-auto" src={Logo} alt="" />
           </a>
+          <span className="ml-8 mb-2 flex items-center gap-x-1 text-5xl font-thin leading-6 text-gray-900">|</span>
+          <span className="ml-8 flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">Untitled Document</span>
         </div>
         <div className="flex lg:hidden">
           <button
