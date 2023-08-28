@@ -60,6 +60,7 @@ export type Network = {
   route: Record<string, Route>;
   flow: Record<string, Flow>;
   addNode: (node: Node) => void;
+  updateNode: (nodeID: string, node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
   updateEdge: (edgeId: string, edge: Edge) => void;
   deleteNode: (id: string) => void;
@@ -77,6 +78,16 @@ export const useNetworkStore = create<Network>(set => ({
   grid: {},
   addNode: (node: Node) =>
     set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),
+  updateNode: (nodeId, node) => {
+    set(state => {
+      return {
+        nodes: {
+          ...state.nodes,
+          [nodeId]: node,
+        },
+      };
+    });
+  },
   drawEdge: (from, to) =>
     set(state => {
       const newId = `${from.id}${to.id}`;
