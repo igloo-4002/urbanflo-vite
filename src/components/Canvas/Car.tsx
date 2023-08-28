@@ -7,5 +7,13 @@ interface CarProps {
 }
 
 export function Car({ car }: CarProps) {
-  return <Circle x={car.location.x} y={car.location.y} fill={car.color} />;
+  return (
+    <Circle
+      width={5}
+      height={5}
+      x={car.location.x}
+      y={car.location.y}
+      fill={car.color}
+    />
+  );
 }

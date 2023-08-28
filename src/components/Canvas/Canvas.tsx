@@ -76,10 +76,8 @@ export function Canvas() {
       subscribe(SIMULATION_DATA_TOPIC, message => {
         console.log(message);
         const data = extractCarsFromSumoMessage(message);
-        console.log(data);
 
         if (data) {
-          console.log('setting the car store with data');
           carStore.setCars(data);
         }
       });
