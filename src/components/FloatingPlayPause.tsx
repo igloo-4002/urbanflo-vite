@@ -58,9 +58,9 @@ export const FloatingPlayPause = () => {
         {isPlaying ? 'Pause' : 'Play'}
 
         {isPlaying ? (
-          <PlayIcon className="h-5 ml-2" />
-        ) : (
           <PauseIcon className="h-5 ml-2" />
+        ) : (
+          <PlayIcon className="h-5 ml-2" />
         )}
       </button>
     </div>
