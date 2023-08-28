@@ -3,11 +3,9 @@ import { Group, Rect } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
-import {
-  Node,
-  getAllEdgeIdsForNode,
-  useNetworkStore,
-} from '~/zustand/useNetworkStore';
+import { Node } from '~/types/Network';
+import { getAllEdgeIdsForNode } from '~/zustand/helpers/NetworkStoreHelpers';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
 import { laneWidth } from './Road';
@@ -22,6 +20,16 @@ export function Intersection({ node }: IntersectionProps) {
 
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
+
+  function handleDragMove(event: KonvaEventObject<DragEvent>) {
+    const updatedNode = {
+      ...network.nodes[node.id],
+      x: event.target.x(),
+      y: event.target.y(),
+    };
+
+    network.updateNode(node.id, updatedNode);
+  }
 
   function onClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
@@ -49,12 +57,15 @@ export function Intersection({ node }: IntersectionProps) {
     }
   }
 
-  const nodeEdges = getAllEdgeIdsForNode(node);
+  const nodeEdges = getAllEdgeIdsForNode(node.id, network.edges);
 
   // Compute total width based on maximum number of lanes from all edges
   let intersectionSize = 0;
   for (const edge of nodeEdges) {
-    intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
+    intersectionSize = Math.max(
+      intersectionSize,
+      network.edges[edge].numLanes * laneWidth,
+    );
   }
 
   const size = nodeEdges.length === 0 ? baseIntersectionSize : intersectionSize;
@@ -70,6 +81,8 @@ export function Intersection({ node }: IntersectionProps) {
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={4}
         zIndex={1}
+        draggable
+        onDragEnd={handleDragMove}
       />
     </Group>
   );
