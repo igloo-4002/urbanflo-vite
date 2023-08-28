@@ -7,7 +7,7 @@ import {
   removeItems,
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
-} from './helpers/NetworkStoreHelpers';
+} from '../helpers/zustand/NetworkStoreHelpers';
 
 export type Network = {
   nodes: Record<string, Node>;
