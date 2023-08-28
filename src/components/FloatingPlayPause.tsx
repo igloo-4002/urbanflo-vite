@@ -4,7 +4,7 @@ import { BASE_URL } from '~/simulation-urls';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 
-const FloatingPlayPause = () => {
+export const FloatingPlayPause = () => {
   const network = useNetworkStore();
   const { isPlaying, play, changeSimulationId, pause } = usePlaying();
 
@@ -66,5 +66,3 @@ const FloatingPlayPause = () => {
     </div>
   );
 };
-
-export default FloatingPlayPause;
