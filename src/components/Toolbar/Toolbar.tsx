@@ -2,7 +2,7 @@ import { useToolbarState } from '~/zustand/useToolbar';
 
 import { ToolBarItem } from './ToolbarItem';
 
-export function FloatingToolBar() {
+export function Toolbar() {
   const toolbarState = useToolbarState();
 
   return (
