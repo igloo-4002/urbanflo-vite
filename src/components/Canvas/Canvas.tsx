@@ -92,7 +92,7 @@ export function Canvas() {
 
     if (conflict === undefined) {
       const newNode = {
-        id: v4().slice(-2),
+        id: v4(),
         x: point.x,
         y: point.y,
         type: 'priority',
