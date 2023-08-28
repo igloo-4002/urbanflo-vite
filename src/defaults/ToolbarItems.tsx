@@ -14,6 +14,9 @@ export const toolbarItems: ToolbarItem[] = [
     },
   },
   {
+    divider: true,
+  },
+  {
     label: 'Intersection',
     icon: intersectionIcon,
     onClick: () => {

@@ -1,5 +1,6 @@
 import { useToolbarState } from '~/zustand/useToolbar';
 
+import { ToolbarDivider } from './ToolbarDivider';
 import { ToolBarItem } from './ToolbarItem';
 
 export function Toolbar() {
@@ -21,6 +22,9 @@ export function Toolbar() {
       }}
     >
       {toolbarState.items.map((item, idx) => {
+        if (item.divider) {
+          return <ToolbarDivider key={idx} />;
+        }
         return <ToolBarItem toolbarItem={item} key={idx} />;
       })}
     </span>

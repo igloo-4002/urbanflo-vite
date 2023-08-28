@@ -21,7 +21,7 @@ export function ToolBarItem({ toolbarItem }: Props) {
     if (isSelected) {
       toolbarState.setSelectedToolBarItem(null);
       return;
-    } else {
+    } else if (toolbarItem.label) {
       toolbarState.setSelectedToolBarItem(toolbarItem.label);
     }
   }
@@ -29,7 +29,7 @@ export function ToolBarItem({ toolbarItem }: Props) {
     <button
       onClick={() => {
         selectOrDeselect();
-        toolbarItem.onClick();
+        toolbarItem?.onClick?.();
       }}
       className={cls}
     >

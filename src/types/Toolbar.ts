@@ -1,8 +1,9 @@
 export type LabelNames = 'Intersection' | 'Road' | 'Pointer';
 
 export type ToolbarItem = {
-  label: LabelNames;
+  label?: LabelNames;
   icon?: string;
-  onClick: () => void;
+onClick?: () => void;
   heroIcon?: JSX.Element;
+  divider?: boolean;
 };
