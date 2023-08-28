@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 
-import { ToolbarItem } from '~/types/Toolbar';
+import { LabelNames, ToolbarItem } from '~/types/Toolbar';
 
 import intersectionIcon from '../../public/intersection.png';
 import roadIcon from '../../public/road-icon.png';
 
 type ToolbarState = {
   isOpen: boolean;
-  selectedToolBarItem: string | null;
-  setSelectedToolBarItem: (selectedToolBarItem: string | null) => void;
+  selectedToolBarItem: LabelNames | null;
+  setSelectedToolBarItem: (selectedToolBarItem: LabelNames | null) => void;
   items: ToolbarItem[];
 };
 
@@ -32,7 +32,7 @@ const toolbarItems: ToolbarItem[] = [
 export const useToolbarState = create<ToolbarState>(set => ({
   isOpen: true,
   selectedToolBarItem: null,
-  setSelectedToolBarItem: (selectedToolBarItem: string | null) =>
+  setSelectedToolBarItem: (selectedToolBarItem: LabelNames | null) =>
     set({ selectedToolBarItem }),
   items: toolbarItems,
 }));
