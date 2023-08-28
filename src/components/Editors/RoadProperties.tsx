@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
+import { useLeftSideBar } from '~/zustand/useLeftSideBar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
-import { useLeftSideBar } from '~/zustand/useLeftSideBar';
 
 export function RoadPropertiesEditor() {
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
@@ -13,7 +13,7 @@ export function RoadPropertiesEditor() {
   const selected = useSelector();
   const network = useNetworkStore();
   const leftSideBar = useLeftSideBar();
-  
+
   useEffect(() => {
     if (selected.selected === null || !network.edges[selected.selected]) {
       return;
@@ -21,19 +21,19 @@ export function RoadPropertiesEditor() {
 
     const edge = network.edges[selected.selected];
 
-    setNewSpeedLimit(edge.speed*3.6);
+    setNewSpeedLimit(edge.speed * 3.6);
     setNewLanes(edge.numLanes);
 
-    const fromX = network.nodes[edge.from].x
-    const fromY= network.nodes[edge.from].y
-    const toX= network.nodes[edge.to].x
-    const toY= network.nodes[edge.to].y
+    const from = network.nodes[edge.from];
+    const to = network.nodes[edge.to];
 
-    const dist = Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2))
-    setRoadLength(dist)
+    const dist = Math.sqrt(
+      Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2),
+    );
+    setRoadLength(dist);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected.selected]);
+  }, [selected.selected, network.nodes]);
 
   function submitRoadProperties() {
     if (selected.selected === null || !network.edges[selected.selected]) {
@@ -43,11 +43,11 @@ export function RoadPropertiesEditor() {
     const updatedEdge = {
       ...network.edges[selected.selected],
       numLanes: newLanes,
-      speed: newSpeedLimit/3.6,
+      speed: newSpeedLimit / 3.6,
     };
 
     network.updateEdge(selected.selected, updatedEdge);
-    leftSideBar.close()
+    leftSideBar.close();
   }
 
   return (
