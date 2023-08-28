@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
-import { useNetworkStore } from '~/zustand/useNetworkStore';
+import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import { useLeftSideBar } from '~/zustand/useLeftSideBar';
 
 export function RoadPropertiesEditor() {
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);
+  const [roadLength, setRoadLength] = useState(0);
 
   const selected = useSelector();
   const network = useNetworkStore();
@@ -22,6 +23,14 @@ export function RoadPropertiesEditor() {
 
     setNewSpeedLimit(edge.speed);
     setNewLanes(edge.numLanes);
+
+    const fromX = network.nodes[edge.from].x
+    const fromY= network.nodes[edge.from].y
+    const toX= network.nodes[edge.to].x
+    const toY= network.nodes[edge.to].y
+
+    const dist = Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2))
+    setRoadLength(dist)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected.selected]);
@@ -59,6 +68,15 @@ export function RoadPropertiesEditor() {
           type="number"
           value={newLanes}
           onChange={e => setNewLanes(parseInt(e.target.value))}
+        />
+      </RowStack>
+      <RowStack>
+        <p>Length of Road</p>
+        <input
+          style={{ width: '30%' }}
+          type="number"
+          value={roadLength}
+          disabled
         />
       </RowStack>
       <button
