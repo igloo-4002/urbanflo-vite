@@ -7,9 +7,9 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { useSimulation } from '~/hooks/useSimulation';
 import { createId } from '~/id';
 import {
-  SIMULATION_DATA_TOPIC,
+  BASE_SIMULATION_DATA_TOPIC,
+  BASE_SIMULATION_ERROR_TOPIC,
   SIMULATION_DESTINATION_PATH,
-  SIMULATION_ERROR_TOPIC,
   SIMULATION_SOCKET_URL,
 } from '~/simulation-urls';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -23,7 +23,7 @@ import { RoadsLayer } from './Layers/RoadsLayer';
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const { isPlaying } = usePlaying();
+  const { isPlaying, changeSimulationId, simulationId } = usePlaying();
   const nodes = Object.values(network.nodes);
 
   const { subscribe, publish, isConnected } = useSimulation({
@@ -59,6 +59,11 @@ export function Canvas() {
 
   // Streaming of simulation data
   useEffect(() => {
+    const SIMULATION_DATA_TOPIC = `${BASE_SIMULATION_DATA_TOPIC}/${simulationId}`;
+    const SIMULATION_ERROR_TOPIC = BASE_SIMULATION_ERROR_TOPIC.replace(
+      '_',
+      simulationId ?? '',
+    );
     if (isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
 
@@ -73,6 +78,8 @@ export function Canvas() {
     } else if (!isPlaying && isConnected) {
       console.warn('Unsubscribing from simulation data');
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
+    } else if (!isPlaying && simulationId) {
+      changeSimulationId(null);
     }
   }, [isPlaying]);
 
