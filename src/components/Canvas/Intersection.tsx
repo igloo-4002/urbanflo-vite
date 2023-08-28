@@ -49,16 +49,15 @@ export function Intersection({ node }: IntersectionProps) {
     }
   }
 
-  const edgeIds = getAllEdgeIdsForNode(node.id, network.edges);
+  const nodeEdges = getAllEdgeIdsForNode(node);
 
   // Compute total width based on maximum number of lanes from all edges
   let intersectionSize = 0;
-  for (const edgeId of edgeIds) {
-    const edge = network.edges[edgeId];
+  for (const edge of nodeEdges) {
     intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
   }
 
-  const size = edgeIds.length === 0 ? baseIntersectionSize : intersectionSize;
+  const size = nodeEdges.length === 0 ? baseIntersectionSize : intersectionSize;
 
   return (
     <Group onClick={handleIntersectionClick}>

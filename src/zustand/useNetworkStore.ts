@@ -93,10 +93,35 @@ export const useNetworkStore = create<Network>(set => ({
       const pointB = { x: to.x, y: to.y };
 
       if (edgeDoesIntersect(state, pointA, pointB)) {
+        // disallow intersecting edges
         return state;
-      } else {
-        return { edges: { ...state.edges, [newId]: newEdge } };
       }
+
+      const newState = {
+        edges: {
+          ...state.edges,
+          [newId]: newEdge,
+        },
+      };
+
+      // draw connections
+
+      // get all the edges heading into 'from'
+      const edges = Object.values(state.edges);
+      const edgesIn = edges.filter(edge => edge.to === from.id);
+      const edgesOut = edges.filter(edge => edge.from === to.id);
+
+      // draw connections for every edge heading into 'from' to newEdge
+      edgesIn.forEach(edge => {
+        state.addConnection(edge, newEdge);
+      });
+
+      // draw connections for newEdge to every edge heading out of 'to'
+      edgesOut.forEach(edge => {
+        state.addConnection(newEdge, edge);
+      });
+
+      return newState;
     }),
   updateEdge: (edgeId, edge) => {
     set(state => {
@@ -231,18 +256,12 @@ function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
 }
 
-// TODO: Add more data to the store so we can get O(1) retrieval of edges for a node
-export function getAllEdgeIdsForNode(
-  nodeId: string,
-  edges: Record<string, Edge>,
-): string[] {
-  const edgeIds: string[] = [];
+useNetworkStore.subscribe(state => {
+  console.log(state);
+});
 
-  for (const edgeId in edges) {
-    if (edgeId.startsWith(nodeId) || edgeId.endsWith(nodeId)) {
-      edgeIds.push(edgeId);
-    }
-  }
-
-  return edgeIds;
+export function getAllEdgeIdsForNode(node: Node) {
+  const network = useNetworkStore.getState();
+  const edges = Object.values(network.edges);
+  return edges.filter(edge => edge.from === node.id || edge.to === node.id);
 }
