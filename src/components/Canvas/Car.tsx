@@ -1,14 +1,11 @@
 import { Circle } from 'react-konva';
 
-import { Car } from '~/zustand/useCarStore';
+import { Car as CarType } from '~/zustand/useCarStore';
 
 interface CarProps {
-  car: Car;
+  car: CarType;
 }
 
 export function Car({ car }: CarProps) {
-  return (
-    <Circle x={car.location.x} y={car.location.y} fill={car.color}/>
-  );
+  return <Circle x={car.location.x} y={car.location.y} fill={car.color} />;
 }
-
