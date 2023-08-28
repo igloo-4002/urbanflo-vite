@@ -1,11 +1,6 @@
-import {
-  Connection,
-  Edge,
-  Flow,
-  Network,
-  Point,
-  Route,
-} from '../useNetworkStore';
+import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
+
+import { Network } from '../useNetworkStore';
 
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
