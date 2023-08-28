@@ -12,7 +12,17 @@ const FloatingPlayPause = () => {
       nodes: Object.values(network.nodes),
       edges: Object.values(network.edges),
       connections: Object.values(network.connections),
-      vType: Object.values(network.vType),
+      vType: [
+        {
+          id: 'car',
+          accel: 2.6,
+          decel: 4.5,
+          sigma: 1,
+          length: 5,
+          minGap: 2.5,
+          maxSpeed: 30,
+        },
+      ],
       route: Object.values(network.route),
       flow: Object.values(network.flow),
     };

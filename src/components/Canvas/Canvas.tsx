@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
-import { v4 } from 'uuid';
 
 import { useSimulation } from '~/hooks/useSimulation';
+import { createId } from '~/id';
 import {
   SIMULATION_DATA_TOPIC,
   SIMULATION_DESTINATION_PATH,
@@ -26,7 +26,7 @@ export function Canvas() {
   const { isPlaying } = usePlaying();
   const nodes = Object.values(network.nodes);
 
-  const { subscribe, publish, isConnected, deactivate } = useSimulation({
+  const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
@@ -76,11 +76,6 @@ export function Canvas() {
     }
   }, [isPlaying]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return deactivate;
-  }, []);
-
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
@@ -97,7 +92,7 @@ export function Canvas() {
 
     if (conflict === undefined) {
       const newNode = {
-        id: v4(),
+        id: createId(),
         x: point.x,
         y: point.y,
         type: 'priority',
