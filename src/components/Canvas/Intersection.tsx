@@ -21,6 +21,17 @@ export function Intersection({ node }: IntersectionProps) {
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
 
+  function handleDragMove(event: KonvaEventObject<DragEvent>) {
+
+    const updatedNode = {
+      ...network.nodes[node.id],
+      x: event.target.x(),
+      y: event.target.y()
+    };
+
+    network.updateNode(node.id, updatedNode);
+  }
+
   function handleIntersectionClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
@@ -69,6 +80,8 @@ export function Intersection({ node }: IntersectionProps) {
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={4}
         zIndex={1}
+        draggable
+        onDragEnd={handleDragMove}
       />
     </Group>
   );
