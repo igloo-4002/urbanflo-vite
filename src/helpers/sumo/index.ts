@@ -42,7 +42,7 @@ export function extractCarsFromSumoMessage(sumoMessage: string): Car[] {
         x: vehicle.position.first,
         y: vehicle.position.second,
       },
-      color: vehicle.color ?? 'red', // we accept the fact that SUMO may not return this since its not too important
+      color: 'red', // we accept the fact that SUMO may not return this since its not too important
     });
   }
 
