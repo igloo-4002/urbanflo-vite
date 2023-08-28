@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
-import { Edge, useNetworkStore } from '~/zustand/useNetworkStore';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import { useLeftSideBar } from '~/zustand/useLeftSideBar';
 
@@ -13,7 +13,7 @@ export function RoadPropertiesEditor() {
   const selected = useSelector();
   const network = useNetworkStore();
   const leftSideBar = useLeftSideBar();
-console.log(network)
+  
   useEffect(() => {
     if (selected.selected === null || !network.edges[selected.selected]) {
       return;
