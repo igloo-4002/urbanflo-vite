@@ -8,7 +8,7 @@ import roadIcon from '../../public/road-icon.png';
 export const toolbarItems: ToolbarItem[] = [
   {
     label: 'Pointer',
-    heroIcon: <CursorArrowRaysIcon className="h-5 ml-2 center" />,
+    heroIcon: <CursorArrowRaysIcon className="h-5" />,
     onClick: () => {
       console.log('Pointer icon clicked');
     },
