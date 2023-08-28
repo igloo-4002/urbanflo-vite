@@ -13,7 +13,7 @@ export function RoadPropertiesEditor() {
   const selected = useSelector();
   const network = useNetworkStore();
   const leftSideBar = useLeftSideBar();
-
+console.log(network)
   useEffect(() => {
     if (selected.selected === null || !network.edges[selected.selected]) {
       return;
@@ -21,7 +21,7 @@ export function RoadPropertiesEditor() {
 
     const edge = network.edges[selected.selected];
 
-    setNewSpeedLimit(edge.speed);
+    setNewSpeedLimit(edge.speed*3.6);
     setNewLanes(edge.numLanes);
 
     const fromX = network.nodes[edge.from].x
@@ -43,7 +43,7 @@ export function RoadPropertiesEditor() {
     const updatedEdge = {
       ...network.edges[selected.selected],
       numLanes: newLanes,
-      speed: newSpeedLimit,
+      speed: newSpeedLimit/3.6,
     };
 
     network.updateEdge(selected.selected, updatedEdge);
