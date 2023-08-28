@@ -1,5 +1,8 @@
 import { BASE_URL } from '~/simulation-urls';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
+import {
+PlayIcon
+} from '@heroicons/react/24/outline'
 
 const FloatingPlayPause = () => {
   const network = useNetworkStore();
@@ -31,14 +34,15 @@ const FloatingPlayPause = () => {
 
   return (
     <div
-      className="absolute bottom-4 right-4 items-center justify-center rounded-full flex p-4 z-10"
-      style={{ backgroundColor: 'green' }}
+      className="absolute bottom-4 right-4 items-center justify-center rounded-md flex py-2 px-3 z-10 bg-orange-500"
     >
       <button
         onClick={handleUpload}
         className="text-white font-sans font-medium"
+        style={{ display: 'flex', alignItems: 'center' }}
       >
         Play
+        <PlayIcon className='h-5 ml-2'/>
       </button>
     </div>
   );

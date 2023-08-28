@@ -36,6 +36,7 @@ export function RoadPropertiesEditor() {
     };
 
     network.updateEdge(selected.selected, updatedEdge);
+    selected.deselect();
   }
 
   return (
@@ -59,10 +60,10 @@ export function RoadPropertiesEditor() {
         />
       </RowStack>
       <button
-        className="hover:bg-gray-300 duration-200 rounded-md"
+        className="rounded-md py-2 px-3 z-10 bg-amber-400"
         onClick={submitRoadProperties}
       >
-        Update road properties
+        Save
       </button>
     </ColumnStack>
   );

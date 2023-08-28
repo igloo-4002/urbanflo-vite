@@ -1,5 +1,9 @@
 import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
+import {
+  XMarkIcon
+  } from '@heroicons/react/24/outline'
+
 
 export function LeftSideBar() {
   const leftSideBar = useLeftSideBar();
@@ -22,11 +26,11 @@ export function LeftSideBar() {
     <div
       style={{
         position: 'fixed',
-        top: 15,
+        top: 115,
         left: 15,
         zIndex: 1000,
         maxHeight: 'min-content',
-        width: '200px',
+        width: '250px',
         display: leftSideBar.isOpen ? 'flex' : 'none',
         justifyContent: 'center',
         alignContent: 'center',
@@ -39,11 +43,11 @@ export function LeftSideBar() {
       }}
     >
       <button
-        className="hover:bg-gray-300 duration-200 rounded-md"
-        style={{ width: '100%', marginBottom: '8px' }}
+        className="flex"
         onClick={leftSideBar.close}
+        style={{ justifyContent: 'flex-end' }} // Align button contents to the right
       >
-        Close
+              <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />
       </button>
       {getView()}
     </div>
