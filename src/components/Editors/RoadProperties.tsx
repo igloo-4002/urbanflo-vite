@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { ColumnStack, RowStack } from '~/components/Stack';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
-import { useLeftSideBar } from '~/zustand/useLeftSideBar';
 
 export function RoadPropertiesEditor() {
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
@@ -11,7 +10,6 @@ export function RoadPropertiesEditor() {
 
   const selected = useSelector();
   const network = useNetworkStore();
-  const leftSideBar = useLeftSideBar();
 
   useEffect(() => {
     if (selected.selected === null || !network.edges[selected.selected]) {
@@ -38,7 +36,7 @@ export function RoadPropertiesEditor() {
     };
 
     network.updateEdge(selected.selected, updatedEdge);
-    leftSideBar.close()
+    selected.deselect();
   }
 
   return (
