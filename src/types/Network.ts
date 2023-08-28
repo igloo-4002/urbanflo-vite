@@ -48,6 +48,4 @@ export type Flow = {
   begin: number;
   end: number;
   period: number;
-  // TODO: need to add field in the server
-  // vehsPerHour: number;
 };

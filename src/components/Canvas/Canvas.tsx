@@ -8,8 +8,8 @@ import { useSimulation } from '~/hooks/useSimulation';
 import { createId } from '~/id';
 import {
   BASE_SIMULATION_DATA_TOPIC,
+  BASE_SIMULATION_DESTINATION_PATH,
   BASE_SIMULATION_ERROR_TOPIC,
-  SIMULATION_DESTINATION_PATH,
   SIMULATION_SOCKET_URL,
 } from '~/simulation-urls';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -64,6 +64,8 @@ export function Canvas() {
       '_',
       simulationId ?? '',
     );
+    const SIMULATION_DESTINATION_PATH = `${BASE_SIMULATION_DESTINATION_PATH}/${simulationId}`;
+
     if (isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
 

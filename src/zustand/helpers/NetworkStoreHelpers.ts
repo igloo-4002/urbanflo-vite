@@ -174,7 +174,6 @@ export function updateAssociatesOnNewEdge(
         begin: 0,
         end: 86400,
         period: 1,
-        // vehsPerHour: 3600,
       };
     }
   }
