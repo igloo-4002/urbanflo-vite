@@ -3,11 +3,9 @@ import { Group, Rect } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
-import {
-  Node,
-  getAllEdgeIdsForNode,
-  useNetworkStore,
-} from '~/zustand/useNetworkStore';
+import { Node } from '~/types/Network';
+import { getAllEdgeIdsForNode } from '~/zustand/helpers/NetworkStoreHelpers';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
 import { laneWidth } from './Road';

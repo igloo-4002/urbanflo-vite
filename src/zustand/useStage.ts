@@ -3,7 +3,7 @@ import { RefObject, createRef } from 'react';
 import Konva from 'konva';
 import { create } from 'zustand';
 
-import { Point } from './useNetworkStore';
+import { Point } from '~/types/Network';
 
 type StageState = {
   position: Point;

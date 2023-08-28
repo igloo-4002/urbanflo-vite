@@ -45,7 +45,7 @@ export function RoadPropertiesEditor() {
     };
 
     network.updateEdge(selected.selected, updatedEdge);
-    selected.deselect()
+    selected.deselect();
   }
 
   return (
