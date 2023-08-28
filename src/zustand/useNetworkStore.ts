@@ -14,16 +14,17 @@ export type Node = {
 
 export type Edge = {
   id: string;
-  from: string;
-  to: string;
+  from: string; // node id
+  to: string; // node id
   priority: number;
   numLanes: number;
   speed: number;
 };
 
 export type Connection = {
-  from: string;
-  to: string;
+  from: string; // edge id
+  to: string; // edge id
+  over: string; // node id
   fromLane: number;
   toLane: number;
 };
@@ -64,7 +65,6 @@ export type Network = {
   updateEdge: (edgeId: string, edge: Edge) => void;
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
-  addConnection: (from: Edge, to: Edge) => void;
 };
 
 export const useNetworkStore = create<Network>(set => ({
@@ -97,31 +97,60 @@ export const useNetworkStore = create<Network>(set => ({
         return state;
       }
 
-      const newState = {
-        edges: {
-          ...state.edges,
-          [newId]: newEdge,
+      // get all the edges heading into 'from'
+      const edgesIn = Object.values(state.edges).filter(
+        edge => edge.to === from.id,
+      );
+      const edgesOut = Object.values(state.edges).filter(
+        edge => edge.from === to.id,
+      );
+
+      const connectionsIn: Record<string, Connection> = edgesIn.reduce(
+        (acc, edge) => {
+          return {
+            ...acc,
+            [`${edge.id}${newEdge.id}`]: {
+              from: edge.id,
+              to: newEdge.id,
+              over: from.id,
+              fromLane: 0,
+              toLane: 0,
+            },
+          };
         },
+        {},
+      );
+      const connectionsOut: Record<string, Connection> = edgesOut.reduce(
+        (acc, edge) => {
+          return {
+            ...acc,
+            [`${newEdge.id}${edge.id}`]: {
+              from: newEdge.id,
+              to: edge.id,
+              over: to.id,
+              fromLane: 0,
+              toLane: 0,
+            },
+          };
+        },
+        {},
+      );
+
+      const edges: Record<string, Edge> = {
+        ...state.edges,
+        [newId]: newEdge,
       };
 
-      // draw connections
+      const connections = {
+        ...state.connections,
+        ...connectionsIn,
+        ...connectionsOut,
+      };
 
-      // get all the edges heading into 'from'
-      const edges = Object.values(state.edges);
-      const edgesIn = edges.filter(edge => edge.to === from.id);
-      const edgesOut = edges.filter(edge => edge.from === to.id);
-
-      // draw connections for every edge heading into 'from' to newEdge
-      edgesIn.forEach(edge => {
-        state.addConnection(edge, newEdge);
-      });
-
-      // draw connections for newEdge to every edge heading out of 'to'
-      edgesOut.forEach(edge => {
-        state.addConnection(newEdge, edge);
-      });
-
-      return newState;
+      return {
+        edges,
+        connections,
+      };
     }),
   updateEdge: (edgeId, edge) => {
     set(state => {
@@ -157,18 +186,6 @@ export const useNetworkStore = create<Network>(set => ({
       };
     });
   },
-  addConnection: (from, to) =>
-    set(state => ({
-      connections: {
-        ...state.connections,
-        [`${from.id}${to.id}`]: {
-          from: from.id,
-          to: to.id,
-          fromLane: 0,
-          toLane: 0,
-        },
-      },
-    })),
 }));
 
 /**
@@ -255,10 +272,6 @@ function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
 function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
 }
-
-useNetworkStore.subscribe(state => {
-  console.log(state);
-});
 
 export function getAllEdgeIdsForNode(node: Node) {
   const network = useNetworkStore.getState();

@@ -23,7 +23,7 @@ export function Intersection({ node }: IntersectionProps) {
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
 
-  function handleIntersectionClick(event: KonvaEventObject<MouseEvent>) {
+  function onClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
     // if nothing is selected, then select this node
@@ -60,13 +60,13 @@ export function Intersection({ node }: IntersectionProps) {
   const size = nodeEdges.length === 0 ? baseIntersectionSize : intersectionSize;
 
   return (
-    <Group onClick={handleIntersectionClick}>
+    <Group onClick={onClick}>
       <Rect
         x={node.x - size / 2}
         y={node.y - size / 2}
         width={size}
         height={size}
-        fill="grey"
+        fill="red"
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={4}
         zIndex={1}

@@ -17,6 +17,7 @@ import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
 
+import { ConnectionsLayer } from './Layers/ConnectionsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
 
@@ -114,6 +115,8 @@ export function Canvas() {
 
   const { position, ref: stageRef, setPosition, setScale } = useStageState();
 
+  console.log({ connections: network.connections });
+
   return (
     <Stage
       ref={stageRef}
@@ -159,6 +162,7 @@ export function Canvas() {
         setScale({ x: newScale, y: newScale });
       }}
     >
+      <ConnectionsLayer />
       <RoadsLayer />
       <IntersectionsLayer />
     </Stage>

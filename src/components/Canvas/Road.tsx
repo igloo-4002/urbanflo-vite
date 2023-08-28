@@ -21,7 +21,7 @@ export function Road({ edge }: RoadProps) {
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
 
-  function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
+  function onRoadClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
     if (selector.selected !== edge.id) {
       selector.select(edge.id);
@@ -30,7 +30,7 @@ export function Road({ edge }: RoadProps) {
     }
   }
 
-  const commonProps = {
+  const common = {
     points: [0, 0, to.x - from.x, to.y - from.y],
     pointerLength: 0,
     pointerWidth: 0,
@@ -38,7 +38,7 @@ export function Road({ edge }: RoadProps) {
   };
 
   return (
-    <Group onClick={handleRoadClick}>
+    <Group onClick={onRoadClick}>
       {/* Highlight for selected road */}
       <Arrow
         key={`road-selected-stroke-${edge.id}`}
@@ -46,7 +46,7 @@ export function Road({ edge }: RoadProps) {
         y={from.y}
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={laneWidth * edge.numLanes + 8}
-        {...commonProps}
+        {...common}
       />
 
       {/* Grey Road */}
@@ -57,7 +57,7 @@ export function Road({ edge }: RoadProps) {
         fill={roadColor}
         stroke={roadColor}
         strokeWidth={laneWidth * edge.numLanes}
-        {...commonProps}
+        {...common}
       />
 
       {/* Lanes */}
@@ -74,7 +74,7 @@ export function Road({ edge }: RoadProps) {
             fill="transparent"
             stroke={centerlineColor}
             strokeWidth={2}
-            {...commonProps}
+            {...common}
           />
         );
       })}
