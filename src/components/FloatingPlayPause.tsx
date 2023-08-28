@@ -1,4 +1,4 @@
-import { PlayIcon } from '@heroicons/react/24/outline';
+import { PauseIcon, PlayIcon } from '@heroicons/react/24/outline';
 
 import { BASE_URL } from '~/simulation-urls';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -56,7 +56,12 @@ const FloatingPlayPause = () => {
         style={{ display: 'flex', alignItems: 'center' }}
       >
         {isPlaying ? 'Pause' : 'Play'}
-        <PlayIcon className="h-5 ml-2" />
+
+        {isPlaying ? (
+          <PlayIcon className="h-5 ml-2" />
+        ) : (
+          <PauseIcon className="h-5 ml-2" />
+        )}
       </button>
     </div>
   );
