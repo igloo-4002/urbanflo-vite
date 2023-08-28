@@ -1,4 +1,4 @@
-export type LabelNames = 'Intersection' | 'Road';
+export type LabelNames = 'Intersection' | 'Road' | 'Pointer';
 
 export type ToolbarItem = {
   label: LabelNames;

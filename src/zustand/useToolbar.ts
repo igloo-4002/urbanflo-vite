@@ -1,9 +1,7 @@
 import { create } from 'zustand';
 
+import { toolbarItems } from '~/defaults/ToolbarItems';
 import { LabelNames, ToolbarItem } from '~/types/Toolbar';
-
-import intersectionIcon from '../../public/intersection.png';
-import roadIcon from '../../public/road-icon.png';
 
 type ToolbarState = {
   isOpen: boolean;
@@ -11,23 +9,6 @@ type ToolbarState = {
   setSelectedToolBarItem: (selectedToolBarItem: LabelNames | null) => void;
   items: ToolbarItem[];
 };
-
-const toolbarItems: ToolbarItem[] = [
-  {
-    label: 'Intersection',
-    icon: intersectionIcon,
-    onClick: () => {
-      console.log('Intersection icon clicked');
-    },
-  },
-  {
-    label: 'Road',
-    icon: roadIcon,
-    onClick: () => {
-      console.log('Road icon clicked');
-    },
-  },
-];
 
 export const useToolbarState = create<ToolbarState>(set => ({
   isOpen: true,

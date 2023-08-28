@@ -33,14 +33,18 @@ export function ToolBarItem({ toolbarItem }: Props) {
       }}
       className={cls}
     >
-      <img
-        src={toolbarItem.icon}
-        alt={toolbarItem.label}
-        style={{
-          height: '24px',
-          width: '24px',
-        }}
-      />
+      {toolbarItem.heroIcon ? (
+        toolbarItem.heroIcon
+      ) : (
+        <img
+          src={toolbarItem.icon}
+          alt={toolbarItem.label}
+          style={{
+            height: '24px',
+            width: '24px',
+          }}
+        />
+      )}
     </button>
   );
 }
