@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
-import { v4 } from 'uuid';
 
 import { useSimulation } from '~/hooks/useSimulation';
+import { createId } from '~/id';
 import {
   SIMULATION_DATA_TOPIC,
   SIMULATION_DESTINATION_PATH,
@@ -92,7 +92,7 @@ export function Canvas() {
 
     if (conflict === undefined) {
       const newNode = {
-        id: v4(),
+        id: createId(),
         x: point.x,
         y: point.y,
         type: 'priority',
