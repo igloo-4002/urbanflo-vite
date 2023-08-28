@@ -115,8 +115,6 @@ export function Canvas() {
 
   const { position, ref: stageRef, setPosition, setScale } = useStageState();
 
-  console.log({ connections: network.connections });
-
   return (
     <Stage
       ref={stageRef}
