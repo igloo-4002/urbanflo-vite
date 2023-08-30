@@ -1,11 +1,7 @@
 import { useState } from 'react';
 
-import { Dialog, Disclosure } from '@headlessui/react';
-import {
-  Bars3Icon,
-  ChevronDownIcon,
-  XMarkIcon,
-} from '@heroicons/react/20/solid';
+import { Dialog } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 
 import Logo from '../assets/UrbanFloLogoB&W.svg';
 import { ProjectDownloadButton } from './ProjectDownloadButton';
