@@ -17,6 +17,9 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 
+import useJsonDownloader from '~/hooks/useJsonDownloader';
+import { getUrbanFloFileContents } from '~/logic/urbanflo-file-download';
+
 import Logo from '../assets/UrbanFloLogoB&W.svg';
 
 const products = [
@@ -62,6 +65,13 @@ function classNames(...classes: string[]) {
 
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const downloadJson = useJsonDownloader();
+
+  function handleDownloadClick() {
+    const jsonString = getUrbanFloFileContents();
+    downloadJson(jsonString, 'urbanflo-data.json');
+  }
 
   return (
     <header className="bg-white drop-shadow-lg">
@@ -165,8 +175,11 @@ export default function Example() {
           </a> */}
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <button className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3">
-            Download Network
+          <button
+            className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3"
+            onClick={handleDownloadClick}
+          >
+            Download Project
             <ArrowDownTrayIcon className="h-6 w-6 ml-4" aria-hidden="true" />
           </button>
         </div>
