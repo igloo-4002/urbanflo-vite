@@ -2,27 +2,31 @@ import { Fragment, useState } from 'react';
 
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react';
 import {
+  ArrowDownTrayIcon,
+  Bars3Icon,
   ChevronDownIcon,
   PhoneIcon,
   PlayCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/20/solid';
 import {
-  ArrowDownTrayIcon,
   ArrowPathIcon,
-  Bars3Icon,
   ChartPieIcon,
   CursorArrowRaysIcon,
   FingerPrintIcon,
   SquaresPlusIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline';
 
 import useJsonDownloader from '~/hooks/useJsonDownloader';
-import { getUrbanFloFileContents } from '~/logic/urbanflo-file-download';
+import {
+  getNetworkFromUploadedFile,
+  getUrbanFloFileContents,
+} from '~/logic/urbanflo-file-logic';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 
 import Logo from '../assets/UrbanFloLogoB&W.svg';
 
-const products = [
+export const products = [
   {
     name: 'Analytics',
     description: 'Get a better understanding of your traffic',
@@ -54,23 +58,46 @@ const products = [
     icon: ArrowPathIcon,
   },
 ];
-const callsToAction = [
+export const callsToAction = [
   { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
   { name: 'Contact sales', href: '#', icon: PhoneIcon },
 ];
 
-function classNames(...classes: string[]) {
+export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Example() {
+export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const networkStore = useNetworkStore();
   const downloadJson = useJsonDownloader();
 
   function handleDownloadClick() {
     const jsonString = getUrbanFloFileContents();
     downloadJson(jsonString, 'urbanflo-data.json');
+  }
+
+  function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (file && file.type === 'application/json') {
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        try {
+          const parsedJson = JSON.parse(e.target?.result as string);
+          const network = getNetworkFromUploadedFile(parsedJson);
+          Object.values(network.networkData.nodes).forEach(node => {
+            networkStore.addNode(node);
+          });
+        } catch (error) {
+          alert(
+            'An error occurred while parsing the JSON file OR the file is invalid',
+          );
+        }
+      };
+      reader.readAsText(file);
+    }
   }
 
   return (
@@ -182,6 +209,7 @@ export default function Example() {
             Download Project
             <ArrowDownTrayIcon className="h-6 w-6 ml-4" aria-hidden="true" />
           </button>
+          <input type="file" accept=".json" onChange={handleFileUpload} />
         </div>
       </nav>
       <Dialog
