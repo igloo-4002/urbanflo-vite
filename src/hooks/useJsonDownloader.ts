@@ -6,7 +6,7 @@ const useJsonDownloader = () => {
 
     // build link and add it to the DOM
     link.href = url;
-    link.download = 'data.json';
+    link.download = fileName;
     document.body.appendChild(link);
 
     // Download it
