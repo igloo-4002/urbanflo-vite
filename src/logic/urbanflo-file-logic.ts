@@ -28,3 +28,7 @@ function getFileContents(): UrbanFloFile {
     },
   };
 }
+
+export function getNetworkFromUploadedFile(json: unknown): UrbanFloFile {
+  return json as UrbanFloFile;
+}
