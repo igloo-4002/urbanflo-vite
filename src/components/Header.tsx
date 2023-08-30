@@ -2,7 +2,6 @@ import { Fragment, useState } from 'react';
 
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react';
 import {
-  ArrowDownTrayIcon,
   Bars3Icon,
   ChevronDownIcon,
   PhoneIcon,
@@ -17,14 +16,9 @@ import {
   SquaresPlusIcon,
 } from '@heroicons/react/24/outline';
 
-import useJsonDownloader from '~/hooks/useJsonDownloader';
-import {
-  getNetworkFromUploadedFile,
-  getUrbanFloFileContents,
-} from '~/logic/urbanflo-file-logic';
-import { useNetworkStore } from '~/zustand/useNetworkStore';
-
 import Logo from '../assets/UrbanFloLogoB&W.svg';
+import { ProjectDownloadButton } from './ProjectDownloadButton';
+import { ProjectUploadButton } from './ProjectUpload';
 
 export const products = [
   {
@@ -69,36 +63,6 @@ export function classNames(...classes: string[]) {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const networkStore = useNetworkStore();
-  const downloadJson = useJsonDownloader();
-
-  function handleDownloadClick() {
-    const jsonString = getUrbanFloFileContents();
-    downloadJson(jsonString, 'urbanflo-data.json');
-  }
-
-  function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-
-    if (file && file.type === 'application/json') {
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        try {
-          const parsedJson = JSON.parse(e.target?.result as string);
-          const network = getNetworkFromUploadedFile(parsedJson);
-          Object.values(network.networkData.nodes).forEach(node => {
-            networkStore.addNode(node);
-          });
-        } catch (error) {
-          alert(
-            'An error occurred while parsing the JSON file OR the file is invalid',
-          );
-        }
-      };
-      reader.readAsText(file);
-    }
-  }
 
   return (
     <header className="bg-white drop-shadow-lg">
@@ -202,14 +166,8 @@ export function Header() {
           </a> */}
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <button
-            className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3"
-            onClick={handleDownloadClick}
-          >
-            Download Project
-            <ArrowDownTrayIcon className="h-6 w-6 ml-4" aria-hidden="true" />
-          </button>
-          <input type="file" accept=".json" onChange={handleFileUpload} />
+          <ProjectDownloadButton />
+          <ProjectUploadButton />
         </div>
       </nav>
       <Dialog
