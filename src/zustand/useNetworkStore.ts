@@ -7,7 +7,7 @@ import {
   removeItems,
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
-} from './helpers/NetworkStoreHelpers';
+} from '../helpers/zustand/NetworkStoreHelpers';
 
 export interface NetworkData {
   nodes: Record<string, Node>;
