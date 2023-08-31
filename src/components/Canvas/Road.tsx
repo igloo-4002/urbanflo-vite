@@ -37,7 +37,6 @@ export function Road({ edge }: RoadProps) {
     points: [0, 0, to.x - from.x, to.y - from.y],
     pointerLength: 0,
     pointerWidth: 0,
-    zIndex: -1,
   };
 
   const angleRad = Math.atan2(to.y - from.y, to.x - from.x);
