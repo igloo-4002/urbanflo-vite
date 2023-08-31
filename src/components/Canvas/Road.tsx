@@ -17,6 +17,8 @@ export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
+  const isBidirectional = !!network.edges[`${edge.to}_${edge.from}`];
+
   const isSelected = selector.selected === edge.id;
 
   const from = network.nodes[edge.from];
