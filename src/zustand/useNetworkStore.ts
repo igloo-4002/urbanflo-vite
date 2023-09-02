@@ -3,6 +3,8 @@ import { create } from 'zustand';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
 
 import {
+  connectNewEdge,
+  edgeDoesIntersect,
   removeItems,
   updateConnectionsOnLaneChange,
 } from './helpers/NetworkStoreHelpers';
@@ -30,7 +32,6 @@ export const useNetworkStore = create<Network>(set => ({
   vType: {},
   route: {},
   flow: {},
-  grid: {},
   addNode: (node: Node) =>
     set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),
   updateNode: (nodeId, node) => {
@@ -54,87 +55,22 @@ export const useNetworkStore = create<Network>(set => ({
         numLanes: 1,
         speed: 13.89,
       };
-
-      /**
-       * 
       const pointA = { x: from.x, y: from.y };
       const pointB = { x: to.x, y: to.y };
       if (edgeDoesIntersect(state, pointA, pointB)) {
         // disallow intersecting edges
         return state;
-      } else {
-        // update connections, routes, and flows when an edge is being drawn
-        const { newConnections, newRoutes, newFlows } =
-          updateAssociatesOnNewEdge(
-            state.edges,
-            state.route,
-            state.connections,
-            state.flow,
-            newEdge,
-          );
-
-        return {
-          edges: { ...state.edges, [newEdgeId]: newEdge },
-          connections: newConnections,
-          flow: newFlows,
-          route: newRoutes,
-        };
       }
-       */
-
-      // get all the edges heading into 'from'
-      const edgesIn = Object.values(state.edges).filter(
-        edge => edge.to === from.id,
-      );
-      const edgesOut = Object.values(state.edges).filter(
-        edge => edge.from === to.id,
-      );
-
-      const connectionsIn: Record<string, Connection> = edgesIn.reduce(
-        (acc, edge) => {
-          return {
-            ...acc,
-            [`${edge.id}${newEdge.id}`]: {
-              from: edge.id,
-              to: newEdge.id,
-              over: from.id,
-              fromLane: 0,
-              toLane: 0,
-            },
-          };
-        },
-        {},
-      );
-      const connectionsOut: Record<string, Connection> = edgesOut.reduce(
-        (acc, edge) => {
-          return {
-            ...acc,
-            [`${newEdge.id}${edge.id}`]: {
-              from: newEdge.id,
-              to: edge.id,
-              over: to.id,
-              fromLane: 0,
-              toLane: 0,
-            },
-          };
-        },
-        {},
-      );
-
-      const edges: Record<string, Edge> = {
+      const newEdges: Record<string, Edge> = {
         ...state.edges,
         [newEdgeId]: newEdge,
       };
 
-      const connections = {
-        ...state.connections,
-        ...connectionsIn,
-        ...connectionsOut,
-      };
+      const newConnections = connectNewEdge({ newEdge });
 
       return {
-        edges,
-        connections,
+        edges: newEdges,
+        connections: newConnections,
       };
     }),
   updateEdge: (edgeId, edge) => {

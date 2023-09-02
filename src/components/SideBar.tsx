@@ -1,9 +1,7 @@
+import { XMarkIcon } from '@heroicons/react/24/outline';
+
 import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
-import {
-  XMarkIcon
-  } from '@heroicons/react/24/outline'
-
 
 export function LeftSideBar() {
   const leftSideBar = useLeftSideBar();
@@ -47,7 +45,7 @@ export function LeftSideBar() {
         onClick={leftSideBar.close}
         style={{ justifyContent: 'flex-end' }} // Align button contents to the right
       >
-              <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />
+        <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />
       </button>
       {getView()}
     </div>

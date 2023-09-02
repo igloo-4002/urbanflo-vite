@@ -20,6 +20,7 @@ export type Edge = {
 };
 
 export type Connection = {
+  id: string;
   from: string;
   to: string;
   over: string;

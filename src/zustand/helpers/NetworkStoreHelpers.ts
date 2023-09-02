@@ -1,6 +1,6 @@
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
 
-import { Network } from '../useNetworkStore';
+import { Network, useNetworkStore } from '../useNetworkStore';
 
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
@@ -220,4 +220,54 @@ export function removeItems<T>(
   }
 
   return newItems;
+}
+
+export function connectNewEdge({
+  newEdge,
+}: {
+  newEdge: Edge;
+}): Record<string, Connection> {
+  const network = useNetworkStore.getState();
+  const from = network.nodes[newEdge.from];
+  const to = network.nodes[newEdge.to];
+
+  const connections = network.connections;
+  const edges = Object.values(network.edges);
+
+  const inbounds = edges.filter(e => e.to === newEdge.from);
+  const outbounds = edges.filter(e => e.from === newEdge.to);
+
+  const connectionsInbound: Record<string, Connection> = inbounds.reduce(
+    (acc, edge) => ({
+      ...acc,
+      [`${edge.id}${newEdge.id}`]: {
+        from: edge.id,
+        to: newEdge.id,
+        over: from.id,
+        fromLane: 0,
+        toLane: 0,
+      },
+    }),
+    {},
+  );
+
+  const connectionsOutbound: Record<string, Connection> = outbounds.reduce(
+    (acc, edge) => ({
+      ...acc,
+      [`${newEdge.id}${edge.id}`]: {
+        from: newEdge.id,
+        to: edge.id,
+        over: to.id,
+        fromLane: 0,
+        toLane: 0,
+      },
+    }),
+    {},
+  );
+
+  return {
+    ...connections,
+    ...connectionsInbound,
+    ...connectionsOutbound,
+  };
 }
