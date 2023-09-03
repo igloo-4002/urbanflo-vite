@@ -1,6 +1,6 @@
 import { Canvas } from './components/Canvas/Canvas';
 import { FloatingPlayPause } from './components/FloatingPlayPause';
-import Header from './components/Header';
+import { Header } from './components/Header';
 import { LeftSideBar } from './components/SideBar';
 import { Toolbar } from './components/Toolbar/Toolbar';
 

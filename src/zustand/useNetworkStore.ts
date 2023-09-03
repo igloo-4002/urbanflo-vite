@@ -7,15 +7,18 @@ import {
   removeItems,
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
-} from './helpers/NetworkStoreHelpers';
+} from '../helpers/zustand/NetworkStoreHelpers';
 
-export type Network = {
+export interface NetworkData {
   nodes: Record<string, Node>;
   edges: Record<string, Edge>;
   connections: Record<string, Connection>;
   vType: Record<string, VType>;
   route: Record<string, Route>;
   flow: Record<string, Flow>;
+}
+
+export interface Network extends NetworkData {
   addNode: (node: Node) => void;
   updateNode: (nodeID: string, node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
@@ -24,7 +27,7 @@ export type Network = {
   deleteEdge: (id: string) => void;
   addConnection: (from: Edge, to: Edge) => void;
   updateFlow: (flowId: string, flow: Flow) => void;
-};
+}
 
 export const useNetworkStore = create<Network>(set => ({
   nodes: {},
