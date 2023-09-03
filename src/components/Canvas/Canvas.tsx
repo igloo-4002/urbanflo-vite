@@ -13,11 +13,13 @@ import {
   BASE_SIMULATION_ERROR_TOPIC,
   SIMULATION_SOCKET_URL,
 } from '~/simulation-urls';
+import { LabelNames } from '~/types/Toolbar';
 import { useCarsStore } from '~/zustand/useCarStore';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CarLayer } from './Layers/CarLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
@@ -29,6 +31,7 @@ export function Canvas() {
   const { isPlaying, changeSimulationId, simulationId } = usePlaying();
   const carStore = useCarsStore();
   const nodes = Object.values(network.nodes);
+  const toolbarState = useToolbarStore();
 
   const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
@@ -97,7 +100,15 @@ export function Canvas() {
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
-    // const point = stageRef.current?.getPointerPosition() ?? { x: 0, y: 0 };
+    if (
+      ![LabelNames.Road, LabelNames.Intersection].includes(
+        // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
+        toolbarState.selectedToolBarItem,
+      )
+    ) {
+      return;
+    }
+
     const point = event.currentTarget.getRelativePointerPosition();
 
     const conflict = nodes.find(node => {
