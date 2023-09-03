@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 
 import { ToolbarItem } from '~/types/Toolbar';
-import { useToolbarState } from '~/zustand/useToolbar';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 interface Props {
   toolbarItem: ToolbarItem;
 }
 
 export function ToolBarItem({ toolbarItem }: Props) {
-  const toolbarState = useToolbarState();
+  const toolbarState = useToolbarStore();
 
   const isSelected = toolbarItem.label === toolbarState.selectedToolBarItem;
 

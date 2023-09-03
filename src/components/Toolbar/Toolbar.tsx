@@ -1,16 +1,16 @@
-import { useToolbarState } from '~/zustand/useToolbar';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { ToolbarDivider } from './ToolbarDivider';
 import { ToolBarItem } from './ToolbarItem';
 
 export function Toolbar() {
-  const toolbarState = useToolbarState();
+  const toolbarStore = useToolbarStore();
 
   return (
     <span
       style={{
         position: 'fixed',
-        display: toolbarState.isOpen ? 'flex' : 'none',
+        display: toolbarStore.isOpen ? 'flex' : 'none',
         top: 115,
         left: '50%',
         transform: 'translateX(-50%)',
@@ -21,7 +21,7 @@ export function Toolbar() {
         boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
       }}
     >
-      {toolbarState.items.map((item, idx) => {
+      {toolbarStore.items.map((item, idx) => {
         if (item.divider) {
           return <ToolbarDivider key={idx} />;
         }

@@ -10,7 +10,7 @@ type ToolbarState = {
   items: ToolbarItem[];
 };
 
-export const useToolbarState = create<ToolbarState>(set => ({
+export const useToolbarStore = create<ToolbarState>(set => ({
   isOpen: true,
   selectedToolBarItem: null,
   setSelectedToolBarItem: (selectedToolBarItem: LabelNamesType | null) =>
