@@ -1,4 +1,4 @@
-import { Arrow, Group } from 'react-konva';
+import { Arrow, Group, Line } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
@@ -31,12 +31,11 @@ export function Road({ edge }: RoadProps) {
     }
   }
 
-  const commonProps = {
-    points: [0, 0, to.x - from.x, to.y - from.y],
-    pointerLength: 0,
-    pointerWidth: 0,
-    zIndex: -1,
-  };
+  const angleRad = Math.atan2(to.y - from.y, to.x - from.x);
+
+  // Calculate the offset in both x and y directions
+  const dx = laneWidth * Math.sin(angleRad);
+  const dy = laneWidth * Math.cos(angleRad);
 
   return (
     <Group onClick={handleRoadClick}>
@@ -45,9 +44,11 @@ export function Road({ edge }: RoadProps) {
         key={`road-selected-stroke-${edge.id}`}
         x={from.x}
         y={from.y}
+        points={[dx, -dy, to.x - from.x + dx, to.y - from.y - dy]}
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={laneWidth * edge.numLanes + 8}
-        {...commonProps}
+        pointerLength={0}
+        pointerWidth={0}
       />
 
       {/* Grey Road */}
@@ -55,27 +56,27 @@ export function Road({ edge }: RoadProps) {
         key={`road-${edge.id}`}
         x={from.x}
         y={from.y}
+        points={[dx, -dy, to.x - from.x + dx, to.y - from.y - dy]}
         fill={roadColor}
         stroke={roadColor}
         strokeWidth={laneWidth * edge.numLanes}
-        {...commonProps}
+        pointerLength={0}
+        pointerWidth={0}
       />
 
       {/* Lanes */}
       {Array.from({ length: edge.numLanes - 1 }).map((_, index) => {
-        const yOffset =
-          (index + 0.5) * laneWidth - (edge.numLanes - 1) * (laneWidth / 2);
+        const offset = (index + 0.5 - (edge.numLanes - 1) / 2) * laneWidth;
 
         return (
-          <Arrow
+          <Line
             key={`centerline-${edge.id}-${index}`}
-            x={from.x}
-            y={from.y + yOffset}
+            x={from.x + offset * Math.sin(angleRad)}
+            y={from.y - offset * Math.cos(angleRad)}
+            points={[dx, -dy, to.x - from.x + dx, to.y - from.y - dy]}
             dash={[10, 10]}
-            fill="transparent"
             stroke={centerlineColor}
             strokeWidth={2}
-            {...commonProps}
           />
         );
       })}
