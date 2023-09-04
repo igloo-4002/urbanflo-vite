@@ -15,15 +15,6 @@ export function classNames(...classes: string[]) {
 export function Header() {
     const network = useNetworkStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [documentName, setDocumentName] = useState<string>(network.documentName)
-  console.log(network.documentName)
-
-  useEffect(() => {
-    if (network.documentName) {
-      // If network.documentName is not empty, set it to documentName
-      setDocumentName(network.documentName.replace(/\.json$/, ''));
-    }
-  }, [network.documentName]);
 
   return (
     <header className="bg-white drop-shadow-lg">
@@ -41,8 +32,8 @@ export function Header() {
           <input
             className='ml-8 pl-2 flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 focus: border-amber-400'
           type="string"
-          value={documentName}
-          onChange={e => setDocumentName(e.target.value)}
+          value={network.documentName.replace(".json", "")}
+          onChange={e => network.setDocumentName(e.target.value)}
         />
         </div>
         <div className="flex lg:hidden">
@@ -57,7 +48,7 @@ export function Header() {
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-4">
-        <ProjectDownloadButton name={documentName} />
+        <ProjectDownloadButton />
 
           <ProjectUploadButton />
         </div>
