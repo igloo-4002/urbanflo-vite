@@ -22,11 +22,10 @@ export function Intersection({ node }: IntersectionProps) {
   const baseIntersectionSize = 25;
 
   function handleDragMove(event: KonvaEventObject<DragEvent>) {
-
     const updatedNode = {
       ...network.nodes[node.id],
       x: event.target.x(),
-      y: event.target.y()
+      y: event.target.y(),
     };
 
     network.updateNode(node.id, updatedNode);
