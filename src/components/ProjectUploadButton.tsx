@@ -1,5 +1,4 @@
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
 
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
