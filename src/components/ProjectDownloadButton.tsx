@@ -2,13 +2,14 @@ import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 
 import useJsonDownloader from '~/hooks/useJsonDownloader';
 import { getUrbanFloFileContents } from '~/logic/urbanflo-file-logic';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 
 export function ProjectDownloadButton() {
   const downloadJson = useJsonDownloader();
-
+  const network = useNetworkStore();
   function handleDownloadClick() {
     const jsonString = getUrbanFloFileContents();
-    downloadJson(jsonString, 'urbanflo-data.json');
+    downloadJson(jsonString, network.documentName);
   }
 
   return (
