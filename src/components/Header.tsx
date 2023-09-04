@@ -6,12 +6,14 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import Logo from '../assets/UrbanFloLogoB&W.svg';
 import { ProjectDownloadButton } from './ProjectDownloadButton';
 import { ProjectUploadButton } from './ProjectUploadButton';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export function Header() {
+    const network = useNetworkStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -27,9 +29,12 @@ export function Header() {
           <span className="ml-8 mb-2 flex items-center gap-x-1 text-5xl font-thin leading-6 text-gray-900">
             |
           </span>
-          <span className="ml-8 flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-            Untitled Document
-          </span>
+          <input
+            className='ml-8 pl-2 flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 focus: border-amber-400'
+          type="string"
+          value={network.documentName.replace(".json", "")}
+          onChange={e => network.setDocumentName(e.target.value)}
+        />
         </div>
         <div className="flex lg:hidden">
           <button
@@ -43,7 +48,8 @@ export function Header() {
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-4">
-          <ProjectDownloadButton />
+        <ProjectDownloadButton />
+
           <ProjectUploadButton />
         </div>
       </nav>

@@ -19,6 +19,7 @@ function getFileContents(): UrbanFloFile {
   return {
     version: 1,
     networkData: {
+      documentName: networkStore.documentName,
       nodes: networkStore.nodes,
       edges: networkStore.edges,
       connections: networkStore.connections,

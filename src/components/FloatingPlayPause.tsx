@@ -8,8 +8,10 @@ const FloatingPlayPause = () => {
   const network = useNetworkStore();
   const { isPlaying, play, changeSimulationId, pause } = usePlaying();
 
+  console.log(network.documentName)
   const handleUpload = async () => {
     const requestBody = {
+      documentName: network.documentName,
       nodes: Object.values(network.nodes),
       edges: Object.values(network.edges),
       connections: Object.values(network.connections),
