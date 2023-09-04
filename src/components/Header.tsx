@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
@@ -6,14 +6,24 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import Logo from '../assets/UrbanFloLogoB&W.svg';
 import { ProjectDownloadButton } from './ProjectDownloadButton';
 import { ProjectUploadButton } from './ProjectUploadButton';
+import { useNetworkStore } from '~/zustand/useNetworkStore';
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export function Header() {
+    const network = useNetworkStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [documentName, setDocumentName] = useState<string>("Untitled Document")
+  const [documentName, setDocumentName] = useState<string>(network.documentName)
+  console.log(network.documentName)
+
+  useEffect(() => {
+    if (network.documentName) {
+      // If network.documentName is not empty, set it to documentName
+      setDocumentName(network.documentName.replace(/\.json$/, ''));
+    }
+  }, [network.documentName]);
 
   return (
     <header className="bg-white drop-shadow-lg">

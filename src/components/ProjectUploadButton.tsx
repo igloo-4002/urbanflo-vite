@@ -1,4 +1,5 @@
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
+import { useState } from 'react';
 
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -8,8 +9,8 @@ export function ProjectUploadButton() {
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-
     if (file && file.type === 'application/json') {
+      networkStore.setDocumentName(file.name)
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         try {

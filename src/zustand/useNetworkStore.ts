@@ -29,7 +29,8 @@ export interface Network extends NetworkData {
   updateFlow: (flowId: string, flow: Flow) => void;
 }
 
-export const useNetworkStore = create<Network>(set => ({
+export const useNetworkStore = create<Network & { documentName: string; setDocumentName: (name: string) => void }>(set => ({
+  documentName: "Untitled Document",
   nodes: {},
   edges: {},
   connections: {},
@@ -37,6 +38,9 @@ export const useNetworkStore = create<Network>(set => ({
   route: {},
   flow: {},
   grid: {},
+  setDocumentName: (name) => {
+    set({ documentName: name });
+  },
   addNode: (node: Node) =>
     set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),
   updateNode: (nodeId, node) => {
