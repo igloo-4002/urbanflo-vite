@@ -10,6 +10,7 @@ import {
 } from '../helpers/zustand/NetworkStoreHelpers';
 
 export interface NetworkData {
+  documentName: string;
   nodes: Record<string, Node>;
   edges: Record<string, Edge>;
   connections: Record<string, Connection>;
@@ -19,6 +20,7 @@ export interface NetworkData {
 }
 
 export interface Network extends NetworkData {
+  setDocumentName: (name: string) => void;
   addNode: (node: Node) => void;
   updateNode: (nodeID: string, node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
@@ -29,7 +31,7 @@ export interface Network extends NetworkData {
   updateFlow: (flowId: string, flow: Flow) => void;
 }
 
-export const useNetworkStore = create<Network & { documentName: string; setDocumentName: (name: string) => void }>(set => ({
+export const useNetworkStore = create<Network>(set => ({
   documentName: "Untitled Document",
   nodes: {},
   edges: {},
