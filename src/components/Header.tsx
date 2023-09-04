@@ -13,6 +13,7 @@ export function classNames(...classes: string[]) {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [documentName, setDocumentName] = useState<string>("Untitled Document")
 
   return (
     <header className="bg-white drop-shadow-lg">
@@ -27,9 +28,12 @@ export function Header() {
           <span className="ml-8 mb-2 flex items-center gap-x-1 text-5xl font-thin leading-6 text-gray-900">
             |
           </span>
-          <span className="ml-8 flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-            Untitled Document
-          </span>
+          <input
+            className='ml-8 pl-2 flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 focus: border-amber-400'
+          type="string"
+          value={documentName}
+          onChange={e => setDocumentName(e.target.value)}
+        />
         </div>
         <div className="flex lg:hidden">
           <button
@@ -43,7 +47,8 @@ export function Header() {
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-4">
-          <ProjectDownloadButton />
+        <ProjectDownloadButton name={documentName} />
+
           <ProjectUploadButton />
         </div>
       </nav>
