@@ -16,6 +16,12 @@ export function ProjectUploadButton() {
           const parsedJson = JSON.parse(e.target?.result as string);
           const network = getNetworkFromUploadedFile(parsedJson);
 
+          // Clear the current canvas
+          const nodeIds = Object.keys(networkStore.nodes);
+          nodeIds.forEach(nodeId => {
+            networkStore.deleteNode(nodeId);
+          });
+
           // Update the state with the network
           Object.values(network.networkData.nodes).forEach(node => {
             networkStore.addNode(node);
