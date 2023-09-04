@@ -32,7 +32,7 @@ export interface Network extends NetworkData {
 }
 
 export const useNetworkStore = create<Network>(set => ({
-  documentName: "Untitled Document",
+  documentName: 'Untitled Document',
   nodes: {},
   edges: {},
   connections: {},
@@ -40,7 +40,7 @@ export const useNetworkStore = create<Network>(set => ({
   route: {},
   flow: {},
   grid: {},
-  setDocumentName: (name) => {
+  setDocumentName: name => {
     set({ documentName: name });
   },
   addNode: (node: Node) =>
