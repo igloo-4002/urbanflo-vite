@@ -1,8 +1,7 @@
-import { Group, Rect } from 'react-konva';
+import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { highlightColor } from '~/colors';
 import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -20,19 +19,6 @@ export function Intersection({ node }: IntersectionProps) {
   const network = useNetworkStore();
   const selector = useSelector();
   const toolbarState = useToolbarStore();
-
-  const isSelected = selector.selected === node.id;
-  const baseIntersectionSize = 25;
-
-  function handleDragMove(event: KonvaEventObject<DragEvent>) {
-    const updatedNode = {
-      ...network.nodes[node.id],
-      x: event.target.x(),
-      y: event.target.y(),
-    };
-
-    network.updateNode(node.id, updatedNode);
-  }
 
   function handleIntersectionClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
@@ -73,11 +59,10 @@ export function Intersection({ node }: IntersectionProps) {
     intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
   }
 
-  const size = edgeIds.length === 0 ? baseIntersectionSize : intersectionSize;
-
   return (
     <Group onClick={handleIntersectionClick}>
-      <Rect
+      <Circle x={node.x} y={node.y} width={4} height={4} fill="green" />
+      {/* <Rect
         x={node.x - size / 2}
         y={node.y - size / 2}
         width={size}
@@ -88,7 +73,7 @@ export function Intersection({ node }: IntersectionProps) {
         zIndex={1}
         draggable
         onDragEnd={handleDragMove}
-      />
+      /> */}
     </Group>
   );
 }

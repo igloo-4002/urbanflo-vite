@@ -1,8 +1,8 @@
-import { Arrow, Group } from 'react-konva';
+import { Group, Line } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { centerlineColor, highlightColor, roadColor } from '~/colors';
+import { roadColor } from '~/colors';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
@@ -17,7 +17,7 @@ export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
-  const isSelected = selector.selected === edge.id;
+  // const isSelected = selector.selected === edge.id;
 
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
@@ -31,54 +31,33 @@ export function Road({ edge }: RoadProps) {
     }
   }
 
-  const commonProps = {
-    points: [0, 0, to.x - from.x, to.y - from.y],
-    pointerLength: 0,
-    pointerWidth: 0,
-    zIndex: -1,
-  };
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+
+  const px = dy;
+  const py = -dx;
+
+  const length = Math.sqrt(px * px + py * py);
+  const ux = (px / length) * laneWidth * edge.numLanes;
+  const uy = (py / length) * laneWidth * edge.numLanes;
+
+  const points = [
+    0,
+    0,
+    ux,
+    uy,
+    to.x - from.x + ux,
+    to.y - from.y + uy,
+    to.x - from.x,
+    to.y - from.y,
+  ];
 
   return (
     <Group onClick={handleRoadClick}>
-      {/* Highlight for selected road */}
-      <Arrow
-        key={`road-selected-stroke-${edge.id}`}
-        x={from.x}
-        y={from.y}
-        stroke={isSelected ? highlightColor : 'transparent'}
-        strokeWidth={laneWidth * edge.numLanes + 8}
-        {...commonProps}
-      />
-
-      {/* Grey Road */}
-      <Arrow
-        key={`road-${edge.id}`}
-        x={from.x}
-        y={from.y}
-        fill={roadColor}
-        stroke={roadColor}
-        strokeWidth={laneWidth * edge.numLanes}
-        {...commonProps}
-      />
+      {/* Gray road */}
+      <Line x={from.x} y={from.y} points={points} closed fill={roadColor} />
 
       {/* Lanes */}
-      {Array.from({ length: edge.numLanes - 1 }).map((_, index) => {
-        const yOffset =
-          (index + 0.5) * laneWidth - (edge.numLanes - 1) * (laneWidth / 2);
-
-        return (
-          <Arrow
-            key={`centerline-${edge.id}-${index}`}
-            x={from.x}
-            y={from.y + yOffset}
-            dash={[10, 10]}
-            fill="transparent"
-            stroke={centerlineColor}
-            strokeWidth={2}
-            {...commonProps}
-          />
-        );
-      })}
     </Group>
   );
 }
