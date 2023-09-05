@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { laneWidth } from '~/components/Canvas/Road';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
 
 import {
@@ -64,6 +65,7 @@ export const useNetworkStore = create<Network>(set => ({
         to: to.id,
         priority: -1,
         numLanes: 1,
+        width: laneWidth,
         speed: 13.89,
       };
 

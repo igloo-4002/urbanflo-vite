@@ -16,6 +16,7 @@ export type Edge = {
   to: string;
   priority: number;
   numLanes: number;
+  width: number;
   speed: number;
 };
 

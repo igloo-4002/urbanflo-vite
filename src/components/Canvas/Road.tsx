@@ -2,7 +2,7 @@ import { Group, Line } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { roadColor } from '~/colors';
+import { centerlineColor, highlightColor, roadColor } from '~/colors';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
@@ -17,7 +17,7 @@ export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
-  // const isSelected = selector.selected === edge.id;
+  const isSelected = selector.selected === edge.id;
 
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
@@ -54,10 +54,53 @@ export function Road({ edge }: RoadProps) {
 
   return (
     <Group onClick={handleRoadClick}>
-      {/* Gray road */}
-      <Line x={from.x} y={from.y} points={points} closed fill={roadColor} />
+      {/* Highlight */}
+      {isSelected && (
+        <Line
+          key={`edge-highlight-${edge.id}`}
+          x={from.x}
+          y={from.y}
+          points={points}
+          closed
+          stroke={highlightColor}
+          strokeWidth={4}
+        />
+      )}
 
+      {/* Gray road */}
+      <Line
+        key={edge.id}
+        x={from.x}
+        y={from.y}
+        points={points}
+        closed
+        fill={roadColor}
+      />
       {/* Lanes */}
+      {Array.from({ length: edge.numLanes - 1 }, (_, index) => {
+        const midX = ux / 2;
+        const midY = uy / 2;
+        const midEndX = (to.x - from.x + to.x - from.x + ux) / 2;
+        const midEndY = (to.y - from.y + to.y - from.y + uy) / 2;
+
+        const offset = (index + 0.5 - (edge.numLanes - 1) / 2) * laneWidth;
+        const laneStartX = midX + (px / length) * offset;
+        const laneStartY = midY + (py / length) * offset;
+        const laneEndX = midEndX + (px / length) * offset;
+        const laneEndY = midEndY + (py / length) * offset;
+
+        return (
+          <Line
+            key={`lane-${edge.id}-${index}`}
+            x={from.x}
+            y={from.y}
+            points={[laneStartX, laneStartY, laneEndX, laneEndY]}
+            dash={[10, 10]}
+            stroke={centerlineColor}
+            strokeWidth={2}
+          />
+        );
+      })}
     </Group>
   );
 }
