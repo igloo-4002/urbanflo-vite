@@ -80,8 +80,8 @@ export function Road({ edge }: RoadProps) {
       {Array.from({ length: edge.numLanes - 1 }, (_, index) => {
         const midX = ux / 2;
         const midY = uy / 2;
-        const midEndX = (to.x - from.x + to.x - from.x + ux) / 2;
-        const midEndY = (to.y - from.y + to.y - from.y + uy) / 2;
+        const midEndX = to.x - from.x + midX;
+        const midEndY = to.y - from.y + midY;
 
         const offset = (index + 0.5 - (edge.numLanes - 1) / 2) * laneWidth;
         const laneStartX = midX + (px / length) * offset;
