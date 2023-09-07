@@ -102,15 +102,15 @@ export function getAllEdgesForNode(
   nodeId: string,
   edges: Record<string, Edge>,
 ): Edge[] {
-  const edgeIds: Edge[] = [];
+  const connectedEdges: Edge[] = [];
 
   for (const edgeId in edges) {
     if (edgeId.startsWith(nodeId) || edgeId.endsWith(nodeId)) {
-      edgeIds.push(edges[edgeId]);
+      connectedEdges.push(edges[edgeId]);
     }
   }
 
-  return edgeIds;
+  return connectedEdges;
 }
 
 export function updateAssociatesOnNewEdge(
