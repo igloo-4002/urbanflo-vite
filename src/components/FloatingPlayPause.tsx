@@ -6,7 +6,7 @@ import { usePlaying } from '~/zustand/usePlaying';
 
 export const FloatingPlayPause = () => {
   const network = useNetworkStore();
-  const { isPlaying, play, changeSimulationId, pause } = usePlaying();
+  const player = usePlaying();
 
   const handleUpload = async () => {
     const requestBody = {
@@ -42,22 +42,21 @@ export const FloatingPlayPause = () => {
     }
 
     const res = await response.json();
-    changeSimulationId(res.id);
-    play();
+    player.changeSimulationId(res.id);
+    player.play();
   };
 
   return (
     <div className="absolute bottom-4 right-4 items-center justify-center rounded-md flex py-2 px-3 z-10 bg-orange-500">
       <button
         onClick={() => {
-          isPlaying ? pause() : handleUpload();
+          player.isPlaying ? player.pause() : handleUpload();
         }}
         className="text-white font-sans font-medium"
         style={{ display: 'flex', alignItems: 'center' }}
       >
-        {isPlaying ? 'Pause' : 'Play'}
-
-        {isPlaying ? (
+        {player.isPlaying ? 'Pause' : 'Play'}
+        {player.isPlaying ? (
           <PauseIcon className="h-5 ml-2" />
         ) : (
           <PlayIcon className="h-5 ml-2" />
