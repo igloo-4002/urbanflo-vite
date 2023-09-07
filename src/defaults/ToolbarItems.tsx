@@ -9,9 +9,6 @@ export const toolbarItems: ToolbarItem[] = [
   {
     label: LabelNames.Pointer,
     heroIcon: <CursorArrowRaysIcon className="h-6 w-6" />,
-    onClick: () => {
-      console.log('Pointer icon clicked');
-    },
   },
   {
     divider: true,
@@ -19,15 +16,9 @@ export const toolbarItems: ToolbarItem[] = [
   {
     label: LabelNames.Intersection,
     icon: intersectionIcon,
-    onClick: () => {
-      console.log('Intersection icon clicked');
-    },
   },
   {
     label: LabelNames.Road,
     icon: roadIcon,
-    onClick: () => {
-      console.log('Road icon clicked');
-    },
   },
 ];

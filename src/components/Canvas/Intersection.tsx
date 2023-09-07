@@ -2,7 +2,8 @@ import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
+import { roadColor } from '~/colors';
+import { getAllEdgesForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -50,30 +51,19 @@ export function Intersection({ node }: IntersectionProps) {
     }
   }
 
-  const edgeIds = getAllEdgeIdsForNode(node.id, network.edges);
+  const connectedEdges = getAllEdgesForNode(node.id, network.edges);
 
-  // Compute total width based on maximum number of lanes from all edges
-  let intersectionSize = 0;
-  for (const edgeId of edgeIds) {
-    const edge = network.edges[edgeId];
-    intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
-  }
+  const radius = Math.max(
+    laneWidth,
+    connectedEdges.reduce((maxWidth, edge) => {
+      const edgeWidth = laneWidth * edge.numLanes;
+      return Math.max(maxWidth, edgeWidth);
+    }, 0),
+  );
 
   return (
     <Group onClick={handleIntersectionClick}>
-      <Circle x={node.x} y={node.y} width={4} height={4} fill="green" />
-      {/* <Rect
-        x={node.x - size / 2}
-        y={node.y - size / 2}
-        width={size}
-        height={size}
-        fill="grey"
-        stroke={isSelected ? highlightColor : 'transparent'}
-        strokeWidth={4}
-        zIndex={1}
-        draggable
-        onDragEnd={handleDragMove}
-      /> */}
+      <Circle fill={roadColor} x={node.x} y={node.y} radius={radius} />
     </Group>
   );
 }
