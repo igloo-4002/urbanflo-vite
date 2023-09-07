@@ -111,10 +111,31 @@ export const useNetworkStore = create<Network>(set => ({
       // update connections if the number of lanes is decreasing
       if (state.edges[edgeId].numLanes > edge.numLanes) {
         // remove connections with outdated lanes
-        const connections = removeItems(
+        let connections = removeItems(
           state.connections,
           c => c.fromLane > edge.numLanes - 1 || c.toLane > edge.numLanes - 1,
         );
+
+        for (const connection of affectedConnections) {
+          if (connection.from === edge.id || connection.to === edge.id) {
+            const fromNumLanes =
+              connection.from === edge.id
+                ? edge.numLanes
+                : state.edges[connection.from].numLanes;
+            const toNumLanes =
+              connection.from === edge.id
+                ? state.edges[connection.to].numLanes
+                : edge.numLanes;
+
+            connections = updateConnectionsOnLaneChange(
+              connection.from,
+              connection.to,
+              fromNumLanes,
+              toNumLanes,
+              connections,
+            );
+          }
+        }
 
         return {
           edges: updatedEdges,

@@ -1,6 +1,5 @@
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
-
-import { Network } from '../../zustand/useNetworkStore';
+import { Network } from '~/zustand/useNetworkStore';
 
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
@@ -190,18 +189,45 @@ export function updateConnectionsOnLaneChange(
 ): Record<string, Connection> {
   const newConnections = { ...connections };
 
-  for (let fromLane = 0; fromLane < fromNumLanes; fromLane++) {
-    for (let toLane = 0; toLane < toNumLanes; toLane++) {
-      const newConnectionId = `${from}_${to}_${fromLane}_${toLane}`;
+  for (const [key, connection] of Object.entries(newConnections)) {
+    if (connection.from === from && connection.to === to) {
+      delete newConnections[key];
+    }
+  }
 
-      if (!newConnections[newConnectionId]) {
-        newConnections[newConnectionId] = {
-          from,
-          to,
-          fromLane,
-          toLane,
-        };
-      }
+  const minLanes = Math.min(fromNumLanes, toNumLanes);
+  for (let lane = 0; lane < minLanes; lane++) {
+    const newConnectionId = `${from}_${to}_${lane}_${lane}`;
+
+    if (!newConnections[newConnectionId]) {
+      newConnections[newConnectionId] = {
+        from,
+        to,
+        fromLane: lane,
+        toLane: lane,
+      };
+    }
+  }
+
+  if (fromNumLanes > minLanes) {
+    for (let lane = minLanes; lane < fromNumLanes; lane++) {
+      const newConnectionId = `${from}_${to}_${lane}_${minLanes - 1}`;
+      newConnections[newConnectionId] = {
+        from,
+        to,
+        fromLane: lane,
+        toLane: minLanes - 1,
+      };
+    }
+  } else if (toNumLanes > minLanes) {
+    for (let lane = minLanes; lane < toNumLanes; lane++) {
+      const newConnectionId = `${from}_${to}_${minLanes - 1}_${lane}`;
+      newConnections[newConnectionId] = {
+        from,
+        to,
+        fromLane: minLanes - 1,
+        toLane: lane,
+      };
     }
   }
 
