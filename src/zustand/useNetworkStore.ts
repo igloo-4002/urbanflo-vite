@@ -117,24 +117,26 @@ export const useNetworkStore = create<Network>(set => ({
         );
 
         for (const connection of affectedConnections) {
-          if (connection.from === edge.id || connection.to === edge.id) {
-            const fromNumLanes =
-              connection.from === edge.id
-                ? edge.numLanes
-                : state.edges[connection.from].numLanes;
-            const toNumLanes =
-              connection.from === edge.id
-                ? state.edges[connection.to].numLanes
-                : edge.numLanes;
+          let fromNumLanes: number;
+          let toNumLanes: number;
 
-            connections = updateConnectionsOnLaneChange(
-              connection.from,
-              connection.to,
-              fromNumLanes,
-              toNumLanes,
-              connections,
-            );
+          if (connection.from === edge.id) {
+            fromNumLanes = edge.numLanes;
+            toNumLanes = state.edges[connection.to].numLanes;
+          } else if (connection.to === edge.id) {
+            fromNumLanes = state.edges[connection.from].numLanes;
+            toNumLanes = edge.numLanes;
+          } else {
+            continue;
           }
+
+          connections = updateConnectionsOnLaneChange(
+            connection.from,
+            connection.to,
+            fromNumLanes,
+            toNumLanes,
+            connections,
+          );
         }
 
         return {
