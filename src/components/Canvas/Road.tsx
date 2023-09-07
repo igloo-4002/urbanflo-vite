@@ -49,7 +49,6 @@ export function Road({ edge }: RoadProps) {
     <Group onClick={handleRoadClick}>
       {/* Gray road */}
       <Path
-        key={isSelected ? `road-selected-${edge.id}` : `road-${edge.id}`}
         data={roadPath}
         fill={roadColor}
         stroke={isSelected ? highlightColor : 'transparent'}
@@ -66,7 +65,7 @@ export function Road({ edge }: RoadProps) {
 
         return (
           <Line
-            key={`lane-${edge.id}-${index}`}
+            key={`${edge.id}-lane-${index}`}
             points={[laneUx, laneUy, laneToX, laneToY]}
             stroke={centerlineColor}
             strokeWidth={2}
