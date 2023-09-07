@@ -2,7 +2,7 @@ import { Group, Line, Path } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { centerlineColor, roadColor } from '~/colors';
+import { centerlineColor, highlightColor, roadColor } from '~/colors';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
@@ -17,7 +17,7 @@ export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
-  // const isSelected = selector.selected === edge.id;
+  const isSelected = selector.selected === edge.id;
 
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
@@ -48,7 +48,13 @@ export function Road({ edge }: RoadProps) {
   return (
     <Group onClick={handleRoadClick}>
       {/* Gray road */}
-      <Path data={roadPath} fill={roadColor} />
+      <Path
+        key={isSelected ? `road-selected-${edge.id}` : `road-${edge.id}`}
+        data={roadPath}
+        fill={roadColor}
+        stroke={isSelected ? highlightColor : 'transparent'}
+        strokeWidth={isSelected ? 3 : 0}
+      />
 
       {/* Lanes */}
       {Array.from({ length: edge.numLanes - 1 }).map((_, index) => {

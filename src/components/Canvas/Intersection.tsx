@@ -2,7 +2,7 @@ import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { roadColor } from '~/colors';
+import { highlightColor, roadColor } from '~/colors';
 import { getAllEdgesForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -20,6 +20,8 @@ export function Intersection({ node }: IntersectionProps) {
   const network = useNetworkStore();
   const selector = useSelector();
   const toolbarState = useToolbarStore();
+
+  const isSelected = selector.selected === node.id;
 
   function handleIntersectionClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
@@ -63,7 +65,14 @@ export function Intersection({ node }: IntersectionProps) {
 
   return (
     <Group onClick={handleIntersectionClick}>
-      <Circle fill={roadColor} x={node.x} y={node.y} radius={radius} />
+      <Circle
+        fill={roadColor}
+        x={node.x}
+        y={node.y}
+        radius={radius}
+        stroke={isSelected ? highlightColor : 'transparent'}
+        strokeWidth={isSelected ? 3 : 0}
+      />
     </Group>
   );
 }
