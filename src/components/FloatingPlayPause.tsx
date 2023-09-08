@@ -10,6 +10,7 @@ export const FloatingPlayPause = () => {
 
   const handleUpload = async () => {
     const requestBody = {
+      documentName: network.documentName,
       nodes: Object.values(network.nodes),
       edges: Object.values(network.edges),
       connections: Object.values(network.connections),
@@ -27,6 +28,8 @@ export const FloatingPlayPause = () => {
       route: Object.values(network.route),
       flow: Object.values(network.flow),
     };
+
+    console.log(JSON.stringify(requestBody))
 
     const response = await fetch(`${BASE_URL}/simulation`, {
       method: 'POST',
