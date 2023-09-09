@@ -19,7 +19,7 @@ export function RoadPropertiesEditor() {
 
     const edge = network.edges[selected.selected];
 
-    setNewSpeedLimit(edge.speed * 3.6);
+    setNewSpeedLimit(Math.floor(edge.speed * 3.6));
     setNewLanes(edge.numLanes);
 
     const from = network.nodes[edge.from];
