@@ -22,6 +22,7 @@ export function RoadPropertiesEditor() {
 
     setNewSpeedLimit(Math.floor(edge.speed * 3.6));
     setNewLanes(edge.numLanes);
+    setNewRoadName(edge.name);
 
     const from = network.nodes[edge.from];
     const to = network.nodes[edge.to];
