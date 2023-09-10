@@ -67,6 +67,7 @@ export function RoadPropertiesEditor() {
           type="number"
           value={newLanes}
           onChange={e => setNewLanes(parseInt(e.target.value))}
+          min={1}
         />
       </RowStack>
       <RowStack>
@@ -85,10 +86,11 @@ export function RoadPropertiesEditor() {
           type="number"
           value={newPriority}
           onChange={e => setNewPriority(parseInt(e.target.value))}
+          min={-1}
         />
       </RowStack>
       <button
-        className="rounded-full py-2 px-4 text-white z-10 bg-amber-400"
+        className="rounded-full py-2 px-4 my-2 text-white z-10 bg-amber-400"
         onClick={submitRoadProperties}
       >
         Save

@@ -29,23 +29,9 @@ export function LeftSideBar() {
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        top: 115,
-        left: 15,
-        zIndex: 1000,
-        maxHeight: 'min-content',
-        width: '250px',
-        display: leftSideBar.isOpen ? 'flex' : 'none',
-        justifyContent: 'center',
-        alignContent: 'center',
-        flexDirection: 'column',
-        backgroundColor: '#FAF9F6',
-        padding: '12px',
-        borderRadius: '10px',
-        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-        overflowWrap: 'break-word',
-      }}
+      className={`fixed max-h-[min-content] z-100 flex-col bg-[#FAF9F6] shadow-md top-32 left-4 w-64 items-center justify-center p-3 rounded-xl ${
+        leftSideBar.isOpen ? 'flex' : 'hidden'
+      }`}
     >
       <button className="flex self-end" onClick={closeLeftBar}>
         <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />

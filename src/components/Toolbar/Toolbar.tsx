@@ -9,17 +9,11 @@ export function Toolbar() {
   return (
     <span
       style={{
-        position: 'fixed',
-        display: toolbarStore.isOpen ? 'flex' : 'none',
-        top: 115,
-        left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: 1000,
-        backgroundColor: '#FAF9F6',
-        padding: '8px',
-        borderRadius: '10px',
-        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
       }}
+      className={`fixed ${
+        toolbarStore.isOpen ? 'flex' : 'hidden'
+      } top-32 left-1/2 z-100 bg-[#FAF9F6] shadow-md p-2 rounded-xl`}
     >
       {toolbarStore.items.map((item, idx) => {
         if (item.divider) {
