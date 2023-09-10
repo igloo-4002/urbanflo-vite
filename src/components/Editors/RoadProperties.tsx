@@ -76,7 +76,7 @@ export function RoadPropertiesEditor() {
         />
       </RowStack>
       <button
-        className="rounded-md py-2 px-3 z-10 bg-amber-400"
+        className="rounded-full py-2 px-4 text-white z-10 bg-amber-400"
         onClick={submitRoadProperties}
       >
         Save

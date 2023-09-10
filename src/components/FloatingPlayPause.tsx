@@ -59,10 +59,10 @@ export const FloatingPlayPause = () => {
   };
 
   return (
-    <div className="absolute bottom-4 right-4 items-center justify-center rounded-md flex py-2 px-3 z-10 bg-orange-500">
+    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex py-2 px-4 z-10 bg-orange-500">
       <button
         onClick={player.isPlaying ? handleOutput : handleUpload}
-        className="text-white font-sans font-medium"
+        className="text-white font-sans font-medium h-8"
         style={{ display: 'flex', alignItems: 'center' }}
         disabled={loading}
       >

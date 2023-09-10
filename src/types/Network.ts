@@ -33,7 +33,7 @@ export type Edge = {
   numLanes: number;
   width: number;
   speed: number;
-  spreadType?: 'center' | 'center' | 'roadCenter';
+  spreadType?: 'right' | 'center' | 'roadCenter';
 };
 
 export type Connection = {
