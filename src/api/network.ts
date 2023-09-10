@@ -12,7 +12,9 @@ type NetworkPayload = {
   vType: VType[];
 };
 
-export async function uploadNetwork(network: NetworkPayload) {
+export async function uploadNetwork(
+  network: NetworkPayload,
+): Promise<SimulationInfo> {
   const response = await fetch(`${BASE_URL}/simulation`, {
     method: 'POST',
     headers: {
@@ -25,10 +27,12 @@ export async function uploadNetwork(network: NetworkPayload) {
     throw new Error(`Failed to upload network: ${response.statusText}`);
   }
 
-  return (await response.json()) as SimulationInfo;
+  return await response.json();
 }
 
-export async function getSimulationOutput(simulationId: string) {
+export async function getSimulationOutput(
+  simulationId: string,
+): Promise<SimulationOutput> {
   const response = await fetch(
     `${BASE_URL}/simulation/${simulationId}/output`,
     {
@@ -43,10 +47,12 @@ export async function getSimulationOutput(simulationId: string) {
     throw new Error(`Failed to get network output: ${response.statusText}`);
   }
 
-  return (await response.json()) as SimulationOutput;
+  return await response.json();
 }
 
-export async function getSimulationInfo(simulationId: string) {
+export async function getSimulationInfo(
+  simulationId: string,
+): Promise<SimulationInfo> {
   const response = await fetch(`${BASE_URL}/simulation/${simulationId}`, {
     method: 'GET',
     headers: {
@@ -58,13 +64,13 @@ export async function getSimulationInfo(simulationId: string) {
     throw new Error(`Failed to get network output: ${response.statusText}`);
   }
 
-  return (await response.json()) as SimulationInfo;
+  return await response.json();
 }
 
 export async function modifyNetwork(
   simulationId: string,
   network: NetworkPayload,
-) {
+): Promise<SimulationInfo> {
   const response = await fetch(`${BASE_URL}/simulation/${simulationId}`, {
     method: 'PUT',
     headers: {
@@ -77,7 +83,7 @@ export async function modifyNetwork(
     throw new Error(`Failed to modify network: ${response.statusText}`);
   }
 
-  return (await response.json()) as SimulationInfo;
+  return await response.json();
 }
 
 export async function deleteSimulation(simulationId: string) {
@@ -91,9 +97,11 @@ export async function deleteSimulation(simulationId: string) {
   if (!response.ok) {
     throw new Error(`Failed to delete simulation: ${response.statusText}`);
   }
+
+  return await response.json();
 }
 
-export async function getAllSimulationInfo() {
+export async function getAllSimulationInfo(): Promise<SimulationInfo[]> {
   const response = await fetch(`${BASE_URL}/simulations`, {
     method: 'GET',
     headers: {
@@ -105,5 +113,5 @@ export async function getAllSimulationInfo() {
     throw new Error(`Failed to get simulation info: ${response.statusText}`);
   }
 
-  return (await response.json()) as SimulationInfo[];
+  return await response.json();
 }

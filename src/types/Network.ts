@@ -3,11 +3,26 @@ export type Point = {
   y: number;
 };
 
+export type NodeType =
+  | 'priority'
+  | 'traffic_light'
+  | 'right_before_left'
+  | 'left_before_right'
+  | 'unregulated'
+  | 'priority_stop'
+  | 'traffic_light_unregulated'
+  | 'allway_stop'
+  | 'rail_signal'
+  | 'zipper'
+  | 'traffic_light_right_on_red'
+  | 'rail_crossing'
+  | 'dead_end';
+
 export type Node = {
   id: string;
   x: number;
   y: number;
-  type: string;
+  type: NodeType;
 };
 
 export type Edge = {
@@ -18,6 +33,7 @@ export type Edge = {
   numLanes: number;
   width: number;
   speed: number;
+  spreadType?: 'center' | 'center' | 'roadCenter';
 };
 
 export type Connection = {

@@ -36,8 +36,8 @@ export const FloatingPlayPause = () => {
         flow: Object.values(network.flow),
       };
 
-      const res = await uploadNetwork(requestBody);
-      player.changeSimulationId(res.id);
+      const simInfo = await uploadNetwork(requestBody);
+      player.changeSimulationId(simInfo.id);
       player.play();
     } catch (error: unknown) {
       console.error(error);
@@ -53,9 +53,9 @@ export const FloatingPlayPause = () => {
       return;
     }
 
-    const response = await getSimulationOutput(player.simulationId);
+    const simOutput = await getSimulationOutput(player.simulationId);
 
-    console.log(response);
+    console.log({ simOutput });
   };
 
   return (
