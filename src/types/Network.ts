@@ -3,26 +3,27 @@ export type Point = {
   y: number;
 };
 
-export type NodeType =
-  | 'priority'
-  | 'traffic_light'
-  | 'right_before_left'
-  | 'left_before_right'
-  | 'unregulated'
-  | 'priority_stop'
-  | 'traffic_light_unregulated'
-  | 'allway_stop'
-  | 'rail_signal'
-  | 'zipper'
-  | 'traffic_light_right_on_red'
-  | 'rail_crossing'
-  | 'dead_end';
+export const NodeType = {
+  priority: 'priority',
+  traffic_light: 'traffic_light',
+  right_before_left: 'right_before_left',
+  left_before_right: 'left_before_right',
+  unregulated: 'unregulated',
+  priority_stop: 'priority_stop',
+  traffic_light_unregulated: 'traffic_light_unregulated',
+  allway_stop: 'allway_stop',
+  rail_signal: 'rail_signal',
+  zipper: 'zipper',
+  traffic_light_right_on_red: 'traffic_light_right_on_red',
+  rail_crossing: 'rail_crossing',
+  dead_end: 'dead_end',
+} as const;
 
 export type Node = {
   id: string;
   x: number;
   y: number;
-  type: NodeType;
+  type: keyof typeof NodeType;
 };
 
 export type Edge = {

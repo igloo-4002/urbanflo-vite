@@ -68,6 +68,7 @@ export function RoadPropertiesEditor() {
           value={newLanes}
           onChange={e => setNewLanes(parseInt(e.target.value))}
           min={1}
+          max={10}
         />
       </RowStack>
       <RowStack>
@@ -87,6 +88,7 @@ export function RoadPropertiesEditor() {
           value={newPriority}
           onChange={e => setNewPriority(parseInt(e.target.value))}
           min={-1}
+          max={20}
         />
       </RowStack>
       <button
