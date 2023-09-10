@@ -14,7 +14,7 @@ export function ProjectDownloadButton() {
 
   return (
     <button
-      className="text-sm font-semibold text-white bg-amber-400 leading-6 rounded-full flex py-2 px-4 mt-4"
+      className="text-sm font-semibold text-white bg-amber-400 leading-6 items-center rounded-full flex py-2 px-4 mt-4"
       onClick={handleDownloadClick}
     >
       Download

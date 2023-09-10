@@ -44,7 +44,7 @@ export function ProjectUploadButton() {
   }
 
   return (
-    <label className="text-sm font-semibold leading-6 border rounded-full flex py-2 px-4 cursor-pointer mt-4">
+    <label className="text-sm items-center font-semibold leading-6 border rounded-full flex py-2 px-4 cursor-pointer mt-4">
       Upload
       <input
         type="file"

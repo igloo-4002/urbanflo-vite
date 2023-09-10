@@ -2,9 +2,11 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
+import { useSelector } from '~/zustand/useSelected';
 
 export function LeftSideBar() {
   const leftSideBar = useLeftSideBar();
+  const selector = useSelector();
 
   function getView() {
     switch (leftSideBar.viewName) {
@@ -18,6 +20,11 @@ export function LeftSideBar() {
       case ModalViewNames.ROAD_PROPERTIES_EDITOR:
         return <RoadPropertiesEditor />;
     }
+  }
+
+  function closeLeftBar() {
+    leftSideBar.close();
+    selector.deselect();
   }
 
   return (
@@ -40,11 +47,7 @@ export function LeftSideBar() {
         overflowWrap: 'break-word',
       }}
     >
-      <button
-        className="flex"
-        onClick={leftSideBar.close}
-        style={{ justifyContent: 'flex-end' }} // Align button contents to the right
-      >
+      <button className="flex self-end" onClick={closeLeftBar}>
         <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />
       </button>
       {getView()}

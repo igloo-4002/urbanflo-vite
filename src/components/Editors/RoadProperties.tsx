@@ -8,6 +8,7 @@ export function RoadPropertiesEditor() {
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);
   const [roadLength, setRoadLength] = useState(0);
+  const [newPriority, setNewPriority] = useState(-1);
 
   const selected = useSelector();
   const network = useNetworkStore();
@@ -21,6 +22,7 @@ export function RoadPropertiesEditor() {
 
     setNewSpeedLimit(Math.floor(edge.speed * 3.6));
     setNewLanes(edge.numLanes);
+    setNewPriority(edge.priority);
 
     const from = network.nodes[edge.from];
     const to = network.nodes[edge.to];
@@ -40,6 +42,7 @@ export function RoadPropertiesEditor() {
       ...network.edges[selected.selected],
       numLanes: newLanes,
       speed: newSpeedLimit / 3.6,
+      priority: newPriority,
     };
 
     network.updateEdge(selected.selected, updatedEdge);
@@ -73,6 +76,15 @@ export function RoadPropertiesEditor() {
           type="number"
           value={roadLength}
           disabled
+        />
+      </RowStack>
+      <RowStack>
+        <p>Priority</p>
+        <input
+          className="w-[30%] rounded-md p-1"
+          type="number"
+          value={newPriority}
+          onChange={e => setNewPriority(parseInt(e.target.value))}
         />
       </RowStack>
       <button
