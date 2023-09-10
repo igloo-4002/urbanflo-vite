@@ -122,7 +122,7 @@ export const FloatingPlayPause = () => {
         ) : player.isPlaying ? (
           'End'
         ) : (
-          'Play'
+          'Start'
         )}
         {player.isPlaying ? (
           <StopIcon className="h-5 ml-2" strokeWidth={3} />
