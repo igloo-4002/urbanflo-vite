@@ -111,10 +111,10 @@ export const FloatingPlayPause = () => {
   };
 
   return (
-    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex py-2 px-4 z-10 w-24 bg-orange-500">
+    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex py-2 px-4 z-10 bg-orange-500">
       <button
         onClick={player.isPlaying ? handleOutput : handleUpload}
-        className="flex items-center text-white font-sans font-medium h-8"
+        className="flex items-center text-white font-sans w-16 font-bold h-8 justify-between"
         disabled={loading}
       >
         {loading ? (
@@ -125,9 +125,9 @@ export const FloatingPlayPause = () => {
           'Play'
         )}
         {player.isPlaying ? (
-          <StopIcon className="h-5 ml-2" />
+          <StopIcon className="h-5 ml-2" strokeWidth={3} />
         ) : (
-          <PlayIcon className="h-5 ml-2" />
+          <PlayIcon className="h-5 ml-2" strokeWidth={3} />
         )}
       </button>
     </div>
