@@ -65,6 +65,7 @@ export const useNetworkStore = create<Network>(set => ({
         priority: -1,
         numLanes: 1,
         speed: 13.89,
+        name: 'New Road',
       };
 
       const pointA = { x: from.x, y: from.y };

@@ -17,6 +17,7 @@ export type Edge = {
   priority: number;
   numLanes: number;
   speed: number;
+  name: string;
 };
 
 export type Connection = {
