@@ -29,8 +29,6 @@ export function RoadPropertiesEditor() {
       Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2),
     );
     setRoadLength(dist);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected.selected, network.nodes]);
 
   function submitRoadProperties() {
@@ -49,11 +47,11 @@ export function RoadPropertiesEditor() {
   }
 
   return (
-    <ColumnStack style={{ gap: '8px' }}>
+    <ColumnStack style={{ gap: 8 }}>
       <RowStack>
-        <p>Speed Limit</p>
+        <p>Speed Limit (km/hr)</p>
         <input
-          style={{ width: '30%' }}
+          className="w-[30%] rounded-md p-1"
           type="number"
           value={newSpeedLimit}
           onChange={e => setNewSpeedLimit(parseInt(e.target.value))}
@@ -62,16 +60,16 @@ export function RoadPropertiesEditor() {
       <RowStack>
         <p>Number of Lanes</p>
         <input
-          style={{ width: '30%' }}
+          className="w-[30%] rounded-md p-1"
           type="number"
           value={newLanes}
           onChange={e => setNewLanes(parseInt(e.target.value))}
         />
       </RowStack>
       <RowStack>
-        <p>Length of Road</p>
+        <p>Length of Road (m)</p>
         <input
-          style={{ width: '30%' }}
+          className="w-[30%] rounded-md p-1"
           type="number"
           value={roadLength}
           disabled

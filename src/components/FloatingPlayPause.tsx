@@ -1,66 +1,80 @@
-import { PauseIcon, PlayIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { CircleLoader } from 'react-spinners';
 
-import { BASE_URL } from '~/simulation-urls';
+import { PlayIcon, StopIcon } from '@heroicons/react/24/outline';
+
+import { getSimulationOutput, uploadNetwork } from '~/api/network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 
 export const FloatingPlayPause = () => {
+  const [loading, setLoading] = useState(false);
   const network = useNetworkStore();
   const player = usePlaying();
 
   const handleUpload = async () => {
-    const requestBody = {
-      documentName: network.documentName,
-      nodes: Object.values(network.nodes),
-      edges: Object.values(network.edges),
-      connections: Object.values(network.connections),
-      vType: [
-        {
-          id: 'car',
-          accel: 2.6,
-          decel: 4.5,
-          sigma: 1,
-          length: 5,
-          minGap: 2.5,
-          maxSpeed: 30,
-        },
-      ],
-      route: Object.values(network.route),
-      flow: Object.values(network.flow),
-    };
+    try {
+      setLoading(true);
 
-    console.log(JSON.stringify(requestBody))
+      const requestBody = {
+        documentName: network.documentName,
+        nodes: Object.values(network.nodes),
+        edges: Object.values(network.edges),
+        connections: Object.values(network.connections),
+        vType: [
+          {
+            id: 'car',
+            accel: 2.6,
+            decel: 4.5,
+            sigma: 1,
+            length: 5,
+            minGap: 2.5,
+            maxSpeed: 30,
+          },
+        ],
+        route: Object.values(network.route),
+        flow: Object.values(network.flow),
+      };
 
-    const response = await fetch(`${BASE_URL}/simulation`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
+      const res = await uploadNetwork(requestBody);
+      player.changeSimulationId(res.id);
+      player.play();
+    } catch (error: unknown) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (!response.ok) {
-      console.error(response);
-      throw new Error(JSON.stringify(response));
+  const handleOutput = async () => {
+    player.pause();
+
+    if (!player.simulationId) {
+      return;
     }
 
-    const res = await response.json();
-    player.changeSimulationId(res.id);
-    player.play();
+    const response = await getSimulationOutput(player.simulationId);
+
+    console.log(response);
   };
 
   return (
     <div className="absolute bottom-4 right-4 items-center justify-center rounded-md flex py-2 px-3 z-10 bg-orange-500">
       <button
-        onClick={() => {
-          player.isPlaying ? player.pause() : handleUpload();
-        }}
+        onClick={player.isPlaying ? handleOutput : handleUpload}
         className="text-white font-sans font-medium"
         style={{ display: 'flex', alignItems: 'center' }}
+        disabled={loading}
       >
-        {player.isPlaying ? 'Pause' : 'Play'}
+        {loading ? (
+          <CircleLoader size={20} color="white" />
+        ) : player.isPlaying ? (
+          'End'
+        ) : (
+          'Play'
+        )}
         {player.isPlaying ? (
-          <PauseIcon className="h-5 ml-2" />
+          <StopIcon className="h-5 ml-2" />
         ) : (
           <PlayIcon className="h-5 ml-2" />
         )}
