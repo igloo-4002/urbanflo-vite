@@ -137,7 +137,7 @@ export function Canvas() {
     >
       <RoadsLayer />
       <IntersectionsLayer />
-      <ConnectionsLayer />
+      {toolbarState.isShowingConnections && <ConnectionsLayer />}
       <CarLayer />
     </Stage>
   );

@@ -2,6 +2,7 @@ import { Layer, Line } from 'react-konva';
 
 import { Edge, Point } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 function adjustControlPoint(
   source: Point,

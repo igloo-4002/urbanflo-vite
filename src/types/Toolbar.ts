@@ -2,6 +2,7 @@ export const LabelNames = {
   Intersection: 'Intersection',
   Road: 'Road',
   Pointer: 'Pointer',
+  'Toggle Connections': 'Toggle Connections',
 } as const;
 
 export type LabelNamesType = (typeof LabelNames)[keyof typeof LabelNames];
