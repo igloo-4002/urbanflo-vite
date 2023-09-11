@@ -1,22 +1,17 @@
 import { create } from 'zustand';
 
+type Views = 'road-editor' | 'traffic-light-editor' | null;
+
 type LeftSideBar = {
   isOpen: boolean;
-  viewName: ModalViewNamesValues | null;
-  open: (viewName: ModalViewNamesValues) => void;
+  view: Views;
+  open: (viewName: Views) => void;
   close: () => void;
 };
 
 export const useLeftSideBar = create<LeftSideBar>(set => ({
   isOpen: false,
-  viewName: null,
-  open: (viewName: ModalViewNamesValues) => set({ viewName, isOpen: true }),
-  close: () => set({ viewName: null, isOpen: false }),
+  view: null,
+  open: (viewName: Views) => set({ view: viewName, isOpen: true }),
+  close: () => set({ view: null, isOpen: false }),
 }));
-
-export const ModalViewNames = {
-  ROAD_PROPERTIES_EDITOR: 'road-properties-editor',
-} as const;
-
-export type ModalViewNamesValues =
-  (typeof ModalViewNames)[keyof typeof ModalViewNames];

@@ -7,13 +7,22 @@ import {
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
 } from '~/helpers/zustand/NetworkStoreHelpers';
-import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
+import {
+  Connection,
+  Edge,
+  Flow,
+  Node,
+  Route,
+  TrafficLightLogic,
+  VType,
+} from '~/types/Network';
 
 export interface NetworkData {
   documentName: string;
   nodes: Record<string, Node>;
   edges: Record<string, Edge>;
   connections: Record<string, Connection>;
+  tllogic: Record<string, TrafficLightLogic>;
   vType: Record<string, VType>;
   route: Record<string, Route>;
   flow: Record<string, Flow>;
@@ -36,6 +45,7 @@ export const useNetworkStore = create<Network>(set => ({
   nodes: {},
   edges: {},
   connections: {},
+  tllogic: {},
   vType: {},
   route: {},
   flow: {},

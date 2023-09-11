@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { ModalViewNames, useLeftSideBar } from './useLeftSideBar';
+import { useLeftSideBar } from './useLeftSideBar';
 import { useNetworkStore } from './useNetworkStore';
 
 type Selected = {
@@ -16,10 +16,14 @@ export const useSelector = create<Selected>(set => ({
     const leftSideBarState = useLeftSideBar.getState();
 
     if (networkState.edges[id]) {
-      // If it's an edge, open the left sidebar
-      leftSideBarState.open(ModalViewNames.ROAD_PROPERTIES_EDITOR);
+      leftSideBarState.open('road-editor');
+    } else if (
+      networkState.nodes[id]
+      // TODO: uncomment when ready
+      // && networkState.nodes[id].type === 'traffic_light'
+    ) {
+      leftSideBarState.open('traffic-light-editor');
     } else {
-      // If it's a node, close the left sidebar
       leftSideBarState.close();
     }
 

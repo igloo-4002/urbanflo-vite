@@ -67,3 +67,16 @@ export type Flow = {
   end: number;
   period: number;
 };
+
+type Phase = {
+  duration: number;
+  state: string;
+};
+
+export type TrafficLightLogic = {
+  id: string;
+  programID: string;
+  offset: number;
+  type: 'static' | 'actuated' | 'delay_based';
+  phase: Phase[];
+};
