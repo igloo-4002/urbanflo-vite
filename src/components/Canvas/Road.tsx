@@ -18,7 +18,7 @@ export function Road({ edge, reverseEdge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
-  const isBidirectional = !!reverseEdge;
+  const _isBidirectional = !!reverseEdge;
 
   const isSelected = selector.selected === edge.id;
 
