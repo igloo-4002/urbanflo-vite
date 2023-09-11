@@ -9,11 +9,12 @@ import { useSelector } from '~/zustand/useSelected';
 
 interface RoadProps {
   edge: Edge;
+  offset?: number;
 }
 
 export const laneWidth = 25;
 
-export function Road({ edge }: RoadProps) {
+export function Road({ edge, offset = 0 }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
@@ -40,6 +41,11 @@ export function Road({ edge }: RoadProps) {
   const angleRad = Math.atan2(to.y - from.y, to.x - from.x);
   const angleDeg = (angleRad * 180) / Math.PI;
 
+  const commonOffset = {
+    offsetX: offset * Math.sin(angleRad),
+    offsetY: -offset * Math.cos(angleRad),
+  };
+
   // Calculate the offset in both x and y directions
   const dx = laneWidth * Math.sin(angleRad);
   const dy = laneWidth * Math.cos(angleRad);
@@ -58,6 +64,7 @@ export function Road({ edge }: RoadProps) {
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={laneWidth * edge.numLanes + 8}
         {...commonProps}
+        {...commonOffset}
       />
 
       {/* Grey Road */}
@@ -69,6 +76,7 @@ export function Road({ edge }: RoadProps) {
         stroke={roadColor}
         strokeWidth={laneWidth * edge.numLanes}
         {...commonProps}
+        {...commonOffset}
       />
 
       {/* Lanes */}
@@ -80,11 +88,12 @@ export function Road({ edge }: RoadProps) {
             key={`centerline-${edge.id}-${index}`}
             x={from.x + offset * dx}
             y={from.y - offset * dy}
-            points={[0, 0, to.x - from.x, to.y - from.y]}
             dash={[10, 10]}
             fill="transparent"
             stroke={centerlineColor}
             strokeWidth={2}
+            {...commonProps}
+            {...commonOffset}
           />
         );
       })}
@@ -110,6 +119,7 @@ export function Road({ edge }: RoadProps) {
             stroke="white"
             strokeWidth={2}
             angle={angleDeg}
+            {...commonOffset}
           />
         );
       })}
