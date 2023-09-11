@@ -13,11 +13,13 @@ import {
   BASE_SIMULATION_ERROR_TOPIC,
   SIMULATION_SOCKET_URL,
 } from '~/simulation-urls';
+import { LabelNames } from '~/types/Toolbar';
 import { useCarsStore } from '~/zustand/useCarStore';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CarLayer } from './Layers/CarLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
@@ -26,9 +28,10 @@ import { RoadsLayer } from './Layers/RoadsLayer';
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const { isPlaying, changeSimulationId, simulationId } = usePlaying();
+  const player = usePlaying();
   const carStore = useCarsStore();
   const nodes = Object.values(network.nodes);
+  const toolbarState = useToolbarStore();
 
   const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
@@ -63,18 +66,17 @@ export function Canvas() {
 
   // Streaming of simulation data
   useEffect(() => {
-    const SIMULATION_DATA_TOPIC = `${BASE_SIMULATION_DATA_TOPIC}/${simulationId}`;
+    const SIMULATION_DATA_TOPIC = `${BASE_SIMULATION_DATA_TOPIC}/${player.simulationId}`;
     const SIMULATION_ERROR_TOPIC = BASE_SIMULATION_ERROR_TOPIC.replace(
       '_',
-      simulationId ?? '',
+      player.simulationId ?? '',
     );
-    const SIMULATION_DESTINATION_PATH = `${BASE_SIMULATION_DESTINATION_PATH}/${simulationId}`;
+    const SIMULATION_DESTINATION_PATH = `${BASE_SIMULATION_DESTINATION_PATH}/${player.simulationId}`;
 
-    if (isPlaying && isConnected) {
+    if (player.isPlaying && isConnected) {
       console.warn('Subscribing to simulation data');
 
       subscribe(SIMULATION_DATA_TOPIC, message => {
-        console.log(message);
         const data = extractCarsFromSumoMessage(message);
 
         if (data) {
@@ -86,18 +88,26 @@ export function Canvas() {
       });
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
-    } else if (!isPlaying && isConnected) {
+    } else if (!player.isPlaying && isConnected) {
       console.warn('Unsubscribing from simulation data');
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
-    } else if (!isPlaying && simulationId) {
-      changeSimulationId(null);
+    } else if (!player.isPlaying && player.simulationId) {
+      player.changeSimulationId(null);
     }
-  }, [isPlaying]);
+  }, [player.isPlaying]);
 
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
-    // const point = stageRef.current?.getPointerPosition() ?? { x: 0, y: 0 };
+    if (
+      ![LabelNames.Road, LabelNames.Intersection].includes(
+        // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
+        toolbarState.selectedToolBarItem,
+      )
+    ) {
+      return;
+    }
+
     const point = event.currentTarget.getRelativePointerPosition();
 
     const conflict = nodes.find(node => {

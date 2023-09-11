@@ -1,38 +1,19 @@
 import { create } from 'zustand';
 
-import { ToolbarItem } from '~/types/Toolbar';
-
-import intersectionIcon from '../../public/intersection.png';
-import roadIcon from '../../public/road-icon.png';
+import { toolbarItems } from '~/defaults/ToolbarItems';
+import { LabelNamesType, ToolbarItem } from '~/types/Toolbar';
 
 type ToolbarState = {
   isOpen: boolean;
-  selectedToolBarItem: string | null;
-  setSelectedToolBarItem: (selectedToolBarItem: string | null) => void;
+  selectedToolBarItem: LabelNamesType | null;
+  setSelectedToolBarItem: (selectedToolBarItem: LabelNamesType | null) => void;
   items: ToolbarItem[];
 };
 
-const toolbarItems: ToolbarItem[] = [
-  {
-    label: 'Intersection',
-    icon: intersectionIcon,
-    onClick: () => {
-      console.log('Intersection icon clicked');
-    },
-  },
-  {
-    label: 'Road',
-    icon: roadIcon,
-    onClick: () => {
-      console.log('Road icon clicked');
-    },
-  },
-];
-
-export const useToolbarState = create<ToolbarState>(set => ({
+export const useToolbarStore = create<ToolbarState>(set => ({
   isOpen: true,
   selectedToolBarItem: null,
-  setSelectedToolBarItem: (selectedToolBarItem: string | null) =>
+  setSelectedToolBarItem: (selectedToolBarItem: LabelNamesType | null) =>
     set({ selectedToolBarItem }),
   items: toolbarItems,
 }));

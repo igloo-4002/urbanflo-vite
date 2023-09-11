@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { laneWidth } from '~/components/Canvas/Road';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
 
 import {
@@ -64,6 +65,7 @@ export const useNetworkStore = create<Network>(set => ({
         to: to.id,
         priority: -1,
         numLanes: 1,
+        width: laneWidth,
         speed: 13.89,
         name: 'New Road',
       };
@@ -110,10 +112,33 @@ export const useNetworkStore = create<Network>(set => ({
       // update connections if the number of lanes is decreasing
       if (state.edges[edgeId].numLanes > edge.numLanes) {
         // remove connections with outdated lanes
-        const connections = removeItems(
+        let connections = removeItems(
           state.connections,
           c => c.fromLane > edge.numLanes - 1 || c.toLane > edge.numLanes - 1,
         );
+
+        for (const connection of affectedConnections) {
+          let fromNumLanes: number;
+          let toNumLanes: number;
+
+          if (connection.from === edge.id) {
+            fromNumLanes = edge.numLanes;
+            toNumLanes = state.edges[connection.to].numLanes;
+          } else if (connection.to === edge.id) {
+            fromNumLanes = state.edges[connection.from].numLanes;
+            toNumLanes = edge.numLanes;
+          } else {
+            continue;
+          }
+
+          connections = updateConnectionsOnLaneChange(
+            connection.from,
+            connection.to,
+            fromNumLanes,
+            toNumLanes,
+            connections,
+          );
+        }
 
         return {
           edges: updatedEdges,

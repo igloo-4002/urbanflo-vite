@@ -1,5 +1,15 @@
+export const LabelNames = {
+  Intersection: 'Intersection',
+  Road: 'Road',
+  Pointer: 'Pointer',
+} as const;
+
+export type LabelNamesType = (typeof LabelNames)[keyof typeof LabelNames];
+
 export type ToolbarItem = {
-  label: string;
-  icon: string;
-  onClick: () => void;
+  label?: LabelNamesType;
+  icon?: string;
+  onClick?: () => void;
+  heroIcon?: JSX.Element;
+  divider?: boolean;
 };

@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 
 import { ToolbarItem } from '~/types/Toolbar';
-import { useToolbarState } from '~/zustand/useToolbar';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 interface Props {
   toolbarItem: ToolbarItem;
 }
 
 export function ToolBarItem({ toolbarItem }: Props) {
-  const toolbarState = useToolbarState();
+  const toolbarState = useToolbarStore();
 
   const isSelected = toolbarItem.label === toolbarState.selectedToolBarItem;
 
@@ -21,7 +21,7 @@ export function ToolBarItem({ toolbarItem }: Props) {
     if (isSelected) {
       toolbarState.setSelectedToolBarItem(null);
       return;
-    } else {
+    } else if (toolbarItem.label) {
       toolbarState.setSelectedToolBarItem(toolbarItem.label);
     }
   }
@@ -29,18 +29,22 @@ export function ToolBarItem({ toolbarItem }: Props) {
     <button
       onClick={() => {
         selectOrDeselect();
-        toolbarItem.onClick();
+        toolbarItem?.onClick?.();
       }}
       className={cls}
     >
-      <img
-        src={toolbarItem.icon}
-        alt={toolbarItem.label}
-        style={{
-          height: '24px',
-          width: '24px',
-        }}
-      />
+      {toolbarItem.heroIcon ? (
+        toolbarItem.heroIcon
+      ) : (
+        <img
+          src={toolbarItem.icon}
+          alt={toolbarItem.label}
+          style={{
+            height: '24px',
+            width: '24px',
+          }}
+        />
+      )}
     </button>
   );
 }
