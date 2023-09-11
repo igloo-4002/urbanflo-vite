@@ -9,16 +9,13 @@ import { useSelector } from '~/zustand/useSelected';
 
 interface RoadProps {
   edge: Edge;
-  reverseEdge?: Edge;
 }
 
 export const laneWidth = 25;
 
-export function Road({ edge, reverseEdge }: RoadProps) {
+export function Road({ edge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
-
-  const _isBidirectional = !!reverseEdge;
 
   const isSelected = selector.selected === edge.id;
 
