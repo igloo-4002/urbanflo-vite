@@ -1,9 +1,8 @@
 import { CursorArrowRaysIcon } from '@heroicons/react/24/outline';
 
+import intersectionIcon from '~/assets/intersection.png';
+import roadIcon from '~/assets/road-icon.png';
 import { LabelNames, ToolbarItem } from '~/types/Toolbar';
-
-import intersectionIcon from '../../public/intersection.png';
-import roadIcon from '../../public/road-icon.png';
 
 export const toolbarItems: ToolbarItem[] = [
   {
