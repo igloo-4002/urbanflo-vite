@@ -98,19 +98,19 @@ export function createRouteId(from: string, to: string) {
 }
 
 // TODO: Add more data to the store so we can get O(1) retrieval of edges for a node
-export function getAllEdgesForNode(
+export function getAllEdgeIdsForNode(
   nodeId: string,
   edges: Record<string, Edge>,
-): Edge[] {
-  const connectedEdges: Edge[] = [];
+): string[] {
+  const edgeIds: string[] = [];
 
   for (const edgeId in edges) {
     if (edgeId.startsWith(nodeId) || edgeId.endsWith(nodeId)) {
-      connectedEdges.push(edges[edgeId]);
+      edgeIds.push(edgeId);
     }
   }
 
-  return connectedEdges;
+  return edgeIds;
 }
 
 export function updateAssociatesOnNewEdge(

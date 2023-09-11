@@ -103,7 +103,6 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
   );
 
   const subscribe = useCallback(
-    // TODO: make the message type more specific, make it the same as in the server
     (path: string, callback: (msg: string) => void) => {
       if (!stompClient) {
         return;
@@ -131,7 +130,7 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     stompClient.deactivate();
   }, []);
 
-  useEffect(connect, [connect]);
+  useEffect(connect, []);
 
   return {
     connect,

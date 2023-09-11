@@ -1,22 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { extractCarsFromSumoMessage } from '~/helpers/sumo';
-import { useSimulation } from '~/hooks/useSimulation';
 import { createId } from '~/id';
-import {
-  BASE_SIMULATION_DATA_TOPIC,
-  BASE_SIMULATION_DESTINATION_PATH,
-  BASE_SIMULATION_ERROR_TOPIC,
-  SIMULATION_SOCKET_URL,
-} from '~/simulation-urls';
+import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
-import { useCarsStore } from '~/zustand/useCarStore';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
 import { useToolbarStore } from '~/zustand/useToolbar';
@@ -29,14 +19,8 @@ import { RoadsLayer } from './Layers/RoadsLayer';
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const player = usePlaying();
-  const carStore = useCarsStore();
   const nodes = Object.values(network.nodes);
   const toolbarState = useToolbarStore();
-
-  const { subscribe, publish, isConnected } = useSimulation({
-    brokerURL: SIMULATION_SOCKET_URL,
-  });
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -65,38 +49,6 @@ export function Canvas() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [selector, network]);
 
-  // Streaming of simulation data
-  useEffect(() => {
-    const SIMULATION_DATA_TOPIC = `${BASE_SIMULATION_DATA_TOPIC}/${player.simulationId}`;
-    const SIMULATION_ERROR_TOPIC = BASE_SIMULATION_ERROR_TOPIC.replace(
-      '_',
-      player.simulationId ?? '',
-    );
-    const SIMULATION_DESTINATION_PATH = `${BASE_SIMULATION_DESTINATION_PATH}/${player.simulationId}`;
-
-    if (player.isPlaying && isConnected) {
-      console.warn('Subscribing to simulation data');
-
-      subscribe(SIMULATION_DATA_TOPIC, message => {
-        const data = extractCarsFromSumoMessage(message);
-
-        if (data) {
-          carStore.setCars(data);
-        }
-      });
-      subscribe(SIMULATION_ERROR_TOPIC, message => {
-        console.error(message);
-      });
-
-      publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
-    } else if (!player.isPlaying && isConnected) {
-      console.warn('Unsubscribing from simulation data');
-      publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
-    } else if (!player.isPlaying && player.simulationId) {
-      player.changeSimulationId(null);
-    }
-  }, [player.isPlaying]);
-
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
@@ -124,7 +76,7 @@ export function Canvas() {
         id: createId(),
         x: point.x,
         y: point.y,
-        type: 'priority',
+        type: NodeType.priority,
       };
 
       network.addNode(newNode);

@@ -1,4 +1,4 @@
-import { Group, Line, Path } from 'react-konva';
+import { Arrow, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
@@ -9,13 +9,16 @@ import { useSelector } from '~/zustand/useSelected';
 
 interface RoadProps {
   edge: Edge;
+  reverseEdge?: Edge;
 }
 
 export const laneWidth = 25;
 
-export function Road({ edge }: RoadProps) {
+export function Road({ edge, reverseEdge }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
+
+  const _isBidirectional = !!reverseEdge;
 
   const isSelected = selector.selected === edge.id;
 
@@ -31,45 +34,85 @@ export function Road({ edge }: RoadProps) {
     }
   }
 
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
+  const commonProps = {
+    points: [0, 0, to.x - from.x, to.y - from.y],
+    pointerLength: 0,
+    pointerWidth: 0,
+  };
 
-  const px = dy;
-  const py = -dx;
+  const angleRad = Math.atan2(to.y - from.y, to.x - from.x);
+  const angleDeg = (angleRad * 180) / Math.PI;
 
-  const length = Math.sqrt(px * px + py * py);
-  const ux = (px / length) * laneWidth * edge.numLanes;
-  const uy = (py / length) * laneWidth * edge.numLanes;
+  // Calculate the offset in both x and y directions
+  const dx = laneWidth * Math.sin(angleRad);
+  const dy = laneWidth * Math.cos(angleRad);
 
-  const roadPath = `M ${from.x} ${from.y} L ${from.x + ux} ${from.y + uy} L ${
-    to.x + ux
-  } ${to.y + uy} L ${to.x} ${to.y} Z`;
+  // Calculate the mid-point of the lane
+  const midX = (from.x + to.x) / 2;
+  const midY = (from.y + to.y) / 2;
 
   return (
     <Group onClick={handleRoadClick}>
-      {/* Gray road */}
-      <Path
-        data={roadPath}
-        fill={roadColor}
+      {/* Highlight for selected road */}
+      <Arrow
+        key={`road-selected-stroke-${edge.id}`}
+        x={from.x}
+        y={from.y}
         stroke={isSelected ? highlightColor : 'transparent'}
-        strokeWidth={isSelected ? 3 : 0}
+        strokeWidth={laneWidth * edge.numLanes + 8}
+        {...commonProps}
+      />
+
+      {/* Grey Road */}
+      <Arrow
+        key={`road-${edge.id}`}
+        x={from.x}
+        y={from.y}
+        fill={roadColor}
+        stroke={roadColor}
+        strokeWidth={laneWidth * edge.numLanes}
+        {...commonProps}
       />
 
       {/* Lanes */}
       {Array.from({ length: edge.numLanes - 1 }).map((_, index) => {
-        const laneOffset = (ux / edge.numLanes) * (index + 1);
-        const laneUx = from.x + laneOffset;
-        const laneUy = from.y + (uy / edge.numLanes) * (index + 1);
-        const laneToX = to.x + laneOffset;
-        const laneToY = to.y + (uy / edge.numLanes) * (index + 1);
+        const offset = index + 0.5 - (edge.numLanes - 1) / 2;
 
         return (
-          <Line
-            key={`${edge.id}-lane-${index}`}
-            points={[laneUx, laneUy, laneToX, laneToY]}
+          <Arrow
+            key={`centerline-${edge.id}-${index}`}
+            x={from.x + offset * dx}
+            y={from.y - offset * dy}
+            points={[0, 0, to.x - from.x, to.y - from.y]}
+            dash={[10, 10]}
+            fill="transparent"
             stroke={centerlineColor}
             strokeWidth={2}
-            dash={[10, 10]}
+          />
+        );
+      })}
+
+      {/* Arrow for traffic direction */}
+      {Array.from({ length: edge.numLanes }).map((_, index) => {
+        const yOffset =
+          index * laneWidth - (edge.numLanes - 1) * (laneWidth / 2);
+
+        // Calculating rotated offset
+        const offsetX = midX + yOffset * Math.sin(angleRad);
+        const offsetY = midY - yOffset * Math.cos(angleRad);
+
+        return (
+          <Arrow
+            key={`arrow-${edge.id}-${index}`}
+            x={offsetX}
+            y={offsetY}
+            points={[0, 0, 20 * Math.cos(angleRad), 20 * Math.sin(angleRad)]}
+            pointerLength={10}
+            pointerWidth={10}
+            fill="white"
+            stroke="white"
+            strokeWidth={2}
+            angle={angleDeg}
           />
         );
       })}

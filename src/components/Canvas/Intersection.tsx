@@ -1,9 +1,9 @@
-import { Circle, Group } from 'react-konva';
+import { Group, Rect } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { highlightColor, roadColor } from '~/colors';
-import { getAllEdgesForNode } from '~/helpers/zustand/NetworkStoreHelpers';
+import { highlightColor } from '~/colors';
+import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -22,6 +22,7 @@ export function Intersection({ node }: IntersectionProps) {
   const toolbarState = useToolbarStore();
 
   const isSelected = selector.selected === node.id;
+  const baseIntersectionSize = 25;
 
   function handleDragMove(event: KonvaEventObject<DragEvent>) {
     const updatedNode = {
@@ -63,25 +64,27 @@ export function Intersection({ node }: IntersectionProps) {
     }
   }
 
-  const connectedEdges = getAllEdgesForNode(node.id, network.edges);
+  const edgeIds = getAllEdgeIdsForNode(node.id, network.edges);
 
-  const radius = Math.max(
-    laneWidth,
-    connectedEdges.reduce((maxWidth, edge) => {
-      const edgeWidth = laneWidth * edge.numLanes;
-      return Math.max(maxWidth, edgeWidth);
-    }, 0),
-  );
+  // Compute total width based on maximum number of lanes from all edges
+  let intersectionSize = 0;
+  for (const edgeId of edgeIds) {
+    const edge = network.edges[edgeId];
+    intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
+  }
+
+  const size = edgeIds.length === 0 ? baseIntersectionSize : intersectionSize;
 
   return (
     <Group onClick={handleIntersectionClick}>
-      <Circle
-        fill={roadColor}
-        x={node.x}
-        y={node.y}
-        radius={radius}
+      <Rect
+        x={node.x - size / 2}
+        y={node.y - size / 2}
+        width={size}
+        height={size}
+        fill="grey"
         stroke={isSelected ? highlightColor : 'transparent'}
-        strokeWidth={isSelected ? 3 : 0}
+        strokeWidth={4}
         draggable
         onDragEnd={handleDragMove}
       />
