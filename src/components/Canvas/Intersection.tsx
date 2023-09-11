@@ -85,7 +85,6 @@ export function Intersection({ node }: IntersectionProps) {
         fill="grey"
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={4}
-        zIndex={1}
         draggable
         onDragEnd={handleDragMove}
       />
