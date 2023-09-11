@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Group, Rect } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -67,13 +68,28 @@ export function Intersection({ node }: IntersectionProps) {
   const edgeIds = getAllEdgeIdsForNode(node.id, network.edges);
 
   // Compute total width based on maximum number of lanes from all edges
-  let intersectionSize = 0;
-  for (const edgeId of edgeIds) {
-    const edge = network.edges[edgeId];
-    intersectionSize = Math.max(intersectionSize, edge.numLanes * laneWidth);
-  }
+  const size = useMemo(() => {
+    if (edgeIds.length === 0) {
+      return baseIntersectionSize;
+    }
 
-  const size = edgeIds.length === 0 ? baseIntersectionSize : intersectionSize;
+    const widths: number[] = [];
+
+    for (const edgeId of edgeIds) {
+      const flippedEdgeId = `${edgeId.split('_').reverse().join('_')}`;
+      const isBidirectional = edgeIds.includes(flippedEdgeId);
+
+      let width = network.edges[edgeId].numLanes * laneWidth;
+
+      if (isBidirectional) {
+        width += network.edges[flippedEdgeId].numLanes * laneWidth;
+      }
+
+      widths.push(width);
+    }
+
+    return Math.max(...widths);
+  }, [edgeIds]);
 
   return (
     <Group onClick={handleIntersectionClick}>
