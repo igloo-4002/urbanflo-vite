@@ -2,6 +2,7 @@ import { Layer } from 'react-konva';
 
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 
+import { BidirectionalRoad } from '../BidirectionalRoad';
 import { Road } from '../Road';
 
 export function RoadsLayer() {
@@ -18,13 +19,20 @@ export function RoadsLayer() {
           return null; // Skip rendering if this edge has already been rendered
         }
 
-        const bidirectionalEdge = network.edges[`${edge.to}_${edge.from}`];
+        const oppositeEdge = network.edges[`${edge.to}_${edge.from}`];
 
-        if (bidirectionalEdge) {
-          renderedEdges.add(bidirectionalEdge.id); // Mark the edge going the other way as rendered.
+        if (oppositeEdge) {
+          renderedEdges.add(oppositeEdge.id); // Mark the edge going the other way as rendered.
+          return (
+            <BidirectionalRoad
+              edge={edge}
+              oppositeEdge={oppositeEdge}
+              key={index}
+            />
+          );
         }
 
-        return <Road edge={edge} reverseEdge={bidirectionalEdge} key={index} />;
+        return <Road edge={edge} key={index} />;
       })}
     </Layer>
   );
