@@ -1,5 +1,7 @@
 import { useFieldArray, useForm } from 'react-hook-form';
 
+import { useSelector } from '~/zustand/useSelected';
+
 type Phase = {
   duration: number;
   state: string;
@@ -10,6 +12,8 @@ type Data = {
 };
 
 export function TrafficLightEditor() {
+  const selector = useSelector();
+
   const { register, handleSubmit, control } = useForm<Data>({
     defaultValues: {
       rows: [{ duration: 1, state: '' }],
@@ -22,7 +26,9 @@ export function TrafficLightEditor() {
   });
 
   async function onSubmit(data: Data) {
-    console.log(data);
+    console.log({
+      selected: selector.selected,
+    });
   }
 
   return (
