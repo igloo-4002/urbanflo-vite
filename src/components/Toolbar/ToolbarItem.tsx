@@ -39,10 +39,7 @@ export function ToolBarItem({ toolbarItem }: Props) {
         <img
           src={toolbarItem.icon}
           alt={toolbarItem.label}
-          style={{
-            height: '24px',
-            width: '24px',
-          }}
+          className="h-6 w-6"
         />
       )}
     </button>

@@ -18,5 +18,6 @@ module.exports = {
     ],
     curly: 'error',
     '@typescript-eslint/no-unused-vars': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
   },
 };

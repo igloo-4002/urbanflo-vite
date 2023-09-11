@@ -50,7 +50,6 @@ export function Header() {
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-4">
           <ProjectDownloadButton />
-
           <ProjectUploadButton />
         </div>
       </nav>

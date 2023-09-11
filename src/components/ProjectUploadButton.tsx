@@ -44,15 +44,15 @@ export function ProjectUploadButton() {
   }
 
   return (
-    <label className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3 cursor-pointer mt-4">
-      Upload Project
+    <label className="text-sm items-center font-semibold leading-6 border rounded-full flex py-2 px-4 cursor-pointer mt-4">
+      Upload
       <input
         type="file"
         accept=".json"
         onChange={handleFileUpload}
         className="hidden"
       />
-      <ArrowUpTrayIcon className="h-6 w-6 ml-4" aria-hidden="true" />
+      <ArrowUpTrayIcon className="h-6 w-6 ml-2" aria-hidden="true" />
     </label>
   );
 }

@@ -1,4 +1,4 @@
-import { Group, Line, Path } from 'react-konva';
+import { Arrow, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
@@ -31,45 +31,51 @@ export function Road({ edge }: RoadProps) {
     }
   }
 
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-
-  const px = dy;
-  const py = -dx;
-
-  const length = Math.sqrt(px * px + py * py);
-  const ux = (px / length) * laneWidth * edge.numLanes;
-  const uy = (py / length) * laneWidth * edge.numLanes;
-
-  const roadPath = `M ${from.x} ${from.y} L ${from.x + ux} ${from.y + uy} L ${
-    to.x + ux
-  } ${to.y + uy} L ${to.x} ${to.y} Z`;
+  const commonProps = {
+    points: [0, 0, to.x - from.x, to.y - from.y],
+    pointerLength: 0,
+    pointerWidth: 0,
+    zIndex: -1,
+  };
 
   return (
     <Group onClick={handleRoadClick}>
-      {/* Gray road */}
-      <Path
-        data={roadPath}
-        fill={roadColor}
+      {/* Highlight for selected road */}
+      <Arrow
+        key={`road-selected-stroke-${edge.id}`}
+        x={from.x}
+        y={from.y}
         stroke={isSelected ? highlightColor : 'transparent'}
-        strokeWidth={isSelected ? 3 : 0}
+        strokeWidth={laneWidth * edge.numLanes + 8}
+        {...commonProps}
+      />
+
+      {/* Grey Road */}
+      <Arrow
+        key={`road-${edge.id}`}
+        x={from.x}
+        y={from.y}
+        fill={roadColor}
+        stroke={roadColor}
+        strokeWidth={laneWidth * edge.numLanes}
+        {...commonProps}
       />
 
       {/* Lanes */}
       {Array.from({ length: edge.numLanes - 1 }).map((_, index) => {
-        const laneOffset = (ux / edge.numLanes) * (index + 1);
-        const laneUx = from.x + laneOffset;
-        const laneUy = from.y + (uy / edge.numLanes) * (index + 1);
-        const laneToX = to.x + laneOffset;
-        const laneToY = to.y + (uy / edge.numLanes) * (index + 1);
+        const yOffset =
+          (index + 0.5) * laneWidth - (edge.numLanes - 1) * (laneWidth / 2);
 
         return (
-          <Line
-            key={`${edge.id}-lane-${index}`}
-            points={[laneUx, laneUy, laneToX, laneToY]}
+          <Arrow
+            key={`centerline-${edge.id}-${index}`}
+            x={from.x}
+            y={from.y + yOffset}
+            dash={[10, 10]}
+            fill="transparent"
             stroke={centerlineColor}
             strokeWidth={2}
-            dash={[10, 10]}
+            {...commonProps}
           />
         );
       })}
