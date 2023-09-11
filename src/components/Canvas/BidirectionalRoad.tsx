@@ -2,16 +2,16 @@ import { Edge } from '~/types/Network';
 
 interface BidirectionalRoadProps {
   edge: Edge;
-  reverseEdge: Edge;
+  oppositeEdge: Edge;
 }
 
 export const laneWidth = 25;
 
 export function BidirectionalRoad({
   edge,
-  reverseEdge,
+  oppositeEdge,
 }: BidirectionalRoadProps) {
-  console.log(edge, reverseEdge);
+  console.log(edge, oppositeEdge);
 
   return <></>;
 }
