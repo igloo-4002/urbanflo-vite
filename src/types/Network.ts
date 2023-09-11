@@ -3,11 +3,27 @@ export type Point = {
   y: number;
 };
 
+export const NodeType = {
+  priority: 'priority',
+  traffic_light: 'traffic_light',
+  right_before_left: 'right_before_left',
+  left_before_right: 'left_before_right',
+  unregulated: 'unregulated',
+  priority_stop: 'priority_stop',
+  traffic_light_unregulated: 'traffic_light_unregulated',
+  allway_stop: 'allway_stop',
+  rail_signal: 'rail_signal',
+  zipper: 'zipper',
+  traffic_light_right_on_red: 'traffic_light_right_on_red',
+  rail_crossing: 'rail_crossing',
+  dead_end: 'dead_end',
+} as const;
+
 export type Node = {
   id: string;
   x: number;
   y: number;
-  type: string;
+  type: keyof typeof NodeType;
 };
 
 export type Edge = {
@@ -19,6 +35,7 @@ export type Edge = {
   width: number;
   speed: number;
   name: string;
+  spreadType?: 'right' | 'center' | 'roadCenter';
 };
 
 export type Connection = {
