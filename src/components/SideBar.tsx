@@ -1,12 +1,12 @@
+import { XMarkIcon } from '@heroicons/react/24/outline';
+
 import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
-import {
-  XMarkIcon
-  } from '@heroicons/react/24/outline'
-
+import { useSelector } from '~/zustand/useSelected';
 
 export function LeftSideBar() {
   const leftSideBar = useLeftSideBar();
+  const selector = useSelector();
 
   function getView() {
     switch (leftSideBar.viewName) {
@@ -22,32 +22,19 @@ export function LeftSideBar() {
     }
   }
 
+  function closeLeftBar() {
+    leftSideBar.close();
+    selector.deselect();
+  }
+
   return (
     <div
-      style={{
-        position: 'fixed',
-        top: 115,
-        left: 15,
-        zIndex: 1000,
-        maxHeight: 'min-content',
-        width: '250px',
-        display: leftSideBar.isOpen ? 'flex' : 'none',
-        justifyContent: 'center',
-        alignContent: 'center',
-        flexDirection: 'column',
-        backgroundColor: '#FAF9F6',
-        padding: '12px',
-        borderRadius: '10px',
-        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-        overflowWrap: 'break-word',
-      }}
+      className={`fixed max-h-[min-content] z-100 flex-col bg-[#FAF9F6] shadow-md top-32 left-4 w-64 items-center justify-center p-3 rounded-xl ${
+        leftSideBar.isOpen ? 'flex' : 'hidden'
+      }`}
     >
-      <button
-        className="flex"
-        onClick={leftSideBar.close}
-        style={{ justifyContent: 'flex-end' }} // Align button contents to the right
-      >
-              <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />
+      <button className="flex self-end" onClick={closeLeftBar}>
+        <XMarkIcon className="h-6 w-6 mb-2 justify-end" aria-hidden="true" />
       </button>
       {getView()}
     </div>

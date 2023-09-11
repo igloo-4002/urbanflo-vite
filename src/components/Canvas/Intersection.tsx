@@ -5,8 +5,10 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { highlightColor } from '~/colors';
 import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
+import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { laneWidth } from './Road';
 
@@ -17,6 +19,7 @@ interface IntersectionProps {
 export function Intersection({ node }: IntersectionProps) {
   const network = useNetworkStore();
   const selector = useSelector();
+  const toolbarState = useToolbarStore();
 
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
@@ -45,7 +48,11 @@ export function Intersection({ node }: IntersectionProps) {
     // if another node is selected, then draw an edge
     else if (
       selector.selected !== node.id &&
-      network.nodes[selector.selected]
+      network.nodes[selector.selected] &&
+      [LabelNames.Road, LabelNames.Intersection].includes(
+        // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
+        toolbarState.selectedToolBarItem,
+      )
     ) {
       network.drawEdge(
         network.nodes[selector.selected],

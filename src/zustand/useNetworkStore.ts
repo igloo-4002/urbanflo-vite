@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 
-import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
-
+import { laneWidth } from '~/components/Canvas/Road';
 import {
   edgeDoesIntersect,
   removeItems,
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
-} from '../helpers/zustand/NetworkStoreHelpers';
+} from '~/helpers/zustand/NetworkStoreHelpers';
+import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
 
 export interface NetworkData {
+  documentName: string;
   nodes: Record<string, Node>;
   edges: Record<string, Edge>;
   connections: Record<string, Connection>;
@@ -19,6 +20,7 @@ export interface NetworkData {
 }
 
 export interface Network extends NetworkData {
+  setDocumentName: (name: string) => void;
   addNode: (node: Node) => void;
   updateNode: (nodeID: string, node: Node) => void;
   drawEdge: (from: Node, to: Node) => void;
@@ -30,6 +32,7 @@ export interface Network extends NetworkData {
 }
 
 export const useNetworkStore = create<Network>(set => ({
+  documentName: 'Untitled Document',
   nodes: {},
   edges: {},
   connections: {},
@@ -37,6 +40,9 @@ export const useNetworkStore = create<Network>(set => ({
   route: {},
   flow: {},
   grid: {},
+  setDocumentName: name => {
+    set({ documentName: name });
+  },
   addNode: (node: Node) =>
     set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),
   updateNode: (nodeId, node) => {
@@ -58,6 +64,8 @@ export const useNetworkStore = create<Network>(set => ({
         to: to.id,
         priority: -1,
         numLanes: 1,
+        spreadType: 'center',
+        width: laneWidth,
         speed: 13.89,
       };
 
@@ -103,10 +111,33 @@ export const useNetworkStore = create<Network>(set => ({
       // update connections if the number of lanes is decreasing
       if (state.edges[edgeId].numLanes > edge.numLanes) {
         // remove connections with outdated lanes
-        const connections = removeItems(
+        let connections = removeItems(
           state.connections,
           c => c.fromLane > edge.numLanes - 1 || c.toLane > edge.numLanes - 1,
         );
+
+        for (const connection of affectedConnections) {
+          let fromNumLanes: number;
+          let toNumLanes: number;
+
+          if (connection.from === edge.id) {
+            fromNumLanes = edge.numLanes;
+            toNumLanes = state.edges[connection.to].numLanes;
+          } else if (connection.to === edge.id) {
+            fromNumLanes = state.edges[connection.from].numLanes;
+            toNumLanes = edge.numLanes;
+          } else {
+            continue;
+          }
+
+          connections = updateConnectionsOnLaneChange(
+            connection.from,
+            connection.to,
+            fromNumLanes,
+            toNumLanes,
+            connections,
+          );
+        }
 
         return {
           edges: updatedEdges,

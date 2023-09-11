@@ -1,23 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
-import { extractCarsFromSumoMessage } from '~/helpers/sumo';
-import { useSimulation } from '~/hooks/useSimulation';
 import { createId } from '~/id';
-import {
-  BASE_SIMULATION_DATA_TOPIC,
-  BASE_SIMULATION_DESTINATION_PATH,
-  BASE_SIMULATION_ERROR_TOPIC,
-  SIMULATION_SOCKET_URL,
-} from '~/simulation-urls';
-import { useCarsStore } from '~/zustand/useCarStore';
+import { NodeType } from '~/types/Network';
+import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { usePlaying } from '~/zustand/usePlaying';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
+import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CarLayer } from './Layers/CarLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
@@ -26,13 +18,8 @@ import { RoadsLayer } from './Layers/RoadsLayer';
 export function Canvas() {
   const selector = useSelector();
   const network = useNetworkStore();
-  const { isPlaying, changeSimulationId, simulationId } = usePlaying();
-  const carStore = useCarsStore();
   const nodes = Object.values(network.nodes);
-
-  const { subscribe, publish, isConnected } = useSimulation({
-    brokerURL: SIMULATION_SOCKET_URL,
-  });
+  const toolbarState = useToolbarStore();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -61,43 +48,18 @@ export function Canvas() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [selector, network]);
 
-  // Streaming of simulation data
-  useEffect(() => {
-    const SIMULATION_DATA_TOPIC = `${BASE_SIMULATION_DATA_TOPIC}/${simulationId}`;
-    const SIMULATION_ERROR_TOPIC = BASE_SIMULATION_ERROR_TOPIC.replace(
-      '_',
-      simulationId ?? '',
-    );
-    const SIMULATION_DESTINATION_PATH = `${BASE_SIMULATION_DESTINATION_PATH}/${simulationId}`;
-
-    if (isPlaying && isConnected) {
-      console.warn('Subscribing to simulation data');
-
-      subscribe(SIMULATION_DATA_TOPIC, message => {
-        console.log(message);
-        const data = extractCarsFromSumoMessage(message);
-
-        if (data) {
-          carStore.setCars(data);
-        }
-      });
-      subscribe(SIMULATION_ERROR_TOPIC, message => {
-        console.error(message);
-      });
-
-      publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
-    } else if (!isPlaying && isConnected) {
-      console.warn('Unsubscribing from simulation data');
-      publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
-    } else if (!isPlaying && simulationId) {
-      changeSimulationId(null);
-    }
-  }, [isPlaying]);
-
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
-    // const point = stageRef.current?.getPointerPosition() ?? { x: 0, y: 0 };
+    if (
+      ![LabelNames.Road, LabelNames.Intersection].includes(
+        // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
+        toolbarState.selectedToolBarItem,
+      )
+    ) {
+      return;
+    }
+
     const point = event.currentTarget.getRelativePointerPosition();
 
     const conflict = nodes.find(node => {
@@ -113,7 +75,7 @@ export function Canvas() {
         id: createId(),
         x: point.x,
         y: point.y,
-        type: 'priority',
+        type: NodeType.priority,
       };
 
       network.addNode(newNode);

@@ -8,13 +8,19 @@ export function ProjectUploadButton() {
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-
     if (file && file.type === 'application/json') {
+      networkStore.setDocumentName(file.name);
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         try {
           const parsedJson = JSON.parse(e.target?.result as string);
           const network = getNetworkFromUploadedFile(parsedJson);
+
+          // Clear the current canvas
+          const nodeIds = Object.keys(networkStore.nodes);
+          nodeIds.forEach(nodeId => {
+            networkStore.deleteNode(nodeId);
+          });
 
           // Update the state with the network
           Object.values(network.networkData.nodes).forEach(node => {
@@ -38,15 +44,15 @@ export function ProjectUploadButton() {
   }
 
   return (
-    <label className="text-sm font-semibold leading-6 text-white bg-amber-400 rounded-xl flex py-2 px-3 cursor-pointer mt-4">
-      Upload Project
+    <label className="text-sm items-center font-semibold leading-6 border rounded-full flex py-2 px-4 cursor-pointer mt-4">
+      Upload
       <input
         type="file"
         accept=".json"
         onChange={handleFileUpload}
         className="hidden"
       />
-      <ArrowUpTrayIcon className="h-6 w-6 ml-4" aria-hidden="true" />
+      <ArrowUpTrayIcon className="h-6 w-6 ml-2" aria-hidden="true" />
     </label>
   );
 }

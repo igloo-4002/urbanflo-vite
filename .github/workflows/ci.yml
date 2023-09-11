@@ -25,11 +25,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       # TODO: lint seems to be broken for now
-#      - name: Lint
-#        run: pnpm lint
+      #      - name: Lint
+      #        run: pnpm lint
       # TODO: type check prevent build for now
-#      - name: Type check
-#        run: pnpm type-check
+      #      - name: Type check
+      #        run: pnpm type-check
       - name: Build
         run: pnpm build
       - name: Save files
