@@ -34,6 +34,7 @@ export type Edge = {
   numLanes: number;
   width: number;
   speed: number;
+  name: string;
   spreadType?: 'right' | 'center' | 'roadCenter';
 };
 

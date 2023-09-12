@@ -5,6 +5,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
 export function RoadPropertiesEditor() {
+  const [newRoadName, setNewRoadName] = useState<string>('New Road');
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);
   const [roadLength, setRoadLength] = useState(0);
@@ -22,6 +23,7 @@ export function RoadPropertiesEditor() {
 
     setNewSpeedLimit(Math.floor(edge.speed * 3.6));
     setNewLanes(edge.numLanes);
+    setNewRoadName(edge.name);
     setNewPriority(edge.priority);
 
     const from = network.nodes[edge.from];
@@ -42,6 +44,7 @@ export function RoadPropertiesEditor() {
       ...network.edges[selected.selected],
       numLanes: newLanes,
       speed: newSpeedLimit / 3.6,
+      name: newRoadName,
       priority: newPriority,
     };
 
@@ -52,7 +55,15 @@ export function RoadPropertiesEditor() {
   return (
     <ColumnStack style={{ gap: 8 }}>
       <RowStack>
-        <p>Speed Limit (km/hr)</p>
+        <input
+          className="flex items-center gap-x-1 text-sm font-semibold bg-transparent leading-6 text-gray-900"
+          type="string"
+          value={newRoadName}
+          onChange={e => setNewRoadName(e.target.value)}
+        />
+      </RowStack>
+      <RowStack>
+        <p>Speed Limit</p>
         <input
           className="w-[30%] rounded-md p-1"
           type="number"

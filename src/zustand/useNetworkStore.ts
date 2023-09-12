@@ -77,6 +77,7 @@ export const useNetworkStore = create<Network>(set => ({
         spreadType: 'center',
         width: laneWidth,
         speed: 13.89,
+        name: 'New Road',
       };
 
       const pointA = { x: from.x, y: from.y };
