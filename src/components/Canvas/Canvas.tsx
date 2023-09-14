@@ -4,16 +4,17 @@ import { Stage } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { createId } from '~/id';
-import { NodeType } from '~/types/Network';
+import { NodeType, Point } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
+import { useMeasurements } from '~/zustand/useMeasurement';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import { useStageState } from '~/zustand/useStage';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CarLayer } from './Layers/CarLayer';
-import { ConnectionsLayer } from './Layers/ConnectionsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
+import { MeasurementsLayer } from './Layers/MeasurementsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
 
 export function Canvas() {
@@ -21,6 +22,7 @@ export function Canvas() {
   const network = useNetworkStore();
   const nodes = Object.values(network.nodes);
   const toolbarState = useToolbarStore();
+  const measurements = useMeasurements();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -52,6 +54,25 @@ export function Canvas() {
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
+    if (toolbarState.selectedToolBarItem === LabelNames.Measurements) {
+      const point: Point = event.currentTarget.getRelativePointerPosition();
+
+      measurements.addFlowMeasurement({
+        id: createId(),
+        A: {
+          x: point.x - 100,
+          y: point.y,
+        },
+        B: {
+          x: point.x + 100,
+          y: point.y,
+        },
+        current: 0,
+        interval: 1000,
+      });
+      return;
+    }
+
     if (
       ![LabelNames.Road, LabelNames.Intersection].includes(
         // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
@@ -80,6 +101,7 @@ export function Canvas() {
       };
 
       network.addNode(newNode);
+
       // if another node is selected, then draw an edge
       if (selector.selected !== null && network.nodes[selector.selected]) {
         network.drawEdge(network.nodes[selector.selected], newNode);
@@ -137,8 +159,8 @@ export function Canvas() {
     >
       <RoadsLayer />
       <IntersectionsLayer />
-      {toolbarState.isShowingConnections && <ConnectionsLayer />}
       <CarLayer />
+      <MeasurementsLayer />
     </Stage>
   );
 }

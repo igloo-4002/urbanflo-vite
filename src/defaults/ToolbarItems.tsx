@@ -1,10 +1,11 @@
-import { CursorArrowRaysIcon } from '@heroicons/react/24/outline';
-import { LinkIcon } from '@heroicons/react/24/solid';
+import {
+  ArrowRightIcon,
+  CursorArrowRaysIcon,
+} from '@heroicons/react/24/outline';
 
 import intersectionIcon from '~/assets/intersection.png';
 import roadIcon from '~/assets/road-icon.png';
 import { LabelNames, ToolbarItem } from '~/types/Toolbar';
-import { useToolbarStore } from '~/zustand/useToolbar';
 
 export const toolbarItems: ToolbarItem[] = [
   {
@@ -21,5 +22,9 @@ export const toolbarItems: ToolbarItem[] = [
   {
     label: LabelNames.Road,
     icon: roadIcon,
+  },
+  {
+    label: LabelNames.Measurements,
+    heroIcon: <ArrowRightIcon className="h-6 w-6" />,
   },
 ];
