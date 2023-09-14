@@ -6,8 +6,7 @@ export type FlowMeasurement = {
   id: string;
   A: Point;
   B: Point;
-  current: number; // current flow
-  interval: number; // milliseconds
+  flow: number; // current flow
 };
 
 export type PointType = 'A' | 'B';
@@ -21,6 +20,7 @@ type Measurements = {
     pointType: PointType,
     newPoint: Point,
   ) => void;
+  updateFlowMeasurement: (id: string, newFlow: number) => void;
 };
 
 export const useMeasurements = create<Measurements>(set => ({
@@ -54,4 +54,15 @@ export const useMeasurements = create<Measurements>(set => ({
         },
       },
     })),
+  updateFlowMeasurement: (id: string, newFlow: number) => {
+    set(state => ({
+      flowMeasurements: {
+        ...state.flowMeasurements,
+        [id]: {
+          ...state.flowMeasurements[id],
+          flow: newFlow,
+        },
+      },
+    }));
+  },
 }));

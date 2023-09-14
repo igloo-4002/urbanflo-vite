@@ -67,8 +67,7 @@ export function Canvas() {
           x: point.x + 100,
           y: point.y,
         },
-        current: 0,
-        interval: 1000,
+        flow: 0,
       });
       return;
     }

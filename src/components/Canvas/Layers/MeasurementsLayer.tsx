@@ -76,19 +76,14 @@ export function MeasurementsLayer() {
             <Text
               x={midX}
               y={midY}
-              text={`${flowMeasurement.current}/${flowMeasurement.interval}`}
+              text={`${flowMeasurement.flow}`}
               fontSize={12}
               padding={4}
               fill="white"
               stroke="black"
               strokeWidth={1}
               background="rgba(0, 0, 0, 0.5)"
-              offsetX={
-                (flowMeasurement.current.toString().length +
-                  flowMeasurement.interval.toString().length +
-                  1) *
-                3
-              }
+              offsetX={(flowMeasurement.flow.toString().length + 1) * 3}
             />
             <DraggableAnchor
               x={flowMeasurement.A.x}
@@ -96,7 +91,10 @@ export function MeasurementsLayer() {
               onDragMove={e => {
                 handleDragMove(
                   index,
-                  { x: e.target.x(), y: e.target.y() },
+                  {
+                    x: e.target.x(),
+                    y: e.target.y(),
+                  },
                   'A',
                 );
               }}
@@ -107,7 +105,10 @@ export function MeasurementsLayer() {
               onDragMove={e => {
                 handleDragMove(
                   index,
-                  { x: e.target.x(), y: e.target.y() },
+                  {
+                    x: e.target.x(),
+                    y: e.target.y(),
+                  },
                   'B',
                 );
               }}
