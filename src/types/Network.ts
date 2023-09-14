@@ -36,6 +36,10 @@ export type Edge = {
   speed: number;
   name: string;
   spreadType?: 'right' | 'center' | 'roadCenter';
+  // size of these arrays are = to numLanes
+  // and index of array is the lane number + 1
+  connSource: Point[];
+  connDest: Point[];
 };
 
 export type Connection = {

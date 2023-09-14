@@ -78,6 +78,11 @@ export const useNetworkStore = create<Network>(set => ({
         width: laneWidth,
         speed: 13.89,
         name: 'New Road',
+
+        // pull back 10 units in the direction opposite of the edge
+        connSource: [],
+
+        connDest: [],
       };
 
       const pointA = { x: from.x, y: from.y };
@@ -97,7 +102,10 @@ export const useNetworkStore = create<Network>(set => ({
           );
 
         return {
-          edges: { ...state.edges, [newEdgeId]: newEdge },
+          edges: {
+            ...state.edges,
+            [newEdgeId]: newEdge,
+          },
           connections: newConnections,
           flow: newFlows,
           route: newRoutes,
@@ -282,3 +290,7 @@ export const useNetworkStore = create<Network>(set => ({
   updateFlow: (flowId, flow) =>
     set(state => ({ flow: { ...state.flow, [flowId]: flow } })),
 }));
+
+useNetworkStore.subscribe(state => {
+  console.log({ edges: state.edges });
+});
