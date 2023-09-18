@@ -3,7 +3,7 @@ import { CircleLoader } from 'react-spinners';
 
 import { PlayIcon, StopIcon } from '@heroicons/react/24/outline';
 
-import { getSimulationOutput, uploadNetwork } from '~/api/network';
+import { getSimulationAnalytics, getSimulationOutput, uploadNetwork } from '~/api/network';
 import { extractCarsFromSumoMessage } from '~/helpers/sumo';
 import { useSimulation } from '~/hooks/useSimulation';
 import {
@@ -12,9 +12,11 @@ import {
   BASE_SIMULATION_ERROR_TOPIC,
   SIMULATION_SOCKET_URL,
 } from '~/simulation-urls';
+import { SimulationInfo } from '~/types/Simulation';
 import { useCarsStore } from '~/zustand/useCarStore';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
+import { useSimulationHistory } from '~/zustand/useSimulationHistory';
 
 export const FloatingPlayPause = () => {
   const [loading, setLoading] = useState(false);
@@ -24,6 +26,13 @@ export const FloatingPlayPause = () => {
   const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
+
+  const simulationHistory = useSimulationHistory();
+
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [simulationInfo, setSimulationInfo] = useState<SimulationInfo | null>(
+    null,
+  );
 
   // streaming of simulation data
   useEffect(() => {
@@ -82,6 +91,8 @@ export const FloatingPlayPause = () => {
       };
 
       const simInfo = await uploadNetwork(requestBody);
+      setStartTime(new Date().toISOString());
+      setSimulationInfo(simInfo);
       player.changeSimulationId(simInfo.id);
       player.play();
     } catch (error: unknown) {
@@ -101,8 +112,21 @@ export const FloatingPlayPause = () => {
       }
 
       const simOutput = await getSimulationOutput(player.simulationId);
+      const simAnalytics = await getSimulationAnalytics(simOutput);
+
+      if (startTime && simulationInfo) {
+        simulationHistory.updateHistory({
+          startTime,
+          endTime: new Date().toISOString(),
+          simulation: {
+            info: simulationInfo,
+            output: simOutput,
+          },
+        });
+      }
 
       console.log({ simOutput });
+      console.log(simAnalytics)
     } catch (error: unknown) {
       console.error(error);
     } finally {
