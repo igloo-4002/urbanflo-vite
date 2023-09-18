@@ -3,9 +3,13 @@ import { SimulationHistory } from '~/zustand/useSimulationHistory';
 
 interface SimulationSummaryProps {
   histroyItem: SimulationHistory;
+  simulationNumber: number;
 }
 
-export function SimulationSummary({ histroyItem }: SimulationSummaryProps) {
+export function SimulationSummary({
+  histroyItem,
+  simulationNumber,
+}: SimulationSummaryProps) {
   const summary = getSimulationAnalytics(histroyItem.simulation.output);
 
   const startDateTime = new Date(histroyItem.startTime).toLocaleString();
