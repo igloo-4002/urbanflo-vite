@@ -12,9 +12,11 @@ import {
   BASE_SIMULATION_ERROR_TOPIC,
   SIMULATION_SOCKET_URL,
 } from '~/simulation-urls';
+import { SimulationInfo } from '~/types/Simulation';
 import { useCarsStore } from '~/zustand/useCarStore';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
+import { useSimulationHistory } from '~/zustand/useSimulationHistory';
 
 export const FloatingPlayPause = () => {
   const [loading, setLoading] = useState(false);
@@ -24,6 +26,13 @@ export const FloatingPlayPause = () => {
   const { subscribe, publish, isConnected } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
+
+  const simulationHistory = useSimulationHistory();
+
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [simulationInfo, setSimulationInfo] = useState<SimulationInfo | null>(
+    null,
+  );
 
   // streaming of simulation data
   useEffect(() => {
@@ -82,6 +91,8 @@ export const FloatingPlayPause = () => {
       };
 
       const simInfo = await uploadNetwork(requestBody);
+      setStartTime(new Date().toISOString());
+      setSimulationInfo(simInfo);
       player.changeSimulationId(simInfo.id);
       player.play();
     } catch (error: unknown) {
@@ -101,6 +112,17 @@ export const FloatingPlayPause = () => {
       }
 
       const simOutput = await getSimulationOutput(player.simulationId);
+
+      if (startTime && simulationInfo) {
+        simulationHistory.updateHistory({
+          startTime,
+          endTime: new Date().toISOString(),
+          simulation: {
+            info: simulationInfo,
+            output: simOutput,
+          },
+        });
+      }
 
       console.log({ simOutput });
     } catch (error: unknown) {
