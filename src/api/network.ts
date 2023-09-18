@@ -88,7 +88,7 @@ const totalNumberOfCarsThatCompleted = tripInfo.length - noFinish;
 
 
 // Return the averages as an array
-  return [averageDuration, averageWaiting, averageTimeLoss, totalNumberOfCarsThatCompleted];
+  return [netState.length, averageDuration, averageWaiting, averageTimeLoss, totalNumberOfCarsThatCompleted];
 }
 
 export async function getSimulationInfo(
