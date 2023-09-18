@@ -52,6 +52,7 @@ export async function getSimulationOutput(
 
 export function getSimulationAnalytics(simulationAnalytics: SimulationOutput) {
   const tripInfo = simulationAnalytics.tripInfo;
+  const netState = simulationAnalytics.netstate;
   // Run time: Measured in simulation seconds
 
   // Average duration: The average time each vehicle needed to accomplish the route in simulation seconds
@@ -87,6 +88,7 @@ export function getSimulationAnalytics(simulationAnalytics: SimulationOutput) {
     averageWaiting,
     averageTimeLoss,
     totalNumberOfCarsThatCompleted,
+    simulationLength: netState.length,
   };
 }
 
