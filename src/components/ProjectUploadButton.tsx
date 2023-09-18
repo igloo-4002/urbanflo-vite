@@ -2,9 +2,11 @@ import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
 
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
+import { useSimulationHistory } from '~/zustand/useSimulationHistory';
 
 export function ProjectUploadButton() {
   const networkStore = useNetworkStore();
+  const simulationHistoryStore = useSimulationHistory();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -32,6 +34,12 @@ export function ProjectUploadButton() {
             networkStore.drawEdge(from, to);
             networkStore.updateEdge(edge.id, edge);
           });
+          // Update the state with the network
+          Object.values(uploadedNetwork.simulationHistory).forEach(
+            historyItem => {
+              simulationHistoryStore.updateHistory(historyItem);
+            },
+          );
         } catch (error) {
           console.error(
             'An error occurred while parsing the JSON file OR the file is invalid',
