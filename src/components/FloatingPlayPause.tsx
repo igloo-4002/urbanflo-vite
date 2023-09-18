@@ -3,7 +3,7 @@ import { CircleLoader } from 'react-spinners';
 
 import { PlayIcon, StopIcon } from '@heroicons/react/24/outline';
 
-import { getSimulationOutput, uploadNetwork } from '~/api/network';
+import { getSimulationAnalytics, getSimulationOutput, uploadNetwork } from '~/api/network';
 import { extractCarsFromSumoMessage } from '~/helpers/sumo';
 import { useSimulation } from '~/hooks/useSimulation';
 import {
@@ -112,6 +112,7 @@ export const FloatingPlayPause = () => {
       }
 
       const simOutput = await getSimulationOutput(player.simulationId);
+      const simAnalytics = await getSimulationAnalytics(simOutput);
 
       if (startTime && simulationInfo) {
         simulationHistory.updateHistory({
@@ -125,6 +126,7 @@ export const FloatingPlayPause = () => {
       }
 
       console.log({ simOutput });
+      console.log(simAnalytics)
     } catch (error: unknown) {
       console.error(error);
     } finally {
