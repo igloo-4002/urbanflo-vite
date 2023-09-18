@@ -1,8 +1,13 @@
 import { NetworkData, useNetworkStore } from '~/zustand/useNetworkStore';
+import {
+  SimulationHistory,
+  useSimulationHistory,
+} from '~/zustand/useSimulationHistory';
 
 interface UrbanFloFile {
   version: number;
   networkData: NetworkData;
+  simulationHistory: SimulationHistory[];
 }
 
 export function getUrbanFloFileContents(): string {
@@ -15,6 +20,7 @@ export function getUrbanFloFileContents(): string {
 
 function getFileContents(): UrbanFloFile {
   const networkStore = useNetworkStore.getState();
+  const simulationHistoryStore = useSimulationHistory.getState();
 
   return {
     version: 1,
@@ -27,6 +33,7 @@ function getFileContents(): UrbanFloFile {
       route: networkStore.route,
       flow: networkStore.flow,
     },
+    simulationHistory: simulationHistoryStore.history,
   };
 }
 
