@@ -55,6 +55,12 @@ export function SimulationSummary({
           <div className="flex flex-col gap-2">
             <div>
               <span className="font-medium text-gray-600">
+                Simulation Length:
+              </span>{' '}
+              <span className="text-gray-800">{summary.simulationLength}</span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">
                 Average Time Spent Per Car:
               </span>{' '}
               <span className="text-gray-800">
