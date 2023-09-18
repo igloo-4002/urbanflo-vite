@@ -83,7 +83,11 @@ export function Header() {
             </div>
             <div className="flex flex-col justify-between gap-2">
               {simulationHistoryStore.history.map((item, index) => (
-                <SimulationSummary key={index} histroyItem={item} />
+                <SimulationSummary
+                  key={index}
+                  histroyItem={item}
+                  simulationNumber={index + 1}
+                />
               ))}
             </div>
           </div>
