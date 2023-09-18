@@ -1,8 +1,8 @@
-import { Layer, Line } from 'react-konva';
+import { Circle, Layer, Line } from 'react-konva';
 
+import { getEdgeTerminals } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Edge, Point } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
-import { useToolbarStore } from '~/zustand/useToolbar';
 
 function adjustControlPoint(
   source: Point,
@@ -66,37 +66,26 @@ function quadraticBezier(inward: Edge, outward: Edge, network: Network) {
 
 export function ConnectionsLayer() {
   const network = useNetworkStore();
-  const connections = Object.values(network.connections);
+  const edges = Object.values(network.edges);
 
-  const paths = connections.map((connection, index) => {
-    const inward = network.edges[connection.from];
-    const outward = network.edges[connection.to];
+  const edgeTerminals = edges.map(edge => getEdgeTerminals(edge));
 
-    const [source, control, destination] = quadraticBezier(
-      inward,
-      outward,
-      network,
-    );
+  const flattenedEdgeTerminals = edgeTerminals.flatMap(edge => [
+    ...edge.leading,
+    ...edge.trailing,
+  ]);
 
-    return (
-      <Line
-        key={index}
-        points={[
-          source.x,
-          source.y,
-          control.x,
-          control.y,
-          control.x,
-          control.y,
-          destination.x,
-          destination.y,
-        ]}
-        stroke={'#FF0000'}
-        strokeWidth={2}
-        bezier
-      />
-    );
-  });
-
-  return <Layer>{paths}</Layer>;
+  return (
+    <Layer>
+      {flattenedEdgeTerminals.map((terminal, index) => (
+        <Circle
+          key={index}
+          x={terminal.x}
+          y={terminal.y}
+          fill="red"
+          radius={4}
+        />
+      ))}
+    </Layer>
+  );
 }

@@ -1,5 +1,6 @@
+import { laneWidth } from '~/components/Canvas/Road';
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
-import { Network } from '~/zustand/useNetworkStore';
+import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
 
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
@@ -246,4 +247,48 @@ export function removeItems<T>(
   }
 
   return newItems;
+}
+
+export function getEdgeTerminals(edge: Edge) {
+  const from = useNetworkStore.getState().nodes[edge.from];
+  const to = useNetworkStore.getState().nodes[edge.to];
+
+  const { x: xt, y: yt } = from;
+  const { x: xl, y: yl } = to;
+
+  const m = (xt - xl) / (yl - yt);
+  const cl = yl - m * xl;
+  const ct = yt - m * xt;
+
+  const n = edge.numLanes;
+  const d = (edge.numLanes * laneWidth) / 2;
+
+  const angle = Math.atan(m);
+
+  const xta = xt - d * Math.cos(angle) + (laneWidth / 2) * Math.cos(angle);
+
+  const xla = xl - d * Math.cos(angle) + (laneWidth / 2) * Math.cos(angle);
+
+  // linspace from xta to xtb inclusive with n
+  const xLeading = Array.from(
+    { length: n },
+    (_, i) => xla + i * (laneWidth * Math.cos(angle)),
+  );
+
+  const yLeading = xLeading.map(x => m * x + cl);
+
+  const xTrailing = Array.from(
+    { length: n },
+    (_, i) => xta + i * (laneWidth * Math.cos(angle)),
+  );
+
+  const yTrailing = xTrailing.map(x => m * x + ct);
+
+  const leading = xLeading.map((x, i) => ({ x, y: yLeading[i] }));
+  const trailing = xTrailing.map((x, i) => ({ x, y: yTrailing[i] }));
+
+  return {
+    leading,
+    trailing,
+  };
 }
