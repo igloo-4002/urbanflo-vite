@@ -50,9 +50,7 @@ export async function getSimulationOutput(
   return await response.json();
 }
 
-export async function getSimulationAnalytics(
-  simulationAnalytics: SimulationOutput,
-) {
+export function getSimulationAnalytics(simulationAnalytics: SimulationOutput) {
   const tripInfo = simulationAnalytics.tripInfo;
   // Run time: Measured in simulation seconds
 
