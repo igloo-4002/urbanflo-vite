@@ -8,7 +8,12 @@ import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
-import { useStageState } from '~/zustand/useStage';
+import {
+  MAX_SCALE,
+  MIN_SCALE,
+  SCALE_FACTOR,
+  useStageState,
+} from '~/zustand/useStage';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CarLayer } from './Layers/CarLayer';
@@ -105,10 +110,6 @@ export function Canvas() {
         // Prevent default to disable natural scrolling
         e.evt.preventDefault();
 
-        const MIN_SCALE = 2;
-        const MAX_SCALE = 1 / MIN_SCALE;
-        const SCALE_FACTOR = 1.05;
-
         // Determine the scale change based on the wheel event delta
         const oldScale = e.currentTarget.scaleX();
         const newScale =
@@ -119,7 +120,6 @@ export function Canvas() {
           return;
         }
 
-        // const pointer = e.currentTarget.getPointerPosition();
         const pointer = { x: e.evt.clientX, y: e.evt.clientY };
 
         // Calculate new position to center the zooming around the cursor
@@ -129,9 +129,8 @@ export function Canvas() {
         const newX = -(mx - pointer.x / newScale) * newScale;
         const newY = -(my - pointer.y / newScale) * newScale;
 
-        e.currentTarget.scale({ x: newScale, y: newScale });
-        e.currentTarget.position({ x: newX, y: newY });
         setScale({ x: newScale, y: newScale });
+        setPosition({ x: newX, y: newY });
       }}
     >
       <RoadsLayer />
