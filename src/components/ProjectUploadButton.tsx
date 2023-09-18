@@ -2,9 +2,11 @@ import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
 
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
+import { useSimulationHistory } from '~/zustand/useSimulationHistory';
 
 export function ProjectUploadButton() {
   const networkStore = useNetworkStore();
+  const simulationHistoryStore = useSimulationHistory();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -14,7 +16,7 @@ export function ProjectUploadButton() {
       reader.onload = (e: ProgressEvent<FileReader>) => {
         try {
           const parsedJson = JSON.parse(e.target?.result as string);
-          const network = getNetworkFromUploadedFile(parsedJson);
+          const uploadedNetwork = getNetworkFromUploadedFile(parsedJson);
 
           // Clear the current canvas
           const nodeIds = Object.keys(networkStore.nodes);
@@ -23,15 +25,21 @@ export function ProjectUploadButton() {
           });
 
           // Update the state with the network
-          Object.values(network.networkData.nodes).forEach(node => {
+          Object.values(uploadedNetwork.networkData.nodes).forEach(node => {
             networkStore.addNode(node);
           });
-          Object.values(network.networkData.edges).forEach(edge => {
-            const from = network.networkData.nodes[edge.from];
-            const to = network.networkData.nodes[edge.to];
+          Object.values(uploadedNetwork.networkData.edges).forEach(edge => {
+            const from = uploadedNetwork.networkData.nodes[edge.from];
+            const to = uploadedNetwork.networkData.nodes[edge.to];
             networkStore.drawEdge(from, to);
             networkStore.updateEdge(edge.id, edge);
           });
+          // Update the state with the network
+          Object.values(uploadedNetwork.simulationHistory).forEach(
+            historyItem => {
+              simulationHistoryStore.updateHistory(historyItem);
+            },
+          );
         } catch (error) {
           console.error(
             'An error occurred while parsing the JSON file OR the file is invalid',
