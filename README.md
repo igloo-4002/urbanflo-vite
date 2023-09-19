@@ -24,3 +24,9 @@ pnpm dev
 A developer has two options, either to connect and run simulations on the cloud server running on `sumo-server.urbanflo.app` or run the server locally.
 
 To run the server locally, follow the instructions in the [server's repository](https://github.com/igloo-4002/urbanflo-sumo-server)
+
+## Contributors
+
+<a href = "https://github.com/igloo-4002/urbanflo-vite/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo=igloo-4002/urbanflo-vite"/>
+</a>
