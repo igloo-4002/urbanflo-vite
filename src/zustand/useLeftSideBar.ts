@@ -16,6 +16,7 @@ export const useLeftSideBar = create<LeftSideBar>(set => ({
 
 export const ModalViewNames = {
   ROAD_PROPERTIES_EDITOR: 'road-properties-editor',
+  INTERSECTION_PROPERTIES_EDITOR: 'intersection-properties-editor',
 } as const;
 
 export type ModalViewNamesValues =
