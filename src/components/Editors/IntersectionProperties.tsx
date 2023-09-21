@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
+import { NodeType } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
-import { NodeType } from '~/types/Network';
 
 // Define a type for intersection types
 type IntersectionType = keyof typeof NodeType;
 
 export function IntersectionPropertiesEditor() {
-  const [intersectionType, setIntersectionType] = useState<IntersectionType>('priority');
+  const [intersectionType, setIntersectionType] =
+    useState<IntersectionType>('priority');
 
   const selected = useSelector();
   const network = useNetworkStore();
@@ -38,18 +39,25 @@ export function IntersectionPropertiesEditor() {
     selected.deselect();
   }
 
+  function prettyPrintIntersectionType(type: IntersectionType) {
+    // Replace underscores with spaces and capitalize the first letter
+    return type.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+  }
+
   return (
     <ColumnStack style={{ gap: 8 }}>
       <RowStack>
         <p>Intersection Type</p>
         <select
           value={intersectionType}
-          onChange={(e) => setIntersectionType(e.target.value as IntersectionType)}
+          onChange={e =>
+            setIntersectionType(e.target.value as IntersectionType)
+          }
           className="w-[40%] rounded-md p-1"
         >
-          {Object.values(NodeType).map((type) => (
+          {Object.values(NodeType).map(type => (
             <option key={type} value={type}>
-              {type}
+              {prettyPrintIntersectionType(type)}
             </option>
           ))}
         </select>
@@ -63,8 +71,3 @@ export function IntersectionPropertiesEditor() {
     </ColumnStack>
   );
 }
-
-
-
-
-
