@@ -249,7 +249,11 @@ export function removeItems<T>(
   return newItems;
 }
 
-export function getEdgeTerminals(edge: Edge, lambdat: number, lambdal: number) {
+export function getEdgeTerminals(
+  edge: Edge,
+  lambdat: number = 50,
+  lambdal: number = 50,
+) {
   const from = useNetworkStore.getState().nodes[edge.from];
   const to = useNetworkStore.getState().nodes[edge.to];
 
