@@ -249,40 +249,51 @@ export function removeItems<T>(
   return newItems;
 }
 
-export function getEdgeTerminals(edge: Edge) {
+export function getEdgeTerminals(edge: Edge, lambdat: number, lambdal: number) {
   const from = useNetworkStore.getState().nodes[edge.from];
   const to = useNetworkStore.getState().nodes[edge.to];
 
-  const { x: xt, y: yt } = from;
-  const { x: xl, y: yl } = to;
+  const { x: xt0, y: yt0 } = from;
+  const { x: xl0, y: yl0 } = to;
 
-  const m = (xt - xl) / (yl - yt);
-  const cl = yl - m * xl;
-  const ct = yt - m * xt;
+  const m1 = (yl0 - yt0) / (xl0 - xt0);
+  const m2 = (xt0 - xl0) / (yl0 - yt0);
+
+  const angle1 = Math.atan(m1);
+
+  const signX = xl0 > xt0 ? -1 : 1;
+
+  const xl = xl0 + signX * lambdal * Math.cos(angle1);
+  const xt = xt0 - signX * lambdat * Math.cos(angle1);
+
+  const yl = yl0 + signX * lambdal * Math.sin(angle1);
+  const yt = yt0 - signX * lambdat * Math.sin(angle1);
+
+  const angle2 = Math.atan(m2);
+  const cl = yl - m2 * xl;
+  const ct = yt - m2 * xt;
 
   const n = edge.numLanes;
   const d = (edge.numLanes * laneWidth) / 2;
 
-  const angle = Math.atan(m);
+  const xta = xt - d * Math.cos(angle2) + (laneWidth / 2) * Math.cos(angle2);
 
-  const xta = xt - d * Math.cos(angle) + (laneWidth / 2) * Math.cos(angle);
-
-  const xla = xl - d * Math.cos(angle) + (laneWidth / 2) * Math.cos(angle);
+  const xla = xl - d * Math.cos(angle2) + (laneWidth / 2) * Math.cos(angle2);
 
   // linspace from xta to xtb inclusive with n
   const xLeading = Array.from(
     { length: n },
-    (_, i) => xla + i * (laneWidth * Math.cos(angle)),
+    (_, i) => xla + i * (laneWidth * Math.cos(angle2)),
   );
 
-  const yLeading = xLeading.map(x => m * x + cl);
+  const yLeading = xLeading.map(x => m2 * x + cl);
 
   const xTrailing = Array.from(
     { length: n },
-    (_, i) => xta + i * (laneWidth * Math.cos(angle)),
+    (_, i) => xta + i * (laneWidth * Math.cos(angle2)),
   );
 
-  const yTrailing = xTrailing.map(x => m * x + ct);
+  const yTrailing = xTrailing.map(x => m2 * x + ct);
 
   const leading = xLeading.map((x, i) => ({ x, y: yLeading[i] }));
   const trailing = xTrailing.map((x, i) => ({ x, y: yTrailing[i] }));
