@@ -17,6 +17,7 @@ import {
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CarLayer } from './Layers/CarLayer';
+import { ConnectionsLayer } from './Layers/ConnectionsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
 
@@ -135,6 +136,7 @@ export function Canvas() {
     >
       <RoadsLayer />
       <IntersectionsLayer />
+      <ConnectionsLayer />
       <CarLayer />
     </Stage>
   );
