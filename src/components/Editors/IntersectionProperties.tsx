@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -14,8 +14,18 @@ export function IntersectionPropertiesEditor() {
   const selected = useSelector();
   const network = useNetworkStore();
 
+  useEffect(() => {
+    if (selected.selected === null || !network.nodes[selected.selected]) {
+      return;
+    }
+
+    const node = network.nodes[selected.selected];
+
+    setIntersectionType(node.type);
+  }, [selected.selected, network.nodes]);
+
   function submitIntersectionProperties() {
-    if (selected.selected === null || !network.edges[selected.selected]) {
+    if (selected.selected === null || !network.nodes[selected.selected]) {
       return;
     }
 
