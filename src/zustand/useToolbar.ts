@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { toolbarItems } from '~/defaults/ToolbarItems';
-import { LabelNamesType, ToolbarItem } from '~/types/Toolbar';
+import { LabelNames, LabelNamesType, ToolbarItem } from '~/types/Toolbar';
 
 type ToolbarState = {
   isOpen: boolean;
@@ -17,7 +17,7 @@ export const useToolbarStore = create<ToolbarState>(set => ({
   isShowingConnections: true,
   toggleShowingConnections: () =>
     set(state => ({ isShowingConnections: !state.isShowingConnections })),
-  selectedToolBarItem: null,
+  selectedToolBarItem: LabelNames.Pointer,
   setSelectedToolBarItem: (selectedToolBarItem: LabelNamesType | null) =>
     set({ selectedToolBarItem }),
   items: toolbarItems,

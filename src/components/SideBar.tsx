@@ -1,6 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
+import { IntersectionPropertiesEditor } from '~/components/Editors/IntersectionProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
 import { useSelector } from '~/zustand/useSelected';
 
@@ -19,6 +20,8 @@ export function LeftSideBar() {
         );
       case ModalViewNames.ROAD_PROPERTIES_EDITOR:
         return <RoadPropertiesEditor />;
+      case ModalViewNames.INTERSECTION_PROPERTIES_EDITOR:
+        return <IntersectionPropertiesEditor />;
     }
   }
 
