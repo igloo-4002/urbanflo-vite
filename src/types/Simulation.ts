@@ -40,3 +40,11 @@ export type SimulationOutput = {
   tripInfo: SumoTripInfo[];
   netstate: SumoNetstate[];
 };
+
+export type SimulationAnalytics = {
+  averageDuration: number;
+  averageWaiting: number;
+  averageTimeLoss: number;
+  totalNumberOfCarsThatCompleted: number;
+  simulationLength: number;
+};

@@ -1,6 +1,10 @@
 import { BASE_URL } from '~/simulation-urls';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
-import { SimulationInfo, SimulationOutput } from '~/types/Simulation';
+import {
+  SimulationAnalytics,
+  SimulationInfo,
+  SimulationOutput,
+} from '~/types/Simulation';
 
 type NetworkPayload = {
   documentName: string;
@@ -50,46 +54,26 @@ export async function getSimulationOutput(
   return await response.json();
 }
 
-export function getSimulationAnalytics(simulationAnalytics: SimulationOutput) {
-  const tripInfo = simulationAnalytics.tripInfo;
-  const netState = simulationAnalytics.netstate;
-  // Run time: Measured in simulation seconds
+export async function getSimulationAnalytics(
+  simulationId: string,
+): Promise<SimulationAnalytics> {
+  const response = await fetch(
+    `${BASE_URL}/simulation/${simulationId}/analytics`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
 
-  // Average duration: The average time each vehicle needed to accomplish the route in simulation seconds
-  // Extract all durations into an array
-  const durations = tripInfo.map(trip => trip.duration);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to get simulation analytics: ${response.statusText}`,
+    );
+  }
 
-  // Calculate the average duration
-  const totalDuration = durations.reduce((acc, duration) => acc + duration, 0);
-  const averageDuration = totalDuration / tripInfo.length;
-
-  // Waiting time: The average time in which vehicles speed was below or equal 0.1 m/s in simulation seconds
-  // Extract all durations into an array
-  const waitingTime = tripInfo.map(trip => trip.waitingTime);
-
-  // Calculate the average duration
-  const totalWaiting = waitingTime.reduce((acc, time) => acc + time, 0);
-  const averageWaiting = totalWaiting / tripInfo.length;
-
-  // Time loss: The time lost due to driving below the ideal speed. (ideal speed includes the individual speedFactor; slowdowns due to intersections etc. will incur timeLoss, scheduled stops do not count) in simulation seconds
-  // Extract all durations into an array
-  const timeLoss = tripInfo.map(trip => trip.timeLoss);
-
-  // Calculate the average duration
-  const totalTimeLoss = timeLoss.reduce((acc, time) => acc + time, 0);
-  const averageTimeLoss = totalTimeLoss / tripInfo.length;
-
-  // Total number of cars that reached their destination. Can work this out with vaporised variable
-  const noFinish = tripInfo.filter(trip => trip.vaporized === true).length;
-  const totalNumberOfCarsThatCompleted = tripInfo.length - noFinish;
-
-  return {
-    averageDuration,
-    averageWaiting,
-    averageTimeLoss,
-    totalNumberOfCarsThatCompleted,
-    simulationLength: netState.length,
-  };
+  return await response.json();
 }
 
 export async function getSimulationInfo(
