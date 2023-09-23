@@ -1,10 +1,15 @@
 import { create } from 'zustand';
 
-import { SimulationInfo, SimulationOutput } from '~/types/Simulation';
+import {
+  SimulationAnalytics,
+  SimulationInfo,
+  SimulationOutput,
+} from '~/types/Simulation';
 
 export interface Simulation {
   info: SimulationInfo;
   output: SimulationOutput;
+  analytics: SimulationAnalytics;
 }
 
 export interface SimulationHistory {

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { getSimulationAnalytics } from '~/api/network';
 import { formatISOString } from '~/helpers/date/formatter';
 import { SimulationHistory } from '~/zustand/useSimulationHistory';
 
@@ -14,7 +13,7 @@ export function SimulationSummary({
   simulationNumber,
 }: SimulationSummaryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const summary = getSimulationAnalytics(histroyItem.simulation.output);
+  const summary = histroyItem.simulation.analytics;
 
   const startDateTime = formatISOString(histroyItem.startTime);
   const endDateTime = formatISOString(histroyItem.endTime);
@@ -64,7 +63,7 @@ export function SimulationSummary({
                 Average Time Spent Per Car:
               </span>{' '}
               <span className="text-gray-800">
-                {summary.averageDuration} seconds
+                {summary.averageDuration.toFixed(2)} seconds
               </span>
             </div>
             <div>
@@ -72,7 +71,7 @@ export function SimulationSummary({
                 Average Waiting Time Per Car:
               </span>{' '}
               <span className="text-gray-800">
-                {summary.averageWaiting} seconds
+                {summary.averageWaiting.toFixed(2)} seconds
               </span>
             </div>
             <div>
@@ -80,7 +79,7 @@ export function SimulationSummary({
                 Average Time Lost Due to Congestion:
               </span>{' '}
               <span className="text-gray-800">
-                {summary.averageTimeLoss} seconds
+                {summary.averageTimeLoss.toFixed(2)} seconds
               </span>
             </div>
             <div>
