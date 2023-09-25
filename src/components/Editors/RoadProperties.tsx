@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { useSelector } from '~/zustand/useSelected';
+import { useSelector } from '~/zustand/useSelector';
 
 export function RoadPropertiesEditor() {
   const [newRoadName, setNewRoadName] = useState<string>('New Road');

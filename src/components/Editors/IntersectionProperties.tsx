@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ColumnStack, RowStack } from '~/components/Stack';
 import { NodeType } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { useSelector } from '~/zustand/useSelected';
+import { useSelector } from '~/zustand/useSelector';
 
 // Define a type for intersection types
 type IntersectionType = keyof typeof NodeType;

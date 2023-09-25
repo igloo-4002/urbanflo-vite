@@ -8,7 +8,7 @@ import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { useSelector } from '~/zustand/useSelected';
+import { useSelector } from '~/zustand/useSelector';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { laneWidth } from './Road';

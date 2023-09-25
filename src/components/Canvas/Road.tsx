@@ -1,11 +1,12 @@
-import { Arrow, Group } from 'react-konva';
+import { Fragment } from 'react';
+import { Arrow, Group, Text } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { centerlineColor, highlightColor, roadColor } from '~/colors';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { useSelector } from '~/zustand/useSelected';
+import { useSelector } from '~/zustand/useSelector';
 
 interface RoadProps {
   edge: Edge;
@@ -61,8 +62,9 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         key={`road-selected-stroke-${edge.id}`}
         x={from.x}
         y={from.y}
-        stroke={isSelected ? highlightColor : 'transparent'}
+        stroke={highlightColor}
         strokeWidth={laneWidth * edge.numLanes + 8}
+        visible={isSelected}
         {...commonProps}
         {...commonOffset}
       />
@@ -121,6 +123,43 @@ export function Road({ edge, offset = 0 }: RoadProps) {
             angle={angleDeg}
             {...commonOffset}
           />
+        );
+      })}
+
+      {Array.from({ length: edge.numLanes }).map((_, index) => {
+        const offset = index - (edge.numLanes - 1) / 2;
+
+        const x20 = (1 - 0.2) * from.x + 0.2 * to.x + offset * dx;
+        const y20 = (1 - 0.2) * from.y + 0.2 * to.y - offset * dy;
+
+        const x80 = (1 - 0.8) * from.x + 0.8 * to.x + offset * dx;
+        const y80 = (1 - 0.8) * from.y + 0.8 * to.y - offset * dy;
+
+        const fontSize = 12;
+        const verticalOffset = fontSize / 2;
+
+        return (
+          <Fragment key={index}>
+            <Text
+              key={`road-label-${edge.id}-${index}-trailing`}
+              x={x20 - fontSize}
+              y={y20 - verticalOffset}
+              text={`lane ${index + 1}`}
+              fontSize={fontSize}
+              fill="white"
+              visible={isSelected}
+            />
+
+            <Text
+              key={`road-label-${edge.id}-${index}-leading`}
+              x={x80 - fontSize}
+              y={y80 - verticalOffset}
+              text={`lane ${index + 1}`}
+              fontSize={fontSize}
+              fill="white"
+              visible={isSelected}
+            />
+          </Fragment>
         );
       })}
     </Group>

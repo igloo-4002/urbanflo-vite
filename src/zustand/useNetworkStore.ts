@@ -27,6 +27,7 @@ export interface Network extends NetworkData {
   updateEdge: (edgeId: string, edge: Edge) => void;
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
+  deleteConnection: (id: string) => void;
   addConnection: (from: Edge, to: Edge) => void;
   updateFlow: (flowId: string, flow: Flow) => void;
 }
@@ -254,6 +255,16 @@ export const useNetworkStore = create<Network>(set => ({
         connections: newConnections,
         route: newRoutes,
         flow: newFlows,
+      };
+    });
+  },
+  deleteConnection: (id: string) => {
+    set(state => {
+      const newConnections = { ...state.connections };
+      delete newConnections[id];
+
+      return {
+        connections: newConnections,
       };
     });
   },

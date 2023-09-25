@@ -1,11 +1,22 @@
 import { Layer, Line } from 'react-konva';
 
+import { highlightColor } from '~/colors';
 import { getEdgeTerminals } from '~/helpers/zustand/NetworkStoreHelpers';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
+import { useSelector } from '~/zustand/useSelector';
 
 export function ConnectionsLayer() {
   const network = useNetworkStore();
+  const selector = useSelector();
   const connections = Object.values(network.connections);
+
+  function selectConnection(connectionId: string) {
+    if (selector.selected === null) {
+      selector.select(connectionId);
+    } else if (selector.selected === connectionId) {
+      selector.deselect();
+    }
+  }
 
   return (
     <Layer>
@@ -24,6 +35,9 @@ export function ConnectionsLayer() {
           y: network.nodes[inward.to].y,
         };
 
+        const connectionId = `${connection.from}_${connection.to}_${connection.fromLane}_${connection.toLane}`;
+        const isSelected = selector.selected === connectionId;
+
         return (
           <Line
             key={index}
@@ -38,8 +52,9 @@ export function ConnectionsLayer() {
               trailing.y,
             ]}
             bezier
-            stroke={'red'}
-            strokeWidth={2}
+            stroke={isSelected ? highlightColor : 'red'}
+            strokeWidth={isSelected ? 3 : 2}
+            onClick={() => selectConnection(connectionId)}
           />
         );
       })}

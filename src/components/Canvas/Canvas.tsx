@@ -7,7 +7,7 @@ import { createId } from '~/id';
 import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { useSelector } from '~/zustand/useSelected';
+import { useSelector } from '~/zustand/useSelector';
 import {
   MAX_SCALE,
   MIN_SCALE,
@@ -39,6 +39,9 @@ export function Canvas() {
           selector.deselect();
         } else if (network.edges[selector.selected]) {
           network.deleteEdge(selector.selected);
+          selector.deselect();
+        } else if (network.connections[selector.selected]) {
+          network.deleteConnection(selector.selected);
           selector.deselect();
         } else {
           throw new Error("cannot delete selected because it doesn't exist");
