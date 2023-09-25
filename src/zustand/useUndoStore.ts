@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-export abstract class Command {
-  abstract execute(): void;
-  abstract unexecute(): void;
+export interface Command {
+  execute(): void;
+  unexecute(): void;
 }
 
 interface UndoRedoStore {

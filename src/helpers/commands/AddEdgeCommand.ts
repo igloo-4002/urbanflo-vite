@@ -2,13 +2,11 @@ import { Edge } from '~/types/Network';
 import { Network } from '~/zustand/useNetworkStore';
 import { Command } from '~/zustand/useUndoStore';
 
-export class AddEdgeCommand extends Command {
+export class AddEdgeCommand implements Command {
   constructor(
     private network: Network,
     private edge: Edge,
-  ) {
-    super();
-  }
+  ) {}
 
   execute() {
     const fromNode = this.network.nodes[this.edge.from];
