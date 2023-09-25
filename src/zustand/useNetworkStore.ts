@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 
 import { laneWidth } from '~/components/Canvas/Road';
+import { AddNodeCommand } from '~/helpers/commands/AddNodeCommand';
+import { RemoveNodeCommand } from '~/helpers/commands/RemoveNodeCommand';
 import {
   edgeDoesIntersect,
   removeItems,
@@ -8,6 +10,8 @@ import {
   updateConnectionsOnLaneChange,
 } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
+
+import { useUndoStore } from './useUndoStore';
 
 export interface NetworkData {
   documentName: string;
@@ -31,7 +35,7 @@ export interface Network extends NetworkData {
   updateFlow: (flowId: string, flow: Flow) => void;
 }
 
-export const useNetworkStore = create<Network>(set => ({
+export const useNetworkStore = create<Network>((set, get) => ({
   documentName: 'Untitled Document',
   nodes: {},
   edges: {},
@@ -43,8 +47,11 @@ export const useNetworkStore = create<Network>(set => ({
   setDocumentName: name => {
     set({ documentName: name });
   },
-  addNode: (node: Node) =>
-    set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),
+  addNode: (node: Node) => {
+    const undoStore = useUndoStore.getState();
+    undoStore.pushCommand(new AddNodeCommand(get(), node));
+    set(state => ({ nodes: { ...state.nodes, [node.id]: node } }));
+  },
   updateNode: (nodeId, node) => {
     set(state => {
       return {
@@ -194,6 +201,8 @@ export const useNetworkStore = create<Network>(set => ({
     });
   },
   deleteNode: (id: string) => {
+    const undoStore = useUndoStore.getState();
+    undoStore.pushCommand(new RemoveNodeCommand(get(), get().nodes[id]));
     set(state => {
       const newNodes = { ...state.nodes };
       delete newNodes[id];
