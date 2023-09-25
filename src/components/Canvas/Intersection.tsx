@@ -4,7 +4,10 @@ import { Group, Rect } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
-import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
+import {
+  getAllEdgeIdsForNode,
+  getEdgeTerminals,
+} from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -90,6 +93,10 @@ export function Intersection({ node }: IntersectionProps) {
 
     return Math.max(...widths);
   }, [edgeIds]);
+
+  const terminatingEdges = edgeIds
+    .map(edgeId => getEdgeTerminals(network.edges[edgeId], 0, 0))
+    .flatMap(edge => [...edge.leading, ...edge.trailing]);
 
   return (
     <Group onClick={handleIntersectionClick}>

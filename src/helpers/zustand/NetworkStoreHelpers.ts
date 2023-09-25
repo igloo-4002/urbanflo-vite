@@ -1,5 +1,5 @@
 import { laneWidth } from '~/components/Canvas/Road';
-import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
+import { Connection, Edge, Flow, Node, Point, Route } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
 
 /**
@@ -299,11 +299,57 @@ export function getEdgeTerminals(
 
   const yTrailing = xTrailing.map(x => m2 * x + ct);
 
-  const leading = xLeading.map((x, i) => ({ x, y: yLeading[i] }));
-  const trailing = xTrailing.map((x, i) => ({ x, y: yTrailing[i] }));
+  const leading = xLeading.map<Point>((x, i) => ({ x, y: yLeading[i] }));
+  const trailing = xTrailing.map<Point>((x, i) => ({ x, y: yTrailing[i] }));
 
   return {
     leading,
     trailing,
   };
+}
+
+type TerminatingEdge = {
+  left: Point;
+  right: Point;
+};
+
+export function getTerminatingEdgesOverNode(node: Node): TerminatingEdge[] {
+  const network = useNetworkStore.getState();
+  return getAllEdgeIdsForNode(node.id, network.edges)
+    .map(id => network.edges[id])
+    .map(edge => {
+      const A =
+        edge.from === node.id
+          ? network.nodes[edge.from]
+          : network.nodes[edge.to];
+
+      const B =
+        edge.from === node.id
+          ? network.nodes[edge.to]
+          : network.nodes[edge.from];
+
+      const m = (B.y - A.y) / (B.x - A.x);
+      const mOrthogonal = -1 / m;
+      const angle = Math.atan(mOrthogonal);
+
+      const leftX = node.x - (laneWidth / 2) * Math.cos(angle);
+      const rightX = node.x + (laneWidth / 2) * Math.cos(angle);
+
+      // if mOrthogonal is negative then
+      //  - leftY = node.y + (laneWidth / 2) * Math.sin(angle)
+      //  - rightY = node.y - (laneWidth / 2) * Math.sin(angle)
+      // else (mOrthogonal is positive)
+      //  - leftY = node.y - (laneWidth / 2) * Math.sin(angle)
+      //  - rightY = node.y + (laneWidth / 2) * Math.sin(angle)
+
+      const sign = mOrthogonal < 0 ? -1 : 1;
+
+      const leftY = node.y - sign * (laneWidth / 2) * Math.sin(angle);
+      const rightY = node.y + sign * (laneWidth / 2) * Math.sin(angle);
+
+      return {
+        left: { x: leftX, y: leftY },
+        right: { x: rightX, y: rightY },
+      };
+    });
 }
