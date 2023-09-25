@@ -129,11 +129,22 @@ export function Road({ edge, offset = 0 }: RoadProps) {
       {Array.from({ length: edge.numLanes }).map((_, index) => {
         const offset = index - (edge.numLanes - 1) / 2;
 
-        const x20 = (1 - 0.2) * from.x + 0.2 * to.x + offset * dx;
-        const y20 = (1 - 0.2) * from.y + 0.2 * to.y - offset * dy;
+        const trailingPosition = 0.25; // 25%
+        const leadingPosition = 0.75; // 70%
 
-        const x80 = (1 - 0.8) * from.x + 0.8 * to.x + offset * dx;
-        const y80 = (1 - 0.8) * from.y + 0.8 * to.y - offset * dy;
+        const xTrailing =
+          (1 - trailingPosition) * from.x +
+          trailingPosition * to.x +
+          offset * dx;
+        const yTrailing =
+          (1 - trailingPosition) * from.y +
+          trailingPosition * to.y -
+          offset * dy;
+
+        const xLeading =
+          (1 - leadingPosition) * from.x + leadingPosition * to.x + offset * dx;
+        const yLeading =
+          (1 - leadingPosition) * from.y + leadingPosition * to.y - offset * dy;
 
         const fontSize = 11;
         const verticalOffset = fontSize / 2;
@@ -142,9 +153,9 @@ export function Road({ edge, offset = 0 }: RoadProps) {
           <Fragment key={index}>
             <Text
               key={`road-label-${edge.id}-${index}-trailing`}
-              x={x20 - fontSize}
-              y={y20 - verticalOffset}
-              text={`lane ${index + 1}`}
+              x={xTrailing - verticalOffset}
+              y={yTrailing - verticalOffset}
+              text={`L${index + 1}`}
               fontSize={fontSize}
               fill="white"
               visible={isSelected}
@@ -152,9 +163,9 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
             <Text
               key={`road-label-${edge.id}-${index}-leading`}
-              x={x80 - fontSize}
-              y={y80 - verticalOffset}
-              text={`lane ${index + 1}`}
+              x={xLeading - verticalOffset}
+              y={yLeading - verticalOffset}
+              text={`L${index + 1}`}
               fontSize={fontSize}
               fill="white"
               visible={isSelected}
