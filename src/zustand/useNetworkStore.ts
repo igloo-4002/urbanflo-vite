@@ -9,6 +9,8 @@ import {
 } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
 
+export const DEFAULT_ROAD_NAME = 'New Road';
+
 export interface NetworkData {
   documentName: string;
   nodes: Record<string, Node>;
@@ -68,7 +70,7 @@ export const useNetworkStore = create<Network>(set => ({
         spreadType: 'center',
         width: laneWidth,
         speed: 13.89,
-        name: 'New Road',
+        name: DEFAULT_ROAD_NAME,
       };
 
       const pointA = { x: from.x, y: from.y };

@@ -135,7 +135,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         const x80 = (1 - 0.8) * from.x + 0.8 * to.x + offset * dx;
         const y80 = (1 - 0.8) * from.y + 0.8 * to.y - offset * dy;
 
-        const fontSize = 12;
+        const fontSize = 11;
         const verticalOffset = fontSize / 2;
 
         return (
