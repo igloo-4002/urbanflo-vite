@@ -56,7 +56,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   const midX = (from.x + to.x) / 2;
   const midY = (from.y + to.y) / 2;
 
-  const { leading: connectionControlPoints, trailing: newConnectionPoints } =
+  const { leading: fromControlPoints, trailing: toControlPoints } =
     getEdgeTerminals(edge);
 
   function getConnectionsState() {
@@ -73,7 +73,8 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     return false;
   }
 
-  const isNewConnectionPointsVisible = getConnectionsState();
+  const showFromControlPoints = isSelected;
+  const showToControlPoints = getConnectionsState();
 
   return (
     <Group onClick={handleRoadClick}>
@@ -180,7 +181,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
               text={`L${index + 1}`}
               fontSize={fontSize}
               fill="white"
-              visible={isNewConnectionPointsVisible}
+              visible={showToControlPoints}
             />
 
             {/* show lane numbers in leading position */}
@@ -198,7 +199,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
       })}
 
       {/* Show connection control points */}
-      {connectionControlPoints.map((point, index) => {
+      {fromControlPoints.map((point, index) => {
         return (
           <Circle
             key={index}
@@ -206,7 +207,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
             y={point.y}
             radius={4}
             fill="red"
-            visible={isSelected}
+            visible={showFromControlPoints}
             onClick={e => {
               e.cancelBubble = true; // stops event propagation
               console.log('clicked from edge');
@@ -216,7 +217,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
       })}
 
       {/* show possible connections points for edges connected to non-selected edges */}
-      {newConnectionPoints.map((point, index) => {
+      {toControlPoints.map((point, index) => {
         return (
           <Circle
             key={index}
@@ -224,7 +225,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
             y={point.y}
             radius={4}
             fill="red"
-            visible={isNewConnectionPointsVisible}
+            visible={showToControlPoints}
             onClick={e => {
               e.cancelBubble = true;
               console.log('draw connection to here');

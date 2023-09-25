@@ -299,8 +299,8 @@ export function getEdgeTerminals(
 
   const yTrailing = xTrailing.map(x => m2 * x + ct);
 
-  const leading = xLeading.map((x, i) => ({ x, y: yLeading[i] }));
-  const trailing = xTrailing.map((x, i) => ({ x, y: yTrailing[i] }));
+  const leading = xLeading.map((x, i) => ({ x, y: yLeading[i] })).reverse();
+  const trailing = xTrailing.map((x, i) => ({ x, y: yTrailing[i] })).reverse();
 
   return {
     leading,
