@@ -6,6 +6,10 @@
 
 - [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction)
 
+### Undo/Redo
+
+- [Command pattern](https://en.wikipedia.org/wiki/Command_pattern)
+
 ### SUMO - (Simulation of Urban MObility)
 
 [SUMO user documentation](https://sumo.dlr.de/docs/index.html)
