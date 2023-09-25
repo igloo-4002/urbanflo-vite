@@ -2,13 +2,11 @@ import { Node } from '~/types/Network';
 import { Network } from '~/zustand/useNetworkStore';
 import { Command } from '~/zustand/useUndoStore';
 
-export class AddNodeCommand extends Command {
+export class AddNodeCommand implements Command {
   constructor(
     private network: Network,
     private node: Node,
-  ) {
-    super();
-  }
+  ) {}
 
   execute() {
     this.network.addNode(this.node);
