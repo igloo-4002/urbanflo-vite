@@ -43,6 +43,7 @@ export const useUndoStore = create<UndoRedoStore>((set, get) => ({
       return;
     }
 
+    lastCommand.execute();
 
     set({
       redoStack: [...redoStack],
