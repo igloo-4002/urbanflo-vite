@@ -34,8 +34,10 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     }
   }
 
+  const roadVector = [to.x - from.x, to.y - from.y];
+
   const commonProps = {
-    points: [0, 0, to.x - from.x, to.y - from.y],
+    points: [0, 0, roadVector[0], roadVector[1]],
     pointerLength: 0,
     pointerWidth: 0,
   };
@@ -56,6 +58,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   const midX = (from.x + to.x) / 2;
   const midY = (from.y + to.y) / 2;
 
+  // get trailing and leading points for drawing connections for each edge
   const { leading: fromControlPoints, trailing: toControlPoints } =
     getEdgeTerminals(edge);
 
@@ -171,6 +174,11 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         const fontSize = 11;
         const verticalOffset = fontSize / 2;
 
+        // sumo always counts lane number from the rightmost side of the road regardless of orientation
+        const angleDeg = (angleRad * 180) / Math.PI;
+        const shouldReverse = angleDeg >= 0 && angleDeg <= 180;
+        const laneNumber = shouldReverse ? edge.numLanes - index : index + 1;
+
         return (
           <Fragment key={index}>
             {/* show lane numbers in trailing position */}
@@ -178,7 +186,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
               key={`road-label-${edge.id}-${index}-trailing`}
               x={xTrailing - verticalOffset}
               y={yTrailing - verticalOffset}
-              text={`L${index + 1}`}
+              text={`L${laneNumber}`}
               fontSize={fontSize}
               fill="white"
               visible={showToControlPoints}
@@ -189,7 +197,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
               key={`road-label-${edge.id}-${index}-leading`}
               x={xLeading - verticalOffset}
               y={yLeading - verticalOffset}
-              text={`L${index + 1}`}
+              text={`L${laneNumber}`}
               fontSize={fontSize}
               fill="white"
               visible={isSelected}
