@@ -172,7 +172,6 @@ export function Road({ edge, offset = 0 }: RoadProps) {
           (1 - leadingPosition) * from.y + leadingPosition * to.y - offset * dy;
 
         const fontSize = 11;
-        const fontSize = 11;
         const verticalOffset = fontSize / 2;
 
         // sumo always counts lane number from the rightmost side of the road regardless of orientation
