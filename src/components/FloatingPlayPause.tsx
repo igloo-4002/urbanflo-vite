@@ -71,8 +71,6 @@ export const FloatingPlayPause = () => {
   }, [player.isPlaying]);
 
   const handleUpload = async () => {
-    console.log(network);
-    return;
     try {
       setLoading(true);
 
