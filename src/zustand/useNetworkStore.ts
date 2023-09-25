@@ -264,6 +264,7 @@ export const useNetworkStore = create<Network>(set => ({
     set(state => {
       const newConnections = { ...state.connections };
       delete newConnections[id];
+      // TODO: delete associates
 
       return {
         connections: newConnections,

@@ -1,9 +1,10 @@
 import { Fragment } from 'react';
-import { Arrow, Group, Text } from 'react-konva';
+import { Arrow, Circle, Group, Text } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { centerlineColor, highlightColor, roadColor } from '~/colors';
+import { getEdgeTerminals } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelector';
@@ -54,6 +55,25 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   // Calculate the mid-point of the lane
   const midX = (from.x + to.x) / 2;
   const midY = (from.y + to.y) / 2;
+
+  const { leading: connectionControlPoints, trailing: newConnectionPoints } =
+    getEdgeTerminals(edge);
+
+  function getConnectionsState() {
+    if (selector.selected === null) {
+      return false;
+    }
+
+    const selectedEdge = network.edges[selector.selected];
+
+    if (selectedEdge) {
+      return selectedEdge.to === edge.from;
+    }
+
+    return false;
+  }
+
+  const isNewConnectionPointsVisible = getConnectionsState();
 
   return (
     <Group onClick={handleRoadClick}>
@@ -126,6 +146,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         );
       })}
 
+      {/* Show lane numbers for selected road and connected edges if not selected */}
       {Array.from({ length: edge.numLanes }).map((_, index) => {
         const offset = index - (edge.numLanes - 1) / 2;
 
@@ -151,6 +172,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
         return (
           <Fragment key={index}>
+            {/* show lane numbers in trailing position */}
             <Text
               key={`road-label-${edge.id}-${index}-trailing`}
               x={xTrailing - verticalOffset}
@@ -158,9 +180,10 @@ export function Road({ edge, offset = 0 }: RoadProps) {
               text={`L${index + 1}`}
               fontSize={fontSize}
               fill="white"
-              visible={isSelected}
+              visible={isNewConnectionPointsVisible}
             />
 
+            {/* show lane numbers in leading position */}
             <Text
               key={`road-label-${edge.id}-${index}-leading`}
               x={xLeading - verticalOffset}
@@ -171,6 +194,42 @@ export function Road({ edge, offset = 0 }: RoadProps) {
               visible={isSelected}
             />
           </Fragment>
+        );
+      })}
+
+      {/* Show connection control points */}
+      {connectionControlPoints.map((point, index) => {
+        return (
+          <Circle
+            key={index}
+            x={point.x}
+            y={point.y}
+            radius={4}
+            fill="red"
+            visible={isSelected}
+            onClick={e => {
+              e.cancelBubble = true; // stops event propagation
+              console.log('clicked from edge');
+            }}
+          />
+        );
+      })}
+
+      {/* show possible connections points for edges connected to non-selected edges */}
+      {newConnectionPoints.map((point, index) => {
+        return (
+          <Circle
+            key={index}
+            x={point.x}
+            y={point.y}
+            radius={4}
+            fill="red"
+            visible={isNewConnectionPointsVisible}
+            onClick={e => {
+              e.cancelBubble = true;
+              console.log('draw connection to here');
+            }}
+          />
         );
       })}
     </Group>
