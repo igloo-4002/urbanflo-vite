@@ -3,10 +3,12 @@ import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
+import { useUndoStore } from '~/zustand/useUndoStore';
 
 export function ProjectUploadButton() {
   const networkStore = useNetworkStore();
   const simulationHistoryStore = useSimulationHistory();
+  const undoStore = useUndoStore();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -40,6 +42,10 @@ export function ProjectUploadButton() {
               simulationHistoryStore.updateHistory(historyItem);
             },
           );
+
+          // Since the deleteNode, addNode, and drawEdge methods add to the undo stack,
+          // we want to clear after building the network.
+          undoStore.clearStacks();
         } catch (error) {
           console.error(
             'An error occurred while parsing the JSON file OR the file is invalid',
