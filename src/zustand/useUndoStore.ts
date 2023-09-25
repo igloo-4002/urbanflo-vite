@@ -29,7 +29,11 @@ export const useUndoStore = create<UndoRedoStore>((set, get) => ({
     }
 
     lastCommand.unexecute();
-    redoStack.push(lastCommand);
+
+    set({
+      redoStack: [...redoStack, lastCommand],
+      undoStack: [...undoStack],
+    });
   },
   redo: () => {
     const { undoStack, redoStack } = get();
@@ -39,8 +43,11 @@ export const useUndoStore = create<UndoRedoStore>((set, get) => ({
       return;
     }
 
-    lastCommand.unexecute();
-    undoStack.push(lastCommand);
+
+    set({
+      redoStack: [...redoStack],
+      undoStack: [...undoStack, lastCommand],
+    });
   },
   clearStacks: () => set({ undoStack: [], redoStack: [] }),
   setStacks: (undoStack, redoStack) => set({ undoStack, redoStack }),
