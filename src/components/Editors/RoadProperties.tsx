@@ -4,6 +4,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
 import { DEFAULT_ROAD_NAME, useNetworkStore } from '~/zustand/useNetworkStore';
+import { DEFAULT_ROAD_NAME, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelector';
 
 export function RoadPropertiesEditor() {
@@ -58,7 +59,7 @@ export function RoadPropertiesEditor() {
     <ColumnStack style={{ gap: 8 }}>
       <RowStack>
         <input
-          className={`w-full items-center gap-x-1 text-base text-center font-semibold bg-transparent ${
+          className={`w-full items-center gap-x-1 text-sm text-center font-semibold bg-transparent ${
             newRoadName === DEFAULT_ROAD_NAME && 'border'
           } rounded-full pl-2 leading-6 text-gray-900`}
           type="string"
