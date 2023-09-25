@@ -15,6 +15,7 @@ import {
   useStageState,
 } from '~/zustand/useStage';
 import { useToolbarStore } from '~/zustand/useToolbar';
+import { useUndoStore } from '~/zustand/useUndoStore';
 
 import { CarLayer } from './Layers/CarLayer';
 import { ConnectionsLayer } from './Layers/ConnectionsLayer';
@@ -26,6 +27,7 @@ export function Canvas() {
   const network = useNetworkStore();
   const nodes = Object.values(network.nodes);
   const toolbarState = useToolbarStore();
+  const undoStore = useUndoStore();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -46,6 +48,18 @@ export function Canvas() {
         } else {
           throw new Error("cannot delete selected because it doesn't exist");
         }
+      }
+
+      const isUndoCommand =
+        (e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'z';
+      const isRedoCommand =
+        (e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'z';
+
+      if (isUndoCommand) {
+        undoStore.undo();
+      }
+      if (isRedoCommand) {
+        undoStore.redo();
       }
 
       if (isEsc && selector.selected) {
