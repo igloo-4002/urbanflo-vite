@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 export function formatISOString(dateString: string) {
-  const date = DateTime.fromISO(dateString, { zone: 'utc' });
+  const date = DateTime.fromISO(dateString, { zone: 'UTC' });
   if (!date.isValid) {
     throw new Error('Invalid date string');
   }
