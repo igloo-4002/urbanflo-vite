@@ -2,7 +2,9 @@ import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 import { SCALE_FACTOR, useStageState } from '~/zustand/useStage';
 
-export function ZoomPill() {
+import Tooltip from './Tooltip';
+
+export function ZoomSection() {
   const stageStore = useStageState();
 
   function updateZoom(change: 'in' | 'out') {
@@ -25,8 +27,8 @@ export function ZoomPill() {
   const zoom = Math.floor(stageStore.scale.x * 100);
 
   return (
-    <div className="fixed bottom-4 left-4 flex items-center space-x-2 bg-[#FAF9F6] p-2 rounded-xl shadow-lg">
-      <div className="flex flex-row items-center gap-3">
+    <div className="flex flex-row items-center gap-3">
+      <Tooltip text="Zoom Out">
         <button
           onClick={() => {
             updateZoom('out');
@@ -35,7 +37,9 @@ export function ZoomPill() {
         >
           <MinusIcon className="h-6 w-6 text-gray-800" />
         </button>
-        <span className="text-lg font-semibold select-none">{zoom}%</span>
+      </Tooltip>
+      <span className="text-lg font-semibold select-none">{zoom}%</span>
+      <Tooltip text="Zoom In">
         <button
           onClick={() => {
             updateZoom('in');
@@ -44,7 +48,7 @@ export function ZoomPill() {
         >
           <PlusIcon className="h-6 w-6 text-gray-800" />
         </button>
-      </div>
+      </Tooltip>
     </div>
   );
 }
