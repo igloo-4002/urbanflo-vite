@@ -12,12 +12,12 @@ export function UndoRedoSection() {
 
   return (
     <div className="flex flex-row items-center gap-3">
-      <Tooltip tooltipText="Undo">
+      <Tooltip text="Undo">
         <button onClick={undoStore.undo} className="bg-gray-200 p-1 rounded-xl">
           <ArrowUturnLeftIcon className="h-6 w-6 text-gray-800" />
         </button>
       </Tooltip>
-      <Tooltip tooltipText="Redo">
+      <Tooltip text="Redo">
         <button onClick={undoStore.redo} className="bg-gray-200 p-1 rounded-xl">
           <ArrowUturnRightIcon className="h-6 w-6 text-gray-800" />
         </button>
