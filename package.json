@@ -9,7 +9,8 @@
     "pretty": "prettier --write . --ignore-path=./.prettierignore",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
