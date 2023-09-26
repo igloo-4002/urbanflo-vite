@@ -9,7 +9,7 @@ export function formatISOString(dateString: string) {
   const day = String(date.day).padStart(2, '0');
   const month = String(date.month).padStart(2, '0');
   const year = String(date.year).slice(-2);
-  const time = date.toLocaleString(DateTime.TIME_SIMPLE);
+  const time = date.toLocaleString(DateTime.TIME_SIMPLE).normalize();
 
   return {
     date: `${day}/${month}/${year}`,
