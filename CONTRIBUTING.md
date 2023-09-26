@@ -10,6 +10,7 @@ In particular, this project seeks the following types of contributions:
 - **Ideas**: participate in an issue thread or start your own to have your voice
   heard.
 - **Resources**: submit a pull request to add to RESOURCES.md with links to related content.
+- **Tests**: submit a pull request to add new or extend tests
 
 # Conduct
 
