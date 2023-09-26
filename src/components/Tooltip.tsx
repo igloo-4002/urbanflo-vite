@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 interface TooltipProps {
   tooltipText: string;
@@ -7,7 +7,6 @@ interface TooltipProps {
 
 export function Tooltip({ tooltipText, children }: TooltipProps) {
   const [visible, setVisible] = useState(false);
-  const tooltipRef = useRef<HTMLDivElement | null>(null);
 
   const showTooltip = () => setVisible(true);
   const hideTooltip = () => setVisible(false);
@@ -23,8 +22,7 @@ export function Tooltip({ tooltipText, children }: TooltipProps) {
         {children}
       </div>
       <div
-        ref={tooltipRef}
-        className={`absolute z-10 ${
+        className={`absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 ${
           visible ? 'opacity-100' : 'opacity-0 invisible'
         } inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700 transition-opacity duration-300`}
         role="tooltip"
