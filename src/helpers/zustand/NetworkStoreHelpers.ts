@@ -1,4 +1,4 @@
-import { laneWidth } from '~/components/Canvas/Road';
+import { laneWidth } from '~/components/Canvas/Constats/Road';
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
 

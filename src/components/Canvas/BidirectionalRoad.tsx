@@ -3,7 +3,8 @@ import { Arrow } from 'react-konva';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 
-import { Road, laneWidth } from './Road';
+import { laneWidth } from './Constats/Road';
+import { Road } from './Road';
 
 interface BidirectionalRoadProps {
   edge: Edge;

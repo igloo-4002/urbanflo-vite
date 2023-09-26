@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { laneWidth } from '~/components/Canvas/Road';
+import { laneWidth } from '~/components/Canvas/Constats/Road';
 import { AddEdgeCommand } from '~/helpers/commands/AddEdgeCommand';
 import { AddNodeCommand } from '~/helpers/commands/AddNodeCommand';
 import { RemoveEdgeCommand } from '~/helpers/commands/RemoveEdgeCommand';
