@@ -1,13 +1,15 @@
+import { DateTime } from 'luxon';
+
 export function formatISOString(dateString: string) {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const year = String(date.getFullYear()).slice(-2);
-  const time = date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
+  const date = DateTime.fromISO(dateString, { zone: 'utc' });
+  if (!date.isValid) {
+    throw new Error('Invalid date string');
+  }
+
+  const day = String(date.day).padStart(2, '0');
+  const month = String(date.month).padStart(2, '0');
+  const year = String(date.year).slice(-2);
+  const time = date.toLocaleString(DateTime.TIME_SIMPLE);
 
   return {
     date: `${day}/${month}/${year}`,
