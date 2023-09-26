@@ -1,4 +1,6 @@
-import { createRouteId } from './NetworkStoreHelpers';
+import { Point } from '~/types/Network';
+
+import { arePointsEqual, createRouteId } from './NetworkStoreHelpers';
 
 describe('createRouteId', () => {
   // Test 1: Function should correctly create a route ID from valid "from" and "to" strings
@@ -40,6 +42,30 @@ describe('createRouteId', () => {
     const result = createRouteId(from, to);
     expect(result).toEqual(expectedRouteId);
   });
+});
 
-  // Additional tests can be added based on the expected behavior of your function
+describe('arePointsEqual', () => {
+  it('should return true for equal points', () => {
+    const point1: Point = { x: 1, y: 2 };
+    const point2: Point = { x: 1, y: 2 };
+    expect(arePointsEqual(point1, point2)).toBe(true);
+  });
+
+  it('should return false for points with different x coordinates', () => {
+    const point1: Point = { x: 1, y: 2 };
+    const point2: Point = { x: 2, y: 2 };
+    expect(arePointsEqual(point1, point2)).toBe(false);
+  });
+
+  it('should return false for points with different y coordinates', () => {
+    const point1: Point = { x: 1, y: 2 };
+    const point2: Point = { x: 1, y: 3 };
+    expect(arePointsEqual(point1, point2)).toBe(false);
+  });
+
+  it('should return false for points with both x and y coordinates different', () => {
+    const point1: Point = { x: 1, y: 2 };
+    const point2: Point = { x: 2, y: 3 };
+    expect(arePointsEqual(point1, point2)).toBe(false);
+  });
 });
