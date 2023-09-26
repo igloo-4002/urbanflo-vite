@@ -11,7 +11,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelector';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
-import { laneWidth } from './Road';
+import { laneWidth } from './Constats/Road';
 
 interface IntersectionProps {
   node: Node;
