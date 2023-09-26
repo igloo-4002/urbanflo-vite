@@ -1,6 +1,10 @@
 import { Point } from '~/types/Network';
 
-import { arePointsEqual, createRouteId } from './NetworkStoreHelpers';
+import {
+  arePointsEqual,
+  createRouteId,
+  removeItems,
+} from './NetworkStoreHelpers';
 
 describe('createRouteId', () => {
   // Test 1: Function should correctly create a route ID from valid "from" and "to" strings
@@ -67,5 +71,35 @@ describe('arePointsEqual', () => {
     const point1: Point = { x: 1, y: 2 };
     const point2: Point = { x: 2, y: 3 };
     expect(arePointsEqual(point1, point2)).toBe(false);
+  });
+});
+
+describe('removeItems', () => {
+  it('should remove items based on condition', () => {
+    const items = { a: 1, b: 2, c: 3 };
+    const condition = (item: number) => item > 2;
+    const result = removeItems(items, condition);
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
+
+  it('should not remove any items if condition is not met', () => {
+    const items = { a: 1, b: 2, c: 3 };
+    const condition = (item: number) => item > 5;
+    const result = removeItems(items, condition);
+    expect(result).toEqual({ a: 1, b: 2, c: 3 });
+  });
+
+  it('should remove all items if condition is always true', () => {
+    const items = { a: 1, b: 2, c: 3 };
+    const condition = (_item: number) => true;
+    const result = removeItems(items, condition);
+    expect(result).toEqual({});
+  });
+
+  it('should not mutate the original items object', () => {
+    const items = { a: 1, b: 2, c: 3 };
+    const condition = (item: number) => item > 2;
+    const _result = removeItems(items, condition);
+    expect(items).toEqual({ a: 1, b: 2, c: 3 });
   });
 });
