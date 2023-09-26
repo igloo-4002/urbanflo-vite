@@ -4,7 +4,6 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
 import { DEFAULT_ROAD_NAME, useNetworkStore } from '~/zustand/useNetworkStore';
-import { DEFAULT_ROAD_NAME, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelector';
 
 export function RoadPropertiesEditor() {
