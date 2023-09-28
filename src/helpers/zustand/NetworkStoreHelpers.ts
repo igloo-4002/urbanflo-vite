@@ -474,15 +474,21 @@ function getQuadraticBezierPoints(
 }
 
 function generateCurve(
-  terminatingEdgeA: TerminatingEdge,
-  terminatingEdgeB: TerminatingEdge,
+  i: number,
+  j: number,
+  terminatingEdges: TerminatingEdge[],
 ) {
+  const terminatingEdgeA = terminatingEdges[i];
+  const terminatingEdgeB = terminatingEdges[j];
+
   const unitVectorA = terminatingEdgeA.unitVector;
   const gradA = unitVectorA.y / unitVectorA.x;
   const pointA = terminatingEdgeA.right;
 
   const unitVectorB = terminatingEdgeB.unitVector;
   const gradB = unitVectorB.y / unitVectorB.x;
+
+  const m = -1 / gradB;
 
   const dot = unitVectorA.x * unitVectorB.x + unitVectorA.y * unitVectorB.y;
   const cross = unitVectorA.x * unitVectorB.y - unitVectorA.y * unitVectorB.x;
@@ -493,8 +499,9 @@ function generateCurve(
   }
   const angle = angleRadians * (180 / Math.PI);
 
-  const pointB =
-    angle >= 90 && angle < 270 ? terminatingEdgeB.right : terminatingEdgeB.left;
+  console.log(i, j, { angle });
+
+  const pointB = angle < 180 ? terminatingEdgeB.left : terminatingEdgeB.right;
 
   return getQuadraticBezierPoints({ pointA, gradA }, { pointB, gradB });
 }
@@ -509,14 +516,11 @@ export function getInterleavedBezierCurves(
   const curves: number[][] = [];
 
   for (let i = 0; i < terminatingEdges.length - 1; i++) {
-    const curve = generateCurve(terminatingEdges[i], terminatingEdges[i + 1]);
+    const curve = generateCurve(i, i + 1, terminatingEdges);
     curves.push(curve);
   }
 
-  const curve = generateCurve(
-    terminatingEdges[terminatingEdges.length - 1],
-    terminatingEdges[0],
-  );
+  const curve = generateCurve(terminatingEdges.length - 1, 0, terminatingEdges);
   curves.push(curve);
 
   return curves;
