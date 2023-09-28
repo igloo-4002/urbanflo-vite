@@ -386,7 +386,7 @@ export function getTerminatingEdgesOverNode(node: Node) {
     i = (i + 1) % terminatingEdges.length;
   }
 
-  return terminatingEdges;
+  return sortEdgesClockwise(terminatingEdges, { x: node.x, y: node.y });
 }
 
 function doTerminatingEdgesIntersect(terminatingEdges: TerminatingEdge[]) {
@@ -402,4 +402,50 @@ function doTerminatingEdgesIntersect(terminatingEdges: TerminatingEdge[]) {
   }
 
   return false;
+}
+
+function findIntersection(
+  { pointA, gradA }: { pointA: Point; gradA: number },
+  { pointB, gradB }: { pointB: Point; gradB: number },
+): Point {
+  const x =
+    (gradA * pointA.x - gradB * pointB.x + pointB.y - pointA.y) /
+    (gradA - gradB);
+
+  const y = gradA * (x - pointA.x) + pointA.y;
+
+  return { x, y };
+}
+
+export function getQuadraticBezierPoints(
+  { pointA, gradA }: { pointA: Point; gradA: number },
+  { pointB, gradB }: { pointB: Point; gradB: number },
+) {
+  const control = findIntersection({ pointA, gradA }, { pointB, gradB });
+  return [pointA.x, pointA.y, control.x, control.y, pointB.x, pointB.y];
+}
+
+function sortEdgesClockwise(
+  edges: TerminatingEdge[],
+  center: Point,
+): TerminatingEdge[] {
+  return edges.sort((a, b) => {
+    // Calculate midpoint for edge a
+    const midA: Point = {
+      x: (a.left.x + a.right.x) / 2,
+      y: (a.left.y + a.right.y) / 2,
+    };
+
+    // Calculate midpoint for edge b
+    const midB: Point = {
+      x: (b.left.x + b.right.x) / 2,
+      y: (b.left.y + b.right.y) / 2,
+    };
+
+    // Calculate angle relative to center for midA and midB
+    const angleA = Math.atan2(midA.y - center.y, midA.x - center.x);
+    const angleB = Math.atan2(midB.y - center.y, midB.x - center.x);
+
+    return angleA - angleB;
+  });
 }
