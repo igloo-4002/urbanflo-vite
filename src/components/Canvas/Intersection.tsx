@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { Group, Rect } from 'react-konva';
+import { Group, Line, Rect } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
 import {
   getAllEdgeIdsForNode,
-  getEdgeTerminals,
+  getTerminatingEdgesOverNode,
 } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -94,12 +94,22 @@ export function Intersection({ node }: IntersectionProps) {
     return Math.max(...widths);
   }, [edgeIds]);
 
-  const terminatingEdges = edgeIds
-    .map(edgeId => getEdgeTerminals(network.edges[edgeId], 0, 0))
-    .flatMap(edge => [...edge.leading, ...edge.trailing]);
+  const terminatingEdges = getTerminatingEdgesOverNode(node);
 
   return (
     <Group onClick={handleIntersectionClick}>
+      {terminatingEdges.map(({ left, right }, index) => {
+        return (
+          <Line
+            key={index}
+            points={[left.x, left.y, right.x, right.y]}
+            stroke="#00FF00"
+            strokeWidth={2}
+            closed
+            fill="grey"
+          />
+        );
+      })}
       <Rect
         x={node.x - size / 2}
         y={node.y - size / 2}

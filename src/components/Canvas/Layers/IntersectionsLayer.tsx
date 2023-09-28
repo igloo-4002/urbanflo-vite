@@ -10,7 +10,7 @@ export function IntersectionsLayer() {
   return (
     <Layer>
       {nodes.map((node, index) => {
-        return <Intersection node={node} key={index}></Intersection>;
+        return <Intersection key={index} node={node} />;
       })}
     </Layer>
   );

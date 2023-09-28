@@ -3,6 +3,11 @@ export type Point = {
   y: number;
 };
 
+export type Vector2D = {
+  x: number;
+  y: number;
+};
+
 export const NodeType = {
   priority: 'priority',
   traffic_light: 'traffic_light',

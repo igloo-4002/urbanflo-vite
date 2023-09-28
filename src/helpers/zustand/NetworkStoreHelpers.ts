@@ -1,5 +1,13 @@
 import { laneWidth } from '~/components/Canvas/Constats/Road';
-import { Connection, Edge, Flow, Node, Point, Route } from '~/types/Network';
+import {
+  Connection,
+  Edge,
+  Flow,
+  Node,
+  Point,
+  Route,
+  Vector2D,
+} from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
 
 /**
@@ -311,11 +319,12 @@ export function getEdgeTerminals(
 type TerminatingEdge = {
   left: Point;
   right: Point;
+  unitVector: Vector2D;
 };
 
-export function getTerminatingEdgesOverNode(node: Node): TerminatingEdge[] {
+export function getTerminatingEdgesOverNode(node: Node) {
   const network = useNetworkStore.getState();
-  return getAllEdgeIdsForNode(node.id, network.edges)
+  const terminatingEdges = getAllEdgeIdsForNode(node.id, network.edges)
     .map(id => network.edges[id])
     .map(edge => {
       const A =
@@ -328,28 +337,69 @@ export function getTerminatingEdgesOverNode(node: Node): TerminatingEdge[] {
           ? network.nodes[edge.to]
           : network.nodes[edge.from];
 
+      const vector: Vector2D = {
+        x: B.x - A.x,
+        y: B.y - A.y,
+      };
+      const magitude = Math.sqrt(vector.x ** 2 + vector.y ** 2);
+
+      const unitVector: Vector2D = {
+        x: vector.x / magitude,
+        y: vector.y / magitude,
+      };
+
       const m = (B.y - A.y) / (B.x - A.x);
       const mOrthogonal = -1 / m;
       const angle = Math.atan(mOrthogonal);
 
-      const leftX = node.x - (laneWidth / 2) * Math.cos(angle);
-      const rightX = node.x + (laneWidth / 2) * Math.cos(angle);
+      const width = (edge.numLanes * laneWidth) / 2;
 
-      // if mOrthogonal is negative then
-      //  - leftY = node.y + (laneWidth / 2) * Math.sin(angle)
-      //  - rightY = node.y - (laneWidth / 2) * Math.sin(angle)
-      // else (mOrthogonal is positive)
-      //  - leftY = node.y - (laneWidth / 2) * Math.sin(angle)
-      //  - rightY = node.y + (laneWidth / 2) * Math.sin(angle)
-
-      const sign = mOrthogonal < 0 ? -1 : 1;
-
-      const leftY = node.y - sign * (laneWidth / 2) * Math.sin(angle);
-      const rightY = node.y + sign * (laneWidth / 2) * Math.sin(angle);
-
-      return {
-        left: { x: leftX, y: leftY },
-        right: { x: rightX, y: rightY },
+      const left: Point = {
+        x: node.x - width * Math.cos(angle),
+        y: node.y - width * Math.sin(angle),
       };
+
+      const right: Point = {
+        x: node.x + width * Math.cos(angle),
+        y: node.y + width * Math.sin(angle),
+      };
+
+      return { left, right, unitVector };
     });
+
+  /**
+   * Move the terminating edges away from the node until they no longer intersect
+   */
+  let i = 0;
+  const k = 0.01;
+  while (doTerminatingEdgesIntersect(terminatingEdges)) {
+    const unitVector = terminatingEdges[i].unitVector;
+    const deltaX = k * unitVector.x;
+    const deltaY = k * unitVector.y;
+
+    terminatingEdges[i].left.x += deltaX;
+    terminatingEdges[i].left.y += deltaY;
+
+    terminatingEdges[i].right.x += deltaX;
+    terminatingEdges[i].right.y += deltaY;
+
+    i = (i + 1) % terminatingEdges.length;
+  }
+
+  return terminatingEdges;
+}
+
+function doTerminatingEdgesIntersect(terminatingEdges: TerminatingEdge[]) {
+  for (let i = 0; i < terminatingEdges.length; i++) {
+    const edge1 = terminatingEdges[i];
+    for (let j = i + 1; j < terminatingEdges.length; j++) {
+      const edge2 = terminatingEdges[j];
+
+      if (doIntersect(edge1.left, edge1.right, edge2.left, edge2.right)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
