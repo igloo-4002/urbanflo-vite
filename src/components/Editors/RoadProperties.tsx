@@ -91,7 +91,7 @@ export function RoadPropertiesEditor() {
         <input
           className="w-[30%] rounded-md p-1"
           type="number"
-          value={roadLength}
+          value={Math.floor(roadLength)}
           disabled
         />
       </RowStack>
