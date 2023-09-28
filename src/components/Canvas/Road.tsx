@@ -175,10 +175,9 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         const verticalOffset = fontSize / 2;
 
         // sumo always counts lane number from the rightmost side of the road regardless of orientation
-        // const angleDeg = (angleRad * 180) / Math.PI;
-        // const shouldReverse = angleDeg >= 0 && angleDeg <= 180;
-        // const laneNumber = shouldReverse ? edge.numLanes - index : index + 1;
-        const laneNumber = index + 1;
+        const angleDeg = (angleRad * 180) / Math.PI;
+        const shouldReverse = angleDeg >= 0 && angleDeg <= 180;
+        const laneNumber = shouldReverse ? edge.numLanes - index : index + 1;
 
         return (
           <Fragment key={index}>
