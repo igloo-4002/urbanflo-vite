@@ -7,12 +7,12 @@ import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
+import { laneWidth } from './Constats/Road';
+
 interface RoadProps {
   edge: Edge;
   offset?: number;
 }
-
-export const laneWidth = 25;
 
 export function Road({ edge, offset = 0 }: RoadProps) {
   const network = useNetworkStore();

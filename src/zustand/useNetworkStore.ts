@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 
-import { laneWidth } from '~/components/Canvas/Road';
+import { laneWidth } from '~/components/Canvas/Constats/Road';
+import { AddEdgeCommand } from '~/helpers/commands/AddEdgeCommand';
+import { AddNodeCommand } from '~/helpers/commands/AddNodeCommand';
+import { RemoveEdgeCommand } from '~/helpers/commands/RemoveEdgeCommand';
+import { RemoveNodeCommand } from '~/helpers/commands/RemoveNodeCommand';
 import {
   edgeDoesIntersect,
   removeItems,
@@ -8,6 +12,8 @@ import {
   updateConnectionsOnLaneChange,
 } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
+
+import { useUndoStore } from './useUndoStore';
 
 export interface NetworkData {
   documentName: string;
@@ -31,7 +37,7 @@ export interface Network extends NetworkData {
   updateFlow: (flowId: string, flow: Flow) => void;
 }
 
-export const useNetworkStore = create<Network>(set => ({
+export const useNetworkStore = create<Network>((set, get) => ({
   documentName: 'Untitled Document',
   nodes: {},
   edges: {},
@@ -43,8 +49,11 @@ export const useNetworkStore = create<Network>(set => ({
   setDocumentName: name => {
     set({ documentName: name });
   },
-  addNode: (node: Node) =>
-    set(state => ({ nodes: { ...state.nodes, [node.id]: node } })),
+  addNode: (node: Node) => {
+    const undoStore = useUndoStore.getState();
+    undoStore.pushCommand(new AddNodeCommand(get(), node));
+    set(state => ({ nodes: { ...state.nodes, [node.id]: node } }));
+  },
   updateNode: (nodeId, node) => {
     set(state => {
       return {
@@ -55,7 +64,9 @@ export const useNetworkStore = create<Network>(set => ({
       };
     });
   },
-  drawEdge: (from, to) =>
+  drawEdge: (from, to) => {
+    const undoStore = useUndoStore.getState();
+
     set(state => {
       const newEdgeId = `${from.id}_${to.id}`;
       const newEdge: Edge = {
@@ -76,6 +87,8 @@ export const useNetworkStore = create<Network>(set => ({
       if (edgeDoesIntersect(state, pointA, pointB)) {
         return state;
       } else {
+        undoStore.pushCommand(new AddEdgeCommand(get(), newEdge));
+
         // update connections, routes, and flows when an edge is being drawn
         const { newConnections, newRoutes, newFlows } =
           updateAssociatesOnNewEdge(
@@ -93,7 +106,8 @@ export const useNetworkStore = create<Network>(set => ({
           route: newRoutes,
         };
       }
-    }),
+    });
+  },
   updateEdge: (edgeId, edge) => {
     set(state => {
       const updatedEdges = {
@@ -194,6 +208,8 @@ export const useNetworkStore = create<Network>(set => ({
     });
   },
   deleteNode: (id: string) => {
+    const undoStore = useUndoStore.getState();
+    undoStore.pushCommand(new RemoveNodeCommand(get(), get().nodes[id]));
     set(state => {
       const newNodes = { ...state.nodes };
       delete newNodes[id];
@@ -233,6 +249,9 @@ export const useNetworkStore = create<Network>(set => ({
     });
   },
   deleteEdge: (id: string) => {
+    const undoStore = useUndoStore.getState();
+    undoStore.pushCommand(new RemoveEdgeCommand(get(), get().edges[id]));
+
     set(state => {
       const newEdges = { ...state.edges };
       delete newEdges[id];
