@@ -386,7 +386,20 @@ export function getTerminatingEdgesOverNode(node: Node) {
     i = (i + 1) % terminatingEdges.length;
   }
 
-  return sortEdgesClockwise(terminatingEdges, { x: node.x, y: node.y });
+  const q = 25;
+  for (let i = 0; i < terminatingEdges.length; i++) {
+    const deltaX = q * terminatingEdges[i].unitVector.x;
+    const deltaY = q * terminatingEdges[i].unitVector.y;
+    terminatingEdges[i].left.x += deltaX;
+    terminatingEdges[i].left.y += deltaY;
+
+    terminatingEdges[i].right.x += deltaX;
+    terminatingEdges[i].right.y += deltaY;
+  }
+
+  sortEdgesClockwise(terminatingEdges, node);
+
+  return terminatingEdges;
 }
 
 function doTerminatingEdgesIntersect(terminatingEdges: TerminatingEdge[]) {
@@ -417,14 +430,6 @@ function findIntersection(
   return { x, y };
 }
 
-export function getQuadraticBezierPoints(
-  { pointA, gradA }: { pointA: Point; gradA: number },
-  { pointB, gradB }: { pointB: Point; gradB: number },
-) {
-  const control = findIntersection({ pointA, gradA }, { pointB, gradB });
-  return [pointA.x, pointA.y, control.x, control.y, pointB.x, pointB.y];
-}
-
 function sortEdgesClockwise(
   edges: TerminatingEdge[],
   center: Point,
@@ -448,4 +453,71 @@ function sortEdgesClockwise(
 
     return angleA - angleB;
   });
+}
+
+function getQuadraticBezierPoints(
+  { pointA, gradA }: { pointA: Point; gradA: number },
+  { pointB, gradB }: { pointB: Point; gradB: number },
+) {
+  const control = findIntersection({ pointA, gradA }, { pointB, gradB });
+
+  return [
+    pointA.x,
+    pointA.y,
+    control.x,
+    control.y,
+    control.x,
+    control.y,
+    pointB.x,
+    pointB.y,
+  ];
+}
+
+function generateCurve(
+  terminatingEdgeA: TerminatingEdge,
+  terminatingEdgeB: TerminatingEdge,
+) {
+  const unitVectorA = terminatingEdgeA.unitVector;
+  const gradA = unitVectorA.y / unitVectorA.x;
+  const pointA = terminatingEdgeA.right;
+
+  const unitVectorB = terminatingEdgeB.unitVector;
+  const gradB = unitVectorB.y / unitVectorB.x;
+
+  const dot = unitVectorA.x * unitVectorB.x + unitVectorA.y * unitVectorB.y;
+  const cross = unitVectorA.x * unitVectorB.y - unitVectorA.y * unitVectorB.x;
+
+  let angleRadians = Math.acos(Math.max(-1, Math.min(1, dot)));
+  if (cross < 0) {
+    angleRadians = 2 * Math.PI - angleRadians;
+  }
+  const angle = angleRadians * (180 / Math.PI);
+
+  const pointB =
+    angle >= 90 && angle < 270 ? terminatingEdgeB.right : terminatingEdgeB.left;
+
+  return getQuadraticBezierPoints({ pointA, gradA }, { pointB, gradB });
+}
+
+export function getInterleavedBezierCurves(
+  terminatingEdges: TerminatingEdge[],
+) {
+  if (terminatingEdges.length <= 1) {
+    return [];
+  }
+
+  const curves: number[][] = [];
+
+  for (let i = 0; i < terminatingEdges.length - 1; i++) {
+    const curve = generateCurve(terminatingEdges[i], terminatingEdges[i + 1]);
+    curves.push(curve);
+  }
+
+  const curve = generateCurve(
+    terminatingEdges[terminatingEdges.length - 1],
+    terminatingEdges[0],
+  );
+  curves.push(curve);
+
+  return curves;
 }

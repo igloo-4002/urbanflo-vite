@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
-import { Group, Line, Rect } from 'react-konva';
+import { Group, Line, Rect, Text } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
 import {
   getAllEdgeIdsForNode,
+  getInterleavedBezierCurves,
   getTerminatingEdgesOverNode,
 } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
@@ -95,18 +96,35 @@ export function Intersection({ node }: IntersectionProps) {
   }, [edgeIds]);
 
   const terminatingEdges = getTerminatingEdgesOverNode(node);
+  const interleavedBezierCurves = getInterleavedBezierCurves(terminatingEdges);
 
   return (
     <Group onClick={handleIntersectionClick}>
       {terminatingEdges.map(({ left, right }, index) => {
+        const mid = {
+          x: (left.x + right.x) / 2,
+          y: (left.y + right.y) / 2,
+        };
+
+        return (
+          <Group key={index}>
+            <Line
+              points={[left.x, left.y, right.x, right.y]}
+              stroke="#00FF00"
+              strokeWidth={2}
+            />
+            <Text x={mid.x} y={mid.y} text={`${index}`} fontSize={15} />
+          </Group>
+        );
+      })}
+      {interleavedBezierCurves.map((points, index) => {
         return (
           <Line
             key={index}
-            points={[left.x, left.y, right.x, right.y]}
-            stroke="#00FF00"
+            points={points}
+            bezier
+            stroke={'#00FF00'}
             strokeWidth={2}
-            closed
-            fill="grey"
           />
         );
       })}
