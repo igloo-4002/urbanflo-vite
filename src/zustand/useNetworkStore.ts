@@ -8,6 +8,7 @@ import { RemoveNodeCommand } from '~/helpers/commands/RemoveNodeCommand';
 import {
   edgeDoesIntersect,
   removeItems,
+  updateAssociatesOnConnectionDelete,
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
 } from '~/helpers/zustand/NetworkStoreHelpers';
@@ -281,12 +282,23 @@ export const useNetworkStore = create<Network>((set, get) => ({
   },
   deleteConnection: (id: string) => {
     set(state => {
+      const deletedConnection = state.connections[id];
+
       const newConnections = { ...state.connections };
       delete newConnections[id];
-      // TODO: delete associates
+
+      // update flow and route when a connection is deleted
+      const { newFlow, newRoute } = updateAssociatesOnConnectionDelete(
+        deletedConnection,
+        newConnections,
+        state.flow,
+        state.route,
+      );
 
       return {
         connections: newConnections,
+        flow: newFlow,
+        route: newRoute,
       };
     });
   },

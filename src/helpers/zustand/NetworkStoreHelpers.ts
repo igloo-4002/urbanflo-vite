@@ -307,3 +307,39 @@ export function getEdgeTerminals(
     trailing,
   };
 }
+
+export function updateAssociatesOnConnectionDelete(
+  deletedConnection: Connection,
+  connections: Record<string, Connection>,
+  flow: Record<string, Flow>,
+  route: Record<string, Route>,
+) {
+  const newFlow = { ...flow };
+  const newRoute = { ...route };
+
+  // check if there are any other connections between two edges
+  for (const connectionId in connections) {
+    if (
+      connectionId.includes(`${deletedConnection.from}_${deletedConnection.to}`)
+    ) {
+      return { newFlow, newRoute };
+    }
+  }
+
+  // delete flow when all connections between two edges are deleted
+  const suspectFlowId = `flow_${deletedConnection.from}${deletedConnection.to}`;
+  if (flow[suspectFlowId]) {
+    delete newFlow[suspectFlowId];
+  }
+
+  // delete route when all connections between two edges are deleted
+  const suspectRouteId = createRouteId(
+    deletedConnection.from,
+    deletedConnection.to,
+  );
+  if (route[suspectRouteId]) {
+    delete newRoute[suspectRouteId];
+  }
+
+  return { newFlow, newRoute };
+}

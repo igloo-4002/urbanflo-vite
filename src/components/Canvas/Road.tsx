@@ -235,6 +235,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
             visible={showToControlPoints}
             onClick={e => {
               e.cancelBubble = true;
+
               console.log('draw connection to here');
             }}
           />
