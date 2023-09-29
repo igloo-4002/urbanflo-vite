@@ -27,7 +27,7 @@ export function ConnectionsLayer() {
         const { leading: leadingTerminals } = getEdgeTerminals(inward);
         const { trailing: trailingTerminals } = getEdgeTerminals(outward);
 
-        const leading = leadingTerminals.reverse()[connection.fromLane];
+        const leading = leadingTerminals[connection.fromLane];
         const trailing = trailingTerminals[connection.toLane];
 
         const control = {

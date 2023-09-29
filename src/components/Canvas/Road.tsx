@@ -76,6 +76,12 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     return false;
   }
 
+  function getLaneIndex(index: number) {
+    // sumo always counts lane number from the rightmost side of the road regardless of orientation
+    const isBelowXAxis = (from.y + to.y) / 2 < 0;
+    return isBelowXAxis ? index : edge.numLanes - index - 1;
+  }
+
   const showFromControlPoints = isSelected;
   const showToControlPoints = getConnectionsState();
 
@@ -83,7 +89,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     <Group onClick={handleRoadClick}>
       {/* Highlight for selected road */}
       <Arrow
-        key={`road-selected-stroke-${edge.id}`}
+        key={`road-selected-${edge.id}`}
         x={from.x}
         y={from.y}
         stroke={highlightColor}
@@ -111,7 +117,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
         return (
           <Arrow
-            key={`centerline-${edge.id}-${index}`}
+            key={`road-centerline-${edge.id}-${index}`}
             x={from.x + offset * dx}
             y={from.y - offset * dy}
             dash={[10, 10]}
@@ -135,7 +141,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
         return (
           <Arrow
-            key={`arrow-${edge.id}-${index}`}
+            key={`road-arrow-${edge.id}-${index}`}
             x={offsetX}
             y={offsetY}
             points={[0, 0, 20 * Math.cos(angleRad), 20 * Math.sin(angleRad)]}
@@ -174,15 +180,13 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         const fontSize = 11;
         const verticalOffset = fontSize / 2;
 
-        // sumo always counts lane number from the rightmost side of the road regardless of orientation
-        const isBelowXAxis = (from.y + to.y) / 2 < 0;
-        const laneNumber = isBelowXAxis ? index + 1 : edge.numLanes - index;
+        const laneNumber = getLaneIndex(index) + 1;
 
         return (
           <Fragment key={index}>
             {/* show lane numbers in trailing position */}
             <Text
-              key={`road-label-${edge.id}-${index}-trailing`}
+              key={`road-label-${edge.id}-${laneNumber}-trailing`}
               x={xTrailing - verticalOffset}
               y={yTrailing - verticalOffset}
               text={`L${laneNumber}`}
@@ -193,7 +197,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
             {/* show lane numbers in leading position */}
             <Text
-              key={`road-label-${edge.id}-${index}-leading`}
+              key={`road-label-${edge.id}-${laneNumber}-leading`}
               x={xLeading - verticalOffset}
               y={yLeading - verticalOffset}
               text={`L${laneNumber}`}
@@ -207,9 +211,11 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
       {/* Show connection control points */}
       {fromControlPoints.map((point, index) => {
+        const laneIndex = getLaneIndex(index) + 1;
+
         return (
           <Circle
-            key={index}
+            key={laneIndex}
             x={point.x}
             y={point.y}
             radius={4}
@@ -217,7 +223,8 @@ export function Road({ edge, offset = 0 }: RoadProps) {
             visible={showFromControlPoints}
             onClick={e => {
               e.cancelBubble = true; // stops event propagation
-              console.log('clicked from edge');
+
+              console.log(`FROM index ${laneIndex}`);
             }}
           />
         );
@@ -225,9 +232,11 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
       {/* show possible connections points for edges connected to non-selected edges */}
       {toControlPoints.map((point, index) => {
+        const laneIndex = getLaneIndex(index) + 1;
+
         return (
           <Circle
-            key={index}
+            key={laneIndex}
             x={point.x}
             y={point.y}
             radius={4}
@@ -236,7 +245,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
             onClick={e => {
               e.cancelBubble = true;
 
-              console.log('draw connection to here');
+              console.log(`TO index ${laneIndex}`);
             }}
           />
         );
