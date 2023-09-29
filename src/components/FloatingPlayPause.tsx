@@ -48,8 +48,6 @@ export const FloatingPlayPause = () => {
     const SIMULATION_DESTINATION_PATH = `${BASE_SIMULATION_DESTINATION_PATH}/${player.simulationId}`;
 
     if (player.isPlaying && isConnected) {
-      console.warn('Subscribing to simulation data');
-
       subscribe(SIMULATION_DATA_TOPIC, message => {
         const data = extractCarsFromSumoMessage(message);
 
@@ -63,7 +61,6 @@ export const FloatingPlayPause = () => {
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
     } else if (!player.isPlaying && isConnected) {
-      console.warn('Unsubscribing from simulation data');
       publish(SIMULATION_DESTINATION_PATH, { status: 'STOP' });
     } else if (!player.isPlaying && player.simulationId) {
       player.changeSimulationId(null);
