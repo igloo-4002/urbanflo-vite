@@ -318,12 +318,11 @@ export function updateAssociatesOnConnectionDelete(
   const newRoute = { ...route };
 
   // check if there are any other connections between two edges
-  for (const connectionId in connections) {
-    if (
-      connectionId.includes(`${deletedConnection.from}_${deletedConnection.to}`)
-    ) {
-      return { newFlow, newRoute };
-    }
+  const connectionExists = Object.keys(connections).some(connectionId =>
+    connectionId.includes(`${deletedConnection.from}_${deletedConnection.to}`),
+  );
+  if (connectionExists) {
+    return { newFlow, newRoute };
   }
 
   // delete flow when all connections between two edges are deleted
