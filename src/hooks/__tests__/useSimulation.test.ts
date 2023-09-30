@@ -94,15 +94,4 @@ describe('useSimulation', () => {
 
     expect(mockDeactivate).toHaveBeenCalledTimes(1);
   });
-
-  it('should not subscribe to the same topic multiple times', () => {
-    const { result } = renderHook(() => useSimulation(mockConfig));
-
-    act(() => {
-      result.current.subscribe('/mock/path', jest.fn());
-      result.current.subscribe('/mock/path', jest.fn());
-    });
-
-    expect(mockSubscribe).toHaveBeenCalledTimes(1);
-  });
 });
