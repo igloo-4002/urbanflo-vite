@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { laneWidth } from '~/components/Canvas/Constats/Road';
+import { laneWidth } from '~/components/Canvas/Constants/Road';
 import { AddEdgeCommand } from '~/helpers/commands/AddEdgeCommand';
 import { AddNodeCommand } from '~/helpers/commands/AddNodeCommand';
 import { RemoveEdgeCommand } from '~/helpers/commands/RemoveEdgeCommand';
@@ -14,6 +14,8 @@ import {
 import { Connection, Edge, Flow, Node, Route, VType } from '~/types/Network';
 
 import { useUndoStore } from './useUndoStore';
+
+export const DEFAULT_ROAD_NAME = 'New Road';
 
 export interface NetworkData {
   documentName: string;
@@ -83,7 +85,7 @@ export const useNetworkStore = create<Network>((set, get) => ({
         spreadType: 'center',
         width: laneWidth,
         speed: 13.89,
-        name: 'New Road',
+        name: DEFAULT_ROAD_NAME,
       };
 
       const pointA = { x: from.x, y: from.y };

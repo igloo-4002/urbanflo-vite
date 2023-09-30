@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
-import { Group, Rect } from 'react-konva';
+import { useMemo, useState } from 'react';
+import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
+import { prettyPrintIntersectionType } from '~/helpers/format';
 import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -11,7 +12,8 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
-import { laneWidth } from './Constats/Road';
+import { laneWidth } from './Constants/Road';
+import { NodeTooltip } from './Tooltips/Node';
 
 interface IntersectionProps {
   node: Node;
@@ -24,6 +26,12 @@ export function Intersection({ node }: IntersectionProps) {
 
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
+
+  const [showIntersectionTooltip, setShowIntersectionTooltip] = useState(false);
+
+  function toggleTooltip() {
+    setShowIntersectionTooltip(!showIntersectionTooltip);
+  }
 
   function handleDragMove(event: KonvaEventObject<DragEvent>) {
     const updatedNode = {
@@ -91,18 +99,30 @@ export function Intersection({ node }: IntersectionProps) {
     return Math.max(...widths);
   }, [edgeIds]);
 
+  const tooltipText = `Type: ${prettyPrintIntersectionType(node.type)}`;
+  const isTooltipVisible = showIntersectionTooltip && !isSelected;
+
   return (
-    <Group onClick={handleIntersectionClick}>
-      <Rect
-        x={node.x - size / 2}
-        y={node.y - size / 2}
-        width={size}
-        height={size}
+    <Group
+      onClick={handleIntersectionClick}
+      onMouseEnter={toggleTooltip}
+      onMouseLeave={toggleTooltip}
+    >
+      <Circle
+        x={node.x}
+        y={node.y}
+        radius={size / 2}
         fill="grey"
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={4}
         draggable
         onDragEnd={handleDragMove}
+      />
+      <NodeTooltip
+        text={tooltipText}
+        visible={isTooltipVisible}
+        x={node.x - size / 2 + 12}
+        y={node.y - size / 2 - 12}
       />
     </Group>
   );

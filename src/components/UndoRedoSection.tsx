@@ -5,7 +5,7 @@ import {
 
 import { useUndoStore } from '~/zustand/useUndoStore';
 
-import Tooltip from './Tooltip';
+import { Tooltip } from './Tooltip';
 
 export function UndoRedoSection() {
   const undoStore = useUndoStore();

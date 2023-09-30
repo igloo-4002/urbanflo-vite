@@ -1,6 +1,8 @@
 import { isValid, parseISO } from 'date-fns';
 import { format as formatTz, utcToZonedTime } from 'date-fns-tz';
 
+import { IntersectionType } from '~/types/Network';
+
 export function formatISOString(dateString: string) {
   const date = parseISO(dateString);
 
@@ -17,4 +19,9 @@ export function formatISOString(dateString: string) {
     date: formattedDate,
     time: formattedTime,
   };
+}
+
+export function prettyPrintIntersectionType(type: IntersectionType) {
+  // Replace underscores with spaces and capitalize the first letter
+  return type.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
 }
