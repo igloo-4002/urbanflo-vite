@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Group, Rect } from 'react-konva';
+import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
@@ -108,11 +108,10 @@ export function Intersection({ node }: IntersectionProps) {
       onMouseEnter={toggleTooltip}
       onMouseLeave={toggleTooltip}
     >
-      <Rect
-        x={node.x - size / 2}
-        y={node.y - size / 2}
-        width={size}
-        height={size}
+      <Circle
+        x={node.x}
+        y={node.y}
+        radius={size / 2}
         fill="grey"
         stroke={isSelected ? highlightColor : 'transparent'}
         strokeWidth={4}
