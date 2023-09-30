@@ -54,6 +54,6 @@ describe('prettyPrintIntersectionType', () => {
 
   it('should handle single-word types correctly', () => {
     const result = prettyPrintIntersectionType(NodeType.zipper);
-    expect(result).toBe('Unregulated');
+    expect(result).toBe('Zipper');
   });
 });

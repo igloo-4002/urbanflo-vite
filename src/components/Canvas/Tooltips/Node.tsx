@@ -1,13 +1,13 @@
 import { Group, Rect, Text } from 'react-konva';
 
-interface CanvasTooltipProps {
+interface NodeTooltipProps {
   text: string;
   x: number;
   y: number;
   visible: boolean;
 }
 
-export function CanvasTooltip({ text, x, y, visible }: CanvasTooltipProps) {
+export function NodeTooltip({ text, x, y, visible }: NodeTooltipProps) {
   if (!visible) {
     return null;
   }
@@ -24,6 +24,12 @@ export function CanvasTooltip({ text, x, y, visible }: CanvasTooltipProps) {
         height={textHeight + 2 * paddingY}
         fill="rgb(51, 65, 85)"
         cornerRadius={8}
+        opacity={0.8}
+        shadowColor="black"
+        shadowBlur={5}
+        shadowOffsetX={2}
+        shadowOffsetY={2}
+        shadowOpacity={0.3}
       />
       <Text
         text={text}

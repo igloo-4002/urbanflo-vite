@@ -12,8 +12,8 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
-import { CanvasTooltip } from './CanvasTooltip';
 import { laneWidth } from './Constants/Road';
+import { NodeTooltip } from './Tooltips/Node';
 
 interface IntersectionProps {
   node: Node;
@@ -119,7 +119,7 @@ export function Intersection({ node }: IntersectionProps) {
         draggable
         onDragEnd={handleDragMove}
       />
-      <CanvasTooltip
+      <NodeTooltip
         text={tooltipText}
         visible={isTooltipVisible}
         x={node.x - size / 2 + 12}
