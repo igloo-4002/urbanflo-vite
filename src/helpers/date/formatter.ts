@@ -1,18 +1,20 @@
-import { DateTime } from 'luxon';
+import { isValid, parseISO } from 'date-fns';
+import { format as formatTz, utcToZonedTime } from 'date-fns-tz';
 
 export function formatISOString(dateString: string) {
-  const date = DateTime.fromISO(dateString, { zone: 'UTC' });
-  if (!date.isValid) {
+  const date = parseISO(dateString);
+
+  if (!isValid(date)) {
     throw new Error('Invalid date string');
   }
 
-  const day = String(date.day).padStart(2, '0');
-  const month = String(date.month).padStart(2, '0');
-  const year = String(date.year).slice(-2);
-  const time = date.toLocaleString(DateTime.TIME_SIMPLE, {});
+  const utcDate = utcToZonedTime(date, 'Etc/UTC');
+
+  const formattedDate = formatTz(utcDate, 'dd/MM/yy', { timeZone: 'Etc/UTC' });
+  const formattedTime = formatTz(utcDate, 'h:mm aa', { timeZone: 'Etc/UTC' });
 
   return {
-    date: `${day}/${month}/${year}`,
-    time,
+    date: formattedDate,
+    time: formattedTime,
   };
 }
