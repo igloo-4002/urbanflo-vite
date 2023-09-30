@@ -6,6 +6,7 @@ import { KonvaEventObject } from 'konva/lib/Node';
 import { createId } from '~/id';
 import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
+import { DecorationType, useDecorationStore } from '~/zustand/useDecorations';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import {
@@ -19,6 +20,7 @@ import { useUndoStore } from '~/zustand/useUndoStore';
 
 import { CarLayer } from './Layers/CarLayer';
 import { ConnectionsLayer } from './Layers/ConnectionsLayer';
+import { DecorationsLayer } from './Layers/DecorationsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
 
@@ -28,6 +30,7 @@ export function Canvas() {
   const nodes = Object.values(network.nodes);
   const toolbarState = useToolbarStore();
   const undoStore = useUndoStore();
+  const decorationsStore = useDecorationStore();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -70,6 +73,20 @@ export function Canvas() {
 
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
+
+    if (toolbarState.selectedToolBarItem === LabelNames.Tree) {
+      const point = event.currentTarget.getRelativePointerPosition();
+
+      const newNode = {
+        id: createId(),
+        x: point.x,
+        y: point.y,
+        type: DecorationType.tree,
+      };
+
+      decorationsStore.addItem(newNode);
+      return;
+    }
 
     if (
       ![LabelNames.Road, LabelNames.Intersection].includes(
@@ -156,6 +173,7 @@ export function Canvas() {
       <IntersectionsLayer />
       <ConnectionsLayer />
       <CarLayer />
+      <DecorationsLayer />
     </Stage>
   );
 }
