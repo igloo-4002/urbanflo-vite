@@ -2,7 +2,7 @@ import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 import { SCALE_FACTOR, useStageState } from '~/zustand/useStage';
 
-import Tooltip from './Tooltip';
+import { Tooltip } from './Tooltip';
 
 export function ZoomSection() {
   const stageStore = useStageState();

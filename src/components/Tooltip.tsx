@@ -33,5 +33,3 @@ export function Tooltip({ text, children }: TooltipProps) {
     </div>
   );
 }
-
-export default Tooltip;
