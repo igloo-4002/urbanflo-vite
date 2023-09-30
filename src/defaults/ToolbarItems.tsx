@@ -2,6 +2,7 @@ import { CursorArrowRaysIcon } from '@heroicons/react/24/outline';
 
 import intersectionIcon from '~/assets/intersection.png';
 import roadIcon from '~/assets/road-icon.png';
+import treeIcon from '~/assets/tree.png';
 import { LabelNames, ToolbarItem } from '~/types/Toolbar';
 
 export const toolbarItems: ToolbarItem[] = [
@@ -19,5 +20,12 @@ export const toolbarItems: ToolbarItem[] = [
   {
     label: LabelNames.Road,
     icon: roadIcon,
+  },
+  {
+    divider: true,
+  },
+  {
+    label: LabelNames.Tree,
+    icon: treeIcon,
   },
 ];
