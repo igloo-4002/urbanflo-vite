@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Group, Rect } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -11,6 +11,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
+import { CanvasTooltip } from './CanvasTooltip';
 import { laneWidth } from './Constats/Road';
 
 interface IntersectionProps {
@@ -24,6 +25,12 @@ export function Intersection({ node }: IntersectionProps) {
 
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
+
+  const [showIntersectionTooltip, setShowIntersectionTooltip] = useState(false);
+
+  function toggleTooltip() {
+    setShowIntersectionTooltip(!showIntersectionTooltip);
+  }
 
   function handleDragMove(event: KonvaEventObject<DragEvent>) {
     const updatedNode = {
@@ -91,8 +98,14 @@ export function Intersection({ node }: IntersectionProps) {
     return Math.max(...widths);
   }, [edgeIds]);
 
+  const tooltipText = `Type: ${node.type}`;
+
   return (
-    <Group onClick={handleIntersectionClick}>
+    <Group
+      onClick={handleIntersectionClick}
+      onMouseEnter={toggleTooltip}
+      onMouseLeave={toggleTooltip}
+    >
       <Rect
         x={node.x - size / 2}
         y={node.y - size / 2}
@@ -103,6 +116,12 @@ export function Intersection({ node }: IntersectionProps) {
         strokeWidth={4}
         draggable
         onDragEnd={handleDragMove}
+      />
+      <CanvasTooltip
+        text={tooltipText}
+        visible={showIntersectionTooltip}
+        x={node.x - size / 2 + 12}
+        y={node.y - size / 2 - 12}
       />
     </Group>
   );
