@@ -29,9 +29,6 @@ dependencies:
   konva:
     specifier: ^9.2.0
     version: 9.2.0
-  luxon:
-    specifier: ^3.4.3
-    version: 3.4.3
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -3026,11 +3023,6 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
-
-  /luxon@3.4.3:
-    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
-    engines: {node: '>=12'}
-    dev: false
 
   /make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
