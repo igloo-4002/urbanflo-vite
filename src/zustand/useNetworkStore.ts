@@ -69,6 +69,11 @@ export const useNetworkStore = create<Network>((set, get) => ({
 
     set(state => {
       const newEdgeId = `${from.id}_${to.id}`;
+
+      if (newEdgeId in state.edges) {
+        return state;
+      }
+
       const newEdge: Edge = {
         id: newEdgeId,
         from: from.id,
@@ -291,3 +296,7 @@ export const useNetworkStore = create<Network>((set, get) => ({
   updateFlow: (flowId, flow) =>
     set(state => ({ flow: { ...state.flow, [flowId]: flow } })),
 }));
+
+useNetworkStore.subscribe(state => {
+  console.log({ nodes: state.nodes, edges: state.edges });
+});
