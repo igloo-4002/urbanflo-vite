@@ -296,7 +296,3 @@ export const useNetworkStore = create<Network>((set, get) => ({
   updateFlow: (flowId, flow) =>
     set(state => ({ flow: { ...state.flow, [flowId]: flow } })),
 }));
-
-useNetworkStore.subscribe(state => {
-  console.log({ nodes: state.nodes, edges: state.edges });
-});
