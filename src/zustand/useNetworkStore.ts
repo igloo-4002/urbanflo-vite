@@ -71,6 +71,11 @@ export const useNetworkStore = create<Network>((set, get) => ({
 
     set(state => {
       const newEdgeId = `${from.id}_${to.id}`;
+
+      if (newEdgeId in state.edges) {
+        return state;
+      }
+
       const newEdge: Edge = {
         id: newEdgeId,
         from: from.id,
