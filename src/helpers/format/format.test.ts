@@ -1,4 +1,6 @@
-import { formatISOString } from './formatter';
+import { NodeType } from '~/types/Network';
+
+import { formatISOString, prettyPrintIntersectionType } from '.';
 
 describe('formatISOString', () => {
   it('should correctly format ISO string to date and time', () => {
@@ -34,5 +36,24 @@ describe('formatISOString', () => {
       date: '29/02/20',
       time: '2:05 PM',
     });
+  });
+});
+
+describe('prettyPrintIntersectionType', () => {
+  it('should replace underscores with spaces and capitalize the first letter', () => {
+    const result = prettyPrintIntersectionType(NodeType.priority);
+    expect(result).toBe('Priority');
+  });
+
+  it('should handle mutliple underscores correctly', () => {
+    const result = prettyPrintIntersectionType(
+      NodeType.traffic_light_unregulated,
+    );
+    expect(result).toBe('Traffic light unregulated');
+  });
+
+  it('should handle single-word types correctly', () => {
+    const result = prettyPrintIntersectionType(NodeType.zipper);
+    expect(result).toBe('Unregulated');
   });
 });

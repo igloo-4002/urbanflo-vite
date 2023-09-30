@@ -19,6 +19,9 @@ export const NodeType = {
   dead_end: 'dead_end',
 } as const;
 
+// Define a type for intersection types
+export type IntersectionType = keyof typeof NodeType;
+
 export type Node = {
   id: string;
   x: number;

@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { ColumnStack, RowStack } from '~/components/Stack';
-import { NodeType } from '~/types/Network';
+import { prettyPrintIntersectionType } from '~/helpers/format';
+import { IntersectionType, NodeType } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
-
-// Define a type for intersection types
-type IntersectionType = keyof typeof NodeType;
 
 export function IntersectionPropertiesEditor() {
   const [intersectionType, setIntersectionType] =
@@ -37,11 +35,6 @@ export function IntersectionPropertiesEditor() {
 
     network.updateNode(selected.selected, updatedNode);
     selected.deselect();
-  }
-
-  function prettyPrintIntersectionType(type: IntersectionType) {
-    // Replace underscores with spaces and capitalize the first letter
-    return type.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
   }
 
   return (

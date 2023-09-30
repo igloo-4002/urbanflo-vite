@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { formatISOString } from '~/helpers/date/formatter';
+import { formatISOString } from '~/helpers/format';
 import { SimulationHistory } from '~/zustand/useSimulationHistory';
 
 interface SimulationSummaryProps {

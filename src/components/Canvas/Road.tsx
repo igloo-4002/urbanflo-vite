@@ -7,7 +7,7 @@ import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
-import { laneWidth } from './Constats/Road';
+import { laneWidth } from './Constants/Road';
 
 interface RoadProps {
   edge: Edge;

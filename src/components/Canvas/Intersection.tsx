@@ -4,6 +4,7 @@ import { Group, Rect } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
+import { prettyPrintIntersectionType } from '~/helpers/format';
 import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -12,7 +13,7 @@ import { useSelector } from '~/zustand/useSelected';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { CanvasTooltip } from './CanvasTooltip';
-import { laneWidth } from './Constats/Road';
+import { laneWidth } from './Constants/Road';
 
 interface IntersectionProps {
   node: Node;
@@ -98,7 +99,8 @@ export function Intersection({ node }: IntersectionProps) {
     return Math.max(...widths);
   }, [edgeIds]);
 
-  const tooltipText = `Type: ${node.type}`;
+  const tooltipText = `Type: ${prettyPrintIntersectionType(node.type)}`;
+  const isTooltipVisible = showIntersectionTooltip && !isSelected;
 
   return (
     <Group
@@ -119,7 +121,7 @@ export function Intersection({ node }: IntersectionProps) {
       />
       <CanvasTooltip
         text={tooltipText}
-        visible={showIntersectionTooltip}
+        visible={isTooltipVisible}
         x={node.x - size / 2 + 12}
         y={node.y - size / 2 - 12}
       />
