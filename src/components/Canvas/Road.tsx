@@ -65,7 +65,11 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   const isTooltipVisible = showRoadTooltip && !isSelected;
 
   return (
-    <Group onClick={handleRoadClick}>
+    <Group
+      onClick={handleRoadClick}
+      onMouseEnter={toggleRoadTooltip}
+      onMouseLeave={toggleRoadTooltip}
+    >
       {/* Highlight for selected road */}
       <Arrow
         key={`road-selected-stroke-${edge.id}`}
@@ -85,8 +89,6 @@ export function Road({ edge, offset = 0 }: RoadProps) {
         fill={roadColor}
         stroke={roadColor}
         strokeWidth={laneWidth * edge.numLanes}
-        onMouseEnter={toggleRoadTooltip}
-        onMouseLeave={toggleRoadTooltip}
         {...commonProps}
         {...commonOffset}
       />
