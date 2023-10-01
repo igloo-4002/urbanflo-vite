@@ -41,14 +41,15 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
   const connect = useCallback(() => {
     if (!stompClient) {
       stompClient = new Client(config);
+
+      stompClient.onConnect = () => {
+        setIsConnected(true);
+        setReconnectAttempts(0);
+        callback?.();
+      };
+
       stompClient.activate();
     }
-
-    stompClient.onConnect = () => {
-      setIsConnected(true);
-      setReconnectAttempts(0);
-      callback?.();
-    };
 
     stompClient.onDisconnect = () => {
       setIsConnected(false);

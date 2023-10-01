@@ -80,6 +80,7 @@ export function Canvas() {
         toolbarState.selectedToolBarItem,
       )
     ) {
+      // deselect anything if clicked on the canvas
       if (selector.selected !== null) {
         selector.deselect();
       }

@@ -13,12 +13,14 @@ export function ProjectUploadButton() {
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/json') {
-      networkStore.setDocumentName(file.name);
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         try {
           const parsedJson = JSON.parse(e.target?.result as string);
           const uploadedNetwork = getNetworkFromUploadedFile(parsedJson);
+
+          // Set document name
+          networkStore.setDocumentName(uploadedNetwork.networkData.documentName);
 
           // Clear the current canvas
           const nodeIds = Object.keys(networkStore.nodes);

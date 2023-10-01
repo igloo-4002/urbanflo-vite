@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Arrow, Circle, Group, Text } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -10,6 +10,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelector';
 
 import { laneWidth } from './Constants/Road';
+import { RoadTooltip } from './Tooltips/Road';
 
 interface RoadProps {
   edge: Edge;
@@ -20,10 +21,16 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
+  const [showRoadTooltip, setShowRoadTooltip] = useState(false);
+
   const isSelected = selector.selected === edge.id;
 
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
+
+  function toggleRoadTooltip() {
+    setShowRoadTooltip(!showRoadTooltip);
+  }
 
   function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
@@ -85,8 +92,14 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   const showFromControlPoints = isSelected;
   const showToControlPoints = getConnectionsState();
 
+  const isTooltipVisible = showRoadTooltip && !isSelected;
+
   return (
-    <Group onClick={handleRoadClick}>
+    <Group
+      onClick={handleRoadClick}
+      onMouseEnter={toggleRoadTooltip}
+      onMouseLeave={toggleRoadTooltip}
+    >
       {/* Highlight for selected road */}
       <Arrow
         key={`road-selected-${edge.id}`}
@@ -250,6 +263,12 @@ export function Road({ edge, offset = 0 }: RoadProps) {
           />
         );
       })}
+      <RoadTooltip
+        edge={edge}
+        x={midX + 10}
+        y={midY + 10}
+        visible={isTooltipVisible}
+      />
     </Group>
   );
 }

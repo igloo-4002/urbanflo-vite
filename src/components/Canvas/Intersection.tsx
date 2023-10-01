@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
+import { prettyPrintIntersectionType } from '~/helpers/format';
 import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -12,6 +13,7 @@ import { useSelector } from '~/zustand/useSelector';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { laneWidth } from './Constants/Road';
+import { NodeTooltip } from './Tooltips/Node';
 
 interface IntersectionProps {
   node: Node;
@@ -24,6 +26,12 @@ export function Intersection({ node }: IntersectionProps) {
 
   const isSelected = selector.selected === node.id;
   const baseIntersectionSize = 25;
+
+  const [showIntersectionTooltip, setShowIntersectionTooltip] = useState(false);
+
+  function toggleTooltip() {
+    setShowIntersectionTooltip(!showIntersectionTooltip);
+  }
 
   function handleDragMove(event: KonvaEventObject<DragEvent>) {
     const updatedNode = {
@@ -91,8 +99,15 @@ export function Intersection({ node }: IntersectionProps) {
     return Math.max(...widths);
   }, [edgeIds]);
 
+  const tooltipText = `Type: ${prettyPrintIntersectionType(node.type)}`;
+  const isTooltipVisible = showIntersectionTooltip && !isSelected;
+
   return (
-    <Group onClick={handleIntersectionClick}>
+    <Group
+      onClick={handleIntersectionClick}
+      onMouseEnter={toggleTooltip}
+      onMouseLeave={toggleTooltip}
+    >
       <Circle
         x={node.x}
         y={node.y}
@@ -102,6 +117,12 @@ export function Intersection({ node }: IntersectionProps) {
         strokeWidth={4}
         draggable
         onDragEnd={handleDragMove}
+      />
+      <NodeTooltip
+        text={tooltipText}
+        visible={isTooltipVisible}
+        x={node.x - size / 2 + 12}
+        y={node.y - size / 2 - 12}
       />
     </Group>
   );
