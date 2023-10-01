@@ -154,7 +154,7 @@ export function Canvas() {
     >
       <RoadsLayer />
       <IntersectionsLayer />
-      <ConnectionsLayer />
+      {/* <ConnectionsLayer /> */}
       <CarLayer />
     </Stage>
   );

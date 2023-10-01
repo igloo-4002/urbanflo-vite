@@ -110,6 +110,7 @@ export const FloatingPlayPause = () => {
     try {
       setLoading(true);
       player.pause();
+      carStore.setCars([]);
 
       if (!player.simulationId) {
         return;
