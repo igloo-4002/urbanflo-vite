@@ -1,6 +1,10 @@
 import { NodeType } from '~/types/Network';
 
-import { formatISOString, prettyPrintIntersectionType } from '.';
+import {
+  formatISOString,
+  formatSimulationTime,
+  prettyPrintIntersectionType,
+} from '.';
 
 describe('formatISOString', () => {
   it('should correctly format ISO string to date and time', () => {
@@ -36,6 +40,38 @@ describe('formatISOString', () => {
       date: '29/02/20',
       time: '2:05 PM',
     });
+  });
+});
+
+describe('formatSimulationTime', () => {
+  it('should format 0 milliseconds correctly', () => {
+    const result = formatSimulationTime(0);
+    expect(result).toBe('00:00:00');
+  });
+
+  it('should format 500 milliseconds correctly', () => {
+    const result = formatSimulationTime(500);
+    expect(result).toBe('00:00:50');
+  });
+
+  it('should format 999 milliseconds correctly', () => {
+    const result = formatSimulationTime(999);
+    expect(result).toBe('00:00:99');
+  });
+
+  it('should format 1000 milliseconds (1 second) correctly', () => {
+    const result = formatSimulationTime(1000);
+    expect(result).toBe('00:01:00');
+  });
+
+  it('should format 60500 milliseconds (1 minutes, 500 milliseconds) correctly', () => {
+    const result = formatSimulationTime(60500);
+    expect(result).toBe('01:00:50');
+  });
+
+  test('should format 120999 milliseconds (2 minutes, 0 seconds, 99 hundredths) correctly', () => {
+    const result = formatSimulationTime(120999);
+    expect(result).toBe('02:00:99');
   });
 });
 
