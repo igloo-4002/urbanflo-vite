@@ -1,3 +1,4 @@
+import { canvasComponentBg } from '~/colors';
 import { useToolbarStore } from '~/zustand/useToolbar';
 
 import { ToolbarDivider } from './ToolbarDivider';
@@ -10,10 +11,11 @@ export function Toolbar() {
     <span
       style={{
         transform: 'translateX(-50%)',
+        backgroundColor: canvasComponentBg,
       }}
       className={`fixed ${
         toolbarStore.isOpen ? 'flex' : 'hidden'
-      } top-32 left-1/2 z-100 bg-[#FAF9F6] shadow-md p-2 rounded-xl`}
+      } top-32 left-1/2 z-100 shadow-md p-2 rounded-xl`}
     >
       {toolbarStore.items.map((item, idx) => {
         if (item.divider) {
