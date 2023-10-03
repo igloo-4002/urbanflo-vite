@@ -5,6 +5,7 @@ import { SimulationHistory } from '~/zustand/useSimulationHistory';
 
 import { DetailedMetricsContainer } from './DetailedMetricsContainer';
 import { DetailedMetricsSection } from './DetailedMetricsSection';
+import { DetailedMetricsSectionContainer } from './DetailedMetricsSectionContainer';
 
 interface SimulationSummaryProps {
   histroyItem: SimulationHistory;
@@ -17,6 +18,7 @@ export function SimulationSummary({
 }: SimulationSummaryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const summary = histroyItem.simulation.analytics;
+  const statistics = histroyItem.simulation.statistics;
 
   const startDateTime = formatISOString(histroyItem.startTime);
   const endDateTime = formatISOString(histroyItem.endTime);
@@ -50,26 +52,64 @@ export function SimulationSummary({
       </div>
 
       <DetailedMetricsContainer show={isExpanded}>
-        <DetailedMetricsSection
-          title="Simulation Length"
-          value={summary.simulationLength}
-        />
-        <DetailedMetricsSection
-          title="Average Time Spent Per Car"
-          value={`${summary.averageDuration.toFixed(2)} seconds`}
-        />
-        <DetailedMetricsSection
-          title="Average Waiting Time Per Car"
-          value={`${summary.averageWaiting.toFixed(2)}} seconds`}
-        />
-        <DetailedMetricsSection
-          title="Average Time Lost Due to Congestion"
-          value={`${summary.averageTimeLoss.toFixed(2)}} seconds`}
-        />
-        <DetailedMetricsSection
-          title="Total Cars Completed Simulation"
-          value={summary.totalNumberOfCarsThatCompleted}
-        />
+        <DetailedMetricsSectionContainer title="General stats">
+          <DetailedMetricsSection
+            title="Simulation Length"
+            value={summary.simulationLength}
+          />
+          <DetailedMetricsSection
+            title="Average Time Spent Per Car"
+            value={`${summary.averageDuration.toFixed(2)} seconds`}
+          />
+          <DetailedMetricsSection
+            title="Average Waiting Time Per Car"
+            value={`${summary.averageWaiting.toFixed(2)} seconds`}
+          />
+          <DetailedMetricsSection
+            title="Average Time Lost Due to Congestion"
+            value={`${summary.averageTimeLoss.toFixed(2)} seconds`}
+          />
+          <DetailedMetricsSection
+            title="Total Cars Completed Simulation"
+            value={summary.totalNumberOfCarsThatCompleted}
+          />
+        </DetailedMetricsSectionContainer>
+        <DetailedMetricsSectionContainer title="Vehicle stats">
+          <DetailedMetricsSection
+            title="Vehicles loaded"
+            value={statistics.vehicles.loaded}
+          />
+          <DetailedMetricsSection
+            title="Vehicles inserted"
+            value={statistics.vehicles.inserted}
+          />
+          <DetailedMetricsSection
+            title="Vehicles running"
+            value={statistics.vehicles.running}
+          />
+          <DetailedMetricsSection
+            title="Vehicles waiting"
+            value={statistics.vehicles.waiting}
+          />
+        </DetailedMetricsSectionContainer>
+        <DetailedMetricsSectionContainer title="Pedestrian stats">
+          <DetailedMetricsSection
+            title="Number of pedestians"
+            value={statistics.pedestrianStatistics.number}
+          />
+          <DetailedMetricsSection
+            title="Pedestian route length"
+            value={statistics.pedestrianStatistics.routeLength}
+          />
+          <DetailedMetricsSection
+            title="Pedestian duration"
+            value={statistics.pedestrianStatistics.duration}
+          />
+          <DetailedMetricsSection
+            title="Pedestian time loss"
+            value={statistics.pedestrianStatistics.timeLoss}
+          />
+        </DetailedMetricsSectionContainer>
       </DetailedMetricsContainer>
     </div>
   );
