@@ -6,6 +6,7 @@ import { PlayIcon, StopIcon } from '@heroicons/react/24/outline';
 import {
   getSimulationAnalytics,
   getSimulationOutput,
+  getSimulationOutputStatistics,
   uploadNetwork,
 } from '~/api/network';
 import { extractCarsFromSumoMessage } from '~/helpers/sumo';
@@ -117,6 +118,9 @@ export const FloatingPlayPause = () => {
       }
 
       const simOutput = await getSimulationOutput(player.simulationId);
+      const simOutputStatistics = await getSimulationOutputStatistics(
+        player.simulationId,
+      );
       const simAnalytics = await getSimulationAnalytics(player.simulationId);
 
       if (startTime && simulationInfo) {
@@ -126,6 +130,7 @@ export const FloatingPlayPause = () => {
           simulation: {
             info: simulationInfo,
             output: simOutput,
+            statistics: simOutputStatistics,
             analytics: simAnalytics,
           },
         });
