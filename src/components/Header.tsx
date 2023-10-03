@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 
@@ -18,7 +16,6 @@ export function classNames(...classes: string[]) {
 
 export function Header() {
   const network = useNetworkStore();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const simulationHistoryStore = useSimulationHistory();
 
@@ -46,7 +43,7 @@ export function Header() {
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => console.log('this does nothing')}
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
