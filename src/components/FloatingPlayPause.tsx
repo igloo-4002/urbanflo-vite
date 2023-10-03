@@ -117,11 +117,11 @@ export const FloatingPlayPause = () => {
         return;
       }
 
-      const simOutput = await getSimulationOutput(player.simulationId);
-      const simOutputStatistics = await getSimulationOutputStatistics(
-        player.simulationId,
-      );
-      const simAnalytics = await getSimulationAnalytics(player.simulationId);
+      const [simOutput, simOutputStatistics, simAnalytics] = await Promise.all([
+        getSimulationOutput(player.simulationId),
+        getSimulationOutputStatistics(player.simulationId),
+        getSimulationAnalytics(player.simulationId),
+      ]);
 
       if (startTime && simulationInfo) {
         simulationHistory.updateHistory({
