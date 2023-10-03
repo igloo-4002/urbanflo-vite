@@ -4,11 +4,13 @@ import {
   SimulationAnalytics,
   SimulationInfo,
   SimulationOutput,
+  SimulationStatistics,
 } from '~/types/Simulation';
 
 export interface Simulation {
   info: SimulationInfo;
   output: SimulationOutput;
+  statistics: SimulationStatistics;
   analytics: SimulationAnalytics;
 }
 
