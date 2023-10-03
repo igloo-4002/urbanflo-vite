@@ -4,6 +4,7 @@ import {
   SimulationAnalytics,
   SimulationInfo,
   SimulationOutput,
+  SimulationStatistics,
 } from '~/types/Simulation';
 
 type NetworkPayload = {
@@ -39,6 +40,26 @@ export async function getSimulationOutput(
 ): Promise<SimulationOutput> {
   const response = await fetch(
     `${BASE_URL}/simulation/${simulationId}/output`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to get network output: ${response.statusText}`);
+  }
+
+  return await response.json();
+}
+
+export async function getSimulationOutputStatistics(
+  simulationId: string,
+): Promise<SimulationStatistics> {
+  const response = await fetch(
+    `${BASE_URL}/simulation/${simulationId}/output/statistics`,
     {
       method: 'GET',
       headers: {
