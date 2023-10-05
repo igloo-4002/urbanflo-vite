@@ -1,3 +1,5 @@
+import { Vector2d } from 'konva/lib/types';
+
 import { laneWidth } from '~/components/Canvas/Constants/Road';
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
@@ -257,6 +259,13 @@ export function getEdgeTerminals(
   const from = useNetworkStore.getState().nodes[edge.from];
   const to = useNetworkStore.getState().nodes[edge.to];
 
+  const roadVector: Vector2d = {
+    x: to.x - from.x,
+    y: to.y - from.y,
+  };
+
+  const direction = roadVector.y > 0 ? 'down' : 'up';
+
   const { x: xt0, y: yt0 } = from;
   const { x: xl0, y: yl0 } = to;
 
@@ -289,14 +298,17 @@ export function getEdgeTerminals(
     { length: n },
     (_, i) => xla + i * (laneWidth * Math.cos(angle2)),
   );
-
-  const yLeading = xLeading.map(x => m2 * x + cl);
-
   const xTrailing = Array.from(
     { length: n },
     (_, i) => xta + i * (laneWidth * Math.cos(angle2)),
   );
 
+  if (direction === 'down') {
+    xLeading.reverse();
+    xTrailing.reverse();
+  }
+
+  const yLeading = xLeading.map(x => m2 * x + cl);
   const yTrailing = xTrailing.map(x => m2 * x + ct);
 
   const leading = xLeading.map((x, i) => ({ x, y: yLeading[i] }));
