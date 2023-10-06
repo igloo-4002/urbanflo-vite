@@ -14,7 +14,7 @@ export type Decoration = {
 
 interface DecorationsStore {
   items: Decoration[];
-  addItem: (decoration: Decoration) => void;
+  addItem: (decoration: Omit<Decoration, 'seed'>) => void;
 }
 
 export const useDecorationStore = create<DecorationsStore>(set => ({
