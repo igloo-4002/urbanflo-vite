@@ -4,15 +4,15 @@ import { Command } from '~/zustand/useUndoStore';
 
 export class AddNodeCommand implements Command {
   constructor(
-    private network: Network,
+    private networkStore: Network,
     private node: Node,
   ) {}
 
   execute() {
-    this.network.addNode(this.node);
+    this.networkStore.addNode(this.node);
   }
 
   unexecute() {
-    this.network.deleteNode(this.node.id);
+    this.networkStore.deleteNode(this.node.id);
   }
 }
