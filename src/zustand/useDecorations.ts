@@ -9,6 +9,7 @@ export type Decoration = {
   x: number;
   y: number;
   type: keyof typeof DecorationType;
+  seed: string;
 };
 
 interface DecorationsStore {
@@ -18,8 +19,11 @@ interface DecorationsStore {
 
 export const useDecorationStore = create<DecorationsStore>(set => ({
   items: [],
-  addItem: (decoration: Decoration) =>
+  addItem: (decoration: Omit<Decoration, 'seed'>) =>
     set(state => ({
-      items: [...state.items, decoration],
+      items: [
+        ...state.items,
+        { ...decoration, seed: Math.random().toString(36).substring(2, 9) },
+      ],
     })),
 }));
