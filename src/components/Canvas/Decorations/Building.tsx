@@ -1,7 +1,5 @@
 import { Group, Rect, Text } from 'react-konva';
 
-import seedrandom from 'seedrandom';
-
 import { Decoration } from '~/zustand/useDecorations';
 
 interface BuildingProps {
