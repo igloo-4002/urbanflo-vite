@@ -3,10 +3,11 @@ import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
+import { toolbarItemToDecoration } from '~/helpers/decorationTypes';
 import { createId } from '~/id';
 import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
-import { DecorationType, useDecorationStore } from '~/zustand/useDecorations';
+import { useDecorationStore } from '~/zustand/useDecorations';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import {
@@ -74,14 +75,27 @@ export function Canvas() {
   function onStageClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
 
-    if (toolbarState.selectedToolBarItem === LabelNames.Tree) {
+    if (
+      [LabelNames.Tree, LabelNames.Building].includes(
+        // @ts-expect-error - Typescript thinks we are trying to assign, but really we are checking if it exists in the array
+        toolbarState.selectedToolBarItem,
+      )
+    ) {
+      if (!toolbarState.selectedToolBarItem) {
+        return;
+      }
+
       const point = event.currentTarget.getRelativePointerPosition();
+
+      const decorationType = toolbarItemToDecoration(
+        toolbarState.selectedToolBarItem,
+      );
 
       const newNode = {
         id: createId(),
         x: point.x,
         y: point.y,
-        type: DecorationType.tree,
+        type: decorationType,
       };
 
       decorationsStore.addItem(newNode);
@@ -90,7 +104,7 @@ export function Canvas() {
 
     if (
       ![LabelNames.Road, LabelNames.Intersection].includes(
-        // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
+        // @ts-expect-error - Typescript thinks we are trying to assign, but really we are checking if it exists in the array
         toolbarState.selectedToolBarItem,
       )
     ) {

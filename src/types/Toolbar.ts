@@ -4,6 +4,7 @@ export const LabelNames = {
   Pointer: 'Pointer',
   'Toggle Connections': 'Toggle Connections',
   Tree: 'Tree',
+  Building: 'Building',
 } as const;
 
 export type LabelNamesType = (typeof LabelNames)[keyof typeof LabelNames];

@@ -2,13 +2,17 @@ import { create } from 'zustand';
 
 export const DecorationType = {
   tree: 'tree',
+  building: 'building',
 } as const;
+
+export type DecorationTypeNames =
+  (typeof DecorationType)[keyof typeof DecorationType];
 
 export type Decoration = {
   id: string;
   x: number;
   y: number;
-  type: keyof typeof DecorationType;
+  type: DecorationTypeNames;
   seed: string;
 };
 
