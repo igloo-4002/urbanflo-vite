@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-konva": "^18.2.10",
     "react-spinners": "^0.13.8",
+    "seedrandom": "^3.0.5",
     "uuid": "^9.0.0",
     "zustand": "^4.4.1"
   },
@@ -37,6 +38,7 @@
     "@types/node": "^20.4.5",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/seedrandom": "^3.0.6",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
