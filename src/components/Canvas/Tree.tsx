@@ -1,5 +1,7 @@
 import { Circle, Group } from 'react-konva';
 
+import seedrandom from 'seedrandom';
+
 import { Decoration } from '~/zustand/useDecorations';
 
 interface LeafProps {
@@ -18,11 +20,13 @@ interface TreeProps {
 }
 
 function Tree(props: TreeProps) {
+  const rng = seedrandom(props.tree.seed);
+
   const leaves = Array.from({ length: 50 }).map(() => ({
-    x: props.tree.x + Math.random() * 100 - 50,
-    y: props.tree.y + Math.random() * 100 - 50,
-    radius: Math.random() * 5 + 2,
-    fill: `rgba(${Math.random() * 255}, ${Math.random() * 255}, 0, 1)`,
+    x: props.tree.x + rng() * 100 - 50,
+    y: props.tree.y + rng() * 100 - 50,
+    radius: rng() * 5 + 2,
+    fill: `rgba(${rng() * 255}, ${rng() * 255}, 0, 1)`,
   }));
 
   return (
