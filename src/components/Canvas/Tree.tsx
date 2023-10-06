@@ -19,14 +19,14 @@ interface TreeProps {
   tree: Decoration;
 }
 
-function Tree(props: TreeProps) {
+export function Tree(props: TreeProps) {
   const rng = seedrandom(props.tree.seed);
 
   const leaves = Array.from({ length: 50 }).map(() => ({
-    x: props.tree.x + rng() * 100 - 50,
-    y: props.tree.y + rng() * 100 - 50,
-    radius: rng() * 5 + 2,
-    fill: `rgba(${rng() * 255}, ${rng() * 255}, 0, 1)`,
+    x: props.tree.x + rng() * 60 - 30,
+    y: props.tree.y + rng() * 60 - 30,
+    radius: rng() * 6 + 2,
+    fill: `rgba(0, ${rng() * 255}, 0, 1)`, // Only green shades
   }));
 
   return (
@@ -41,5 +41,3 @@ function Tree(props: TreeProps) {
     </Group>
   );
 }
-
-export default Tree;
