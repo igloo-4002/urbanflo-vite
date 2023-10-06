@@ -2,7 +2,7 @@ import { Layer } from 'react-konva';
 
 import { useDecorationStore } from '~/zustand/useDecorations';
 
-import Tree from '../Tree';
+import { Tree } from '../Tree';
 
 export function DecorationsLayer() {
   const decorationsStore = useDecorationStore();
