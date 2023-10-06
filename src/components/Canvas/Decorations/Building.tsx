@@ -9,27 +9,18 @@ interface BuildingProps {
 }
 
 export function Building(props: BuildingProps) {
-  const rng = seedrandom(props.building.seed);
-
   const { x, y } = props.building;
 
   // Squares!
-  const width = rng() * 50 + 25;
+  const width = 65;
   const height = width;
 
   // Colors for the roof
-  const colors = ['darkgray', 'lightgray', 'gray'];
 
   return (
     <Group>
       {/* Building structure */}
-      <Rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        fill={colors[Math.floor(rng() * colors.length)]} // Random color selection
-      />
+      <Rect x={x} y={y} width={width} height={height} fill={'darkgray'} />
       {/* Letter "B" on the roof */}
       <Text
         x={x + width / 4}
