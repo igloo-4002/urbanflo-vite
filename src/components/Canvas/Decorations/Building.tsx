@@ -1,22 +1,33 @@
 import { Group, Rect, Text } from 'react-konva';
 
-import { Decoration } from '~/zustand/useDecorations';
+import { KonvaEventObject } from 'konva/lib/Node';
+
+import { Decoration, useDecorationStore } from '~/zustand/useDecorations';
 
 interface BuildingProps {
   building: Decoration;
 }
 
 export function Building(props: BuildingProps) {
+  const decorationsStore = useDecorationStore();
   const { x, y } = props.building;
 
   // Squares!
   const width = 65;
   const height = width;
 
-  // Colors for the roof
+  function handleBuildingMove(event: KonvaEventObject<DragEvent>) {
+    const updatedBuilding = {
+      ...props.building,
+      x: event.target.x(),
+      y: event.target.y(),
+    };
+
+    decorationsStore.updateItem(props.building.id, updatedBuilding);
+  }
 
   return (
-    <Group>
+    <Group draggable onDragMove={handleBuildingMove}>
       {/* Building structure */}
       <Rect x={x} y={y} width={width} height={height} fill={'darkgray'} />
       {/* Letter "B" on the roof */}

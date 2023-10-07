@@ -1,7 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
-import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { IntersectionPropertiesEditor } from '~/components/Editors/IntersectionProperties';
+import { RoadPropertiesEditor } from '~/components/Editors/RoadProperties';
 import { ModalViewNames, useLeftSideBar } from '~/zustand/useLeftSideBar';
 import { useSelector } from '~/zustand/useSelected';
 

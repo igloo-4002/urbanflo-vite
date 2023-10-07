@@ -18,7 +18,7 @@ export const useSelector = create<Selected>(set => ({
     if (networkState.edges[id]) {
       // If it's an edge, open the left sidebar with road properties
       leftSideBarState.open(ModalViewNames.ROAD_PROPERTIES_EDITOR);
-    } else {
+    } else if (networkState.nodes[id]) {
       // If it's a node, open the left sidebar with intersection properties
       leftSideBarState.open(ModalViewNames.INTERSECTION_PROPERTIES_EDITOR);
     }

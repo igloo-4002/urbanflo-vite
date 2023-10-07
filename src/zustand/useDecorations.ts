@@ -24,6 +24,7 @@ export type Decoration = {
 export interface DecorationsStore {
   items: Decoration[];
   addItem: (decoration: Omit<Decoration, 'seed'>, seed?: string) => void;
+  updateItem: (id: string, decoration: Partial<Decoration>) => void;
   deleteItem: (id: string) => void;
 }
 
@@ -40,6 +41,39 @@ export const useDecorationStore = create<DecorationsStore>((set, get) => ({
 
     set(state => ({
       items: [...state.items, newDecoration],
+    }));
+  },
+  updateItem: (id: string, decoration: Partial<Decoration>) => {
+    const items = get().items;
+    const decorationIndex = items.findIndex(item => item.id === id);
+
+    if (decorationIndex === -1) {
+      return get();
+    }
+
+    // avoid placing decorations on top of nodes
+    // const nodes = useNetworkStore.getState().nodes;
+    // for (const node in nodes) {
+    //   if (
+    //     nodes[node].x === items[decorationIndex].x ||
+    //     nodes[node].y === items[decorationIndex].y
+    //   ) {
+    //     return get();
+    //   }
+    // }
+
+    const undoStore = useUndoStore.getState();
+    undoStore.pushCommand(
+      new AddDecorationCommand(get(), {
+        ...items[decorationIndex],
+        ...decoration,
+      }),
+    );
+
+    set(state => ({
+      items: state.items.map(item =>
+        item.id === id ? { ...item, ...decoration } : item,
+      ),
     }));
   },
   deleteItem: (id: string) => {
