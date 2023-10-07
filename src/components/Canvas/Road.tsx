@@ -6,7 +6,10 @@ import { Vector2d } from 'konva/lib/types';
 
 import { centerlineColor, highlightColor, roadColor } from '~/colors';
 import {
+  createControlPointId,
+  getEdgeFromControlId,
   getEdgeTerminals,
+  getLaneFromControlId,
   isEntitySelected,
 } from '~/helpers/zustand/NetworkStoreHelpers';
 import { Edge } from '~/types/Network';
@@ -82,7 +85,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     }
 
     if (selector.selected.type === 'connection-control') {
-      const selectedEdge = network.edges[selector.selected.id.split('-')[0]];
+      const selectedEdge = getEdgeFromControlId(selector.selected.id);
       return selectedEdge.to === edge.from;
     }
 
@@ -113,21 +116,23 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
     // we have another control point already selected
     if (selector.selected.type === 'connection-control') {
+      const controlEdge = getEdgeFromControlId(selector.selected.id);
+      const currentEdge = getEdgeFromControlId(id);
       // if the selected control point is clicked again
       if (selector.selected.id === id) {
         selector.deselect();
       }
       // do not draw connection if its the same edge
-      else if (selector.selected.id.split('-')[0] === id.split('-')[0]) {
+      else if (controlEdge.id === currentEdge.id) {
         // do nothing
       }
       // draw connection if its another edge
       else {
         network.addConnection({
-          from: selector.selected.id.split('-')[0],
-          to: id.split('-')[0],
-          fromLane: parseInt(selector.selected.id.split('-')[2]),
-          toLane: parseInt(id.split('-')[2]),
+          from: controlEdge.id,
+          to: currentEdge.id,
+          fromLane: getLaneFromControlId(selector.selected.id),
+          toLane: getLaneFromControlId(id),
         });
         selector.deselect();
       }
@@ -274,8 +279,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
       {/* Show connection control points */}
       {fromControlPoints.map((point, index) => {
         const laneIndex = edge.numLanes - getLaneIndex(index) - 1;
-        const controlPointId = `${edge.id}-lane-${laneIndex}`;
-
+        const controlPointId = createControlPointId(edge.id, laneIndex);
         const isSelected = isEntitySelected(controlPointId);
 
         return (
@@ -297,7 +301,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
       {/* show possible connections points for edges connected to non-selected edges */}
       {toControlPoints.map((point, index) => {
         const laneIndex = edge.numLanes - getLaneIndex(index) - 1;
-        const controlPointId = `${edge.id}-lane-${laneIndex}`;
+        const controlPointId = createControlPointId(edge.id, laneIndex);
 
         return (
           <Circle

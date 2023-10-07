@@ -169,7 +169,7 @@ export function updateAssociatesOnNewEdge(
         edges: `${connectionFrom} ${connectionTo}`,
       };
 
-      const newFlowId = `flow_${connectionFrom}${connectionTo}`;
+      const newFlowId = createFlowId(connectionFrom, connectionTo);
       newFlows[newFlowId] = {
         id: newFlowId,
         type: 'car',
@@ -201,37 +201,39 @@ export function updateConnectionsOnLaneChange(
 
   const minLanes = Math.min(fromNumLanes, toNumLanes);
   for (let lane = 0; lane < minLanes; lane++) {
-    const newConnectionId = `${from}_${to}_${lane}_${lane}`;
-
+    const newConnection = {
+      from,
+      to,
+      fromLane: lane,
+      toLane: lane,
+    };
+    const newConnectionId = createConnectionId(newConnection);
     if (!newConnections[newConnectionId]) {
-      newConnections[newConnectionId] = {
-        from,
-        to,
-        fromLane: lane,
-        toLane: lane,
-      };
+      newConnections[newConnectionId] = newConnection;
     }
   }
 
   if (fromNumLanes > minLanes) {
     for (let lane = minLanes; lane < fromNumLanes; lane++) {
-      const newConnectionId = `${from}_${to}_${lane}_${minLanes - 1}`;
-      newConnections[newConnectionId] = {
+      const newConnection = {
         from,
         to,
         fromLane: lane,
         toLane: minLanes - 1,
       };
+      const newConnectionId = createConnectionId(newConnection);
+      newConnections[newConnectionId] = newConnection;
     }
   } else if (toNumLanes > minLanes) {
     for (let lane = minLanes; lane < toNumLanes; lane++) {
-      const newConnectionId = `${from}_${to}_${minLanes - 1}_${lane}`;
-      newConnections[newConnectionId] = {
+      const newConnection = {
         from,
         to,
         fromLane: minLanes - 1,
         toLane: lane,
       };
+      const newConnectionId = createConnectionId(newConnection);
+      newConnections[newConnectionId] = newConnection;
     }
   }
 
@@ -376,4 +378,25 @@ export function isEntitySelected(id: string): boolean {
   }
 
   return false;
+}
+
+export function createConnectionId({ from, to, fromLane, toLane }: Connection) {
+  return `${from}_${to}_${fromLane}_${toLane}`;
+}
+
+export function createFlowId(from: string, to: string) {
+  return `flow_${from}${to}`;
+}
+
+export function createControlPointId(edgeId: string, lane: number) {
+  return `${edgeId}-lane-${lane}`;
+}
+
+export function getEdgeFromControlId(controlId: string): Edge {
+  const network = useNetworkStore.getState();
+  return network.edges[controlId.split('-')[0]];
+}
+
+export function getLaneFromControlId(controlId: string): number {
+  return parseInt(controlId.split('-')[2]);
 }
