@@ -27,11 +27,20 @@ export function Building(props: BuildingProps) {
   }
 
   return (
-    <Group draggable onDragMove={handleBuildingMove}>
+    <Group>
       {/* Building structure */}
-      <Rect x={x} y={y} width={width} height={height} fill={'darkgray'} />
+      <Rect
+        draggable
+        onDragMove={handleBuildingMove}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={'darkgray'}
+      />
       {/* Letter "B" on the roof */}
       <Text
+        onClick={() => console.log('clicking the B')}
         x={x + width / 4}
         y={y + height / 4}
         width={width / 2}
