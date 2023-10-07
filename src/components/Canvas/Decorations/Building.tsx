@@ -1,3 +1,4 @@
+import React from 'react';
 import { Group, Rect, Text } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -8,7 +9,7 @@ interface BuildingProps {
   building: Decoration;
 }
 
-export function Building(props: BuildingProps) {
+function BuildingComponent(props: BuildingProps) {
   const decorationsStore = useDecorationStore();
   const { x, y } = props.building;
 
@@ -55,3 +56,5 @@ export function Building(props: BuildingProps) {
     </Group>
   );
 }
+
+export const Building = React.memo(BuildingComponent);
