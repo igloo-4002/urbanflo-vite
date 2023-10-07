@@ -5,7 +5,10 @@ import { KonvaEventObject } from 'konva/lib/Node';
 
 import { highlightColor } from '~/colors';
 import { prettyPrintIntersectionType } from '~/helpers/format';
-import { getAllEdgeIdsForNode } from '~/helpers/zustand/NetworkStoreHelpers';
+import {
+  getAllEdgeIdsForNode,
+  isEntitySelected,
+} from '~/helpers/zustand/NetworkStoreHelpers';
 import { Node } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
@@ -24,7 +27,7 @@ export function Intersection({ node }: IntersectionProps) {
   const selector = useSelector();
   const toolbarState = useToolbarStore();
 
-  const isSelected = selector.selected === node.id;
+  const isSelected = isEntitySelected(node.id);
   const baseIntersectionSize = 25;
 
   const [showIntersectionTooltip, setShowIntersectionTooltip] = useState(false);
@@ -48,28 +51,28 @@ export function Intersection({ node }: IntersectionProps) {
 
     // if nothing is selected, then select this node
     if (selector.selected === null) {
-      selector.select(node.id);
+      selector.select({ type: 'node', id: node.id });
     }
     // if this node is selected, then deselect this node
-    else if (selector.selected === node.id) {
+    else if (isSelected) {
       selector.deselect();
     }
     // if another node is selected, then draw an edge
     else if (
-      selector.selected !== node.id &&
-      network.nodes[selector.selected] &&
+      !isSelected &&
+      selector.selected.type === 'node' &&
       [LabelNames.Road, LabelNames.Intersection].includes(
         // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
         toolbarState.selectedToolBarItem,
       )
     ) {
       network.drawEdge(
-        network.nodes[selector.selected],
+        network.nodes[selector.selected.id],
         network.nodes[node.id],
       );
       selector.deselect();
     } else {
-      selector.select(node.id);
+      selector.select({ type: 'node', id: node.id });
     }
   }
 
@@ -100,7 +103,8 @@ export function Intersection({ node }: IntersectionProps) {
   }, [edgeIds]);
 
   const tooltipText = `Type: ${prettyPrintIntersectionType(node.type)}`;
-  const isTooltipVisible = showIntersectionTooltip && !isSelected;
+  const isTooltipVisible =
+    showIntersectionTooltip && !isSelected && selector.selected === null;
 
   return (
     <Group

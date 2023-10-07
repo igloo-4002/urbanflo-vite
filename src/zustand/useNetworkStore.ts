@@ -37,7 +37,7 @@ export interface Network extends NetworkData {
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
   deleteConnection: (id: string) => void;
-  addConnection: (from: Edge, to: Edge) => void;
+  addConnection: (connection: Connection) => void;
   updateFlow: (flowId: string, flow: Flow) => void;
 }
 
@@ -307,15 +307,15 @@ export const useNetworkStore = create<Network>((set, get) => ({
       };
     });
   },
-  addConnection: (from, to) =>
+  addConnection: ({ from, to, fromLane, toLane }) =>
     set(state => ({
       connections: {
         ...state.connections,
-        [`${from.id}_${to.id}`]: {
-          from: from.id,
-          to: to.id,
-          fromLane: 0,
-          toLane: 0,
+        [`${from}_${to}`]: {
+          from,
+          to,
+          fromLane,
+          toLane,
         },
       },
     })),

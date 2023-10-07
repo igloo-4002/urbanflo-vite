@@ -3,6 +3,7 @@ import { Vector2d } from 'konva/lib/types';
 import { laneWidth } from '~/components/Canvas/Constants/Road';
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
+import { useSelector } from '~/zustand/useSelector';
 
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
@@ -353,4 +354,26 @@ export function updateAssociatesOnConnectionDelete(
   }
 
   return { newFlow, newRoute };
+}
+
+export function isEntitySelected(id: string): boolean {
+  const selector = useSelector.getState();
+
+  if (selector.selected === null) {
+    return false;
+  }
+
+  if (selector.selected.type === 'node') {
+    return selector.selected.id === id;
+  } else if (selector.selected.type === 'edge') {
+    return selector.selected.id === id;
+  } else if (selector.selected.type === 'connection') {
+    return selector.selected.id === id;
+  } else if (selector.selected.type === 'decoration') {
+    return selector.selected.id === id;
+  } else if (selector.selected.type === 'connection-control') {
+    return selector.selected.id === id;
+  }
+
+  return false;
 }

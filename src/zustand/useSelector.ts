@@ -1,31 +1,41 @@
 import { create } from 'zustand';
 
 import { ModalViewNames, useLeftSideBar } from './useLeftSideBar';
-import { useNetworkStore } from './useNetworkStore';
+
+type Selection = {
+  type: 'connection' | 'edge' | 'node' | 'decoration' | 'connection-control';
+  id: string;
+};
 
 type Selected = {
-  selected: string | null;
-  select: (id: string) => void;
+  selected: Selection | null;
+  select: (selection: Selection) => void;
   deselect: () => void;
 };
 
 export const useSelector = create<Selected>(set => ({
   selected: null,
-  select: (id: string) => {
-    const networkState = useNetworkStore.getState();
+  select: ({ type, id }) => {
     const leftSideBarState = useLeftSideBar.getState();
 
-    if (networkState.edges[id]) {
+    if (type === 'edge') {
       // If it's an edge, open the left sidebar with road properties
       leftSideBarState.open(ModalViewNames.ROAD_PROPERTIES_EDITOR);
-    } else if (networkState.nodes[id]) {
+      set({ selected: { type, id } });
+    } else if (type === 'node') {
       // If it's a node, open the left sidebar with intersection properties
       leftSideBarState.open(ModalViewNames.INTERSECTION_PROPERTIES_EDITOR);
+      set({ selected: { type, id } });
+    } else if (type === 'connection') {
+      set({ selected: { type, id } });
+    } else if (type === 'decoration') {
+      set({ selected: { type, id } });
+    } else if (type === 'connection-control') {
+      set({ selected: { type, id } });
     } else {
-      // set({ selected: { mode: 'connection', id } });
+      const never: never = type;
+      return never;
     }
-
-    set({ selected: id });
   },
   deselect: () => {
     const leftSideBarState = useLeftSideBar.getState();

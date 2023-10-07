@@ -40,14 +40,14 @@ export function Canvas() {
       const isEsc = e.key === 'Escape';
 
       if (isCommandDelete && selector.selected) {
-        if (network.nodes[selector.selected]) {
-          network.deleteNode(selector.selected);
+        if (selector.selected.type === 'node') {
+          network.deleteNode(selector.selected.id);
           selector.deselect();
-        } else if (network.edges[selector.selected]) {
-          network.deleteEdge(selector.selected);
+        } else if (selector.selected.type === 'edge') {
+          network.deleteEdge(selector.selected.id);
           selector.deselect();
-        } else if (network.connections[selector.selected]) {
-          network.deleteConnection(selector.selected);
+        } else if (selector.selected.type === 'connection') {
+          network.deleteConnection(selector.selected.id);
           selector.deselect();
         } else {
           throw new Error("cannot delete selected because it doesn't exist");
@@ -138,8 +138,8 @@ export function Canvas() {
 
       network.addNode(newNode);
       // if another node is selected, then draw an edge
-      if (selector.selected !== null && network.nodes[selector.selected]) {
-        network.drawEdge(network.nodes[selector.selected], newNode);
+      if (selector.selected !== null && selector.selected.type === 'node') {
+        network.drawEdge(network.nodes[selector.selected.id], newNode);
         selector.deselect();
       }
     }
@@ -188,7 +188,7 @@ export function Canvas() {
     >
       <RoadsLayer />
       <IntersectionsLayer />
-      {/* <ConnectionsLayer /> */}
+      <ConnectionsLayer />
       <CarLayer />
       <DecorationsLayer />
     </Stage>

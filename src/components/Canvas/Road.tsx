@@ -2,9 +2,13 @@ import { Fragment, useState } from 'react';
 import { Arrow, Circle, Group, Text } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
+import { Vector2d } from 'konva/lib/types';
 
 import { centerlineColor, highlightColor, roadColor } from '~/colors';
-import { getEdgeTerminals } from '~/helpers/zustand/NetworkStoreHelpers';
+import {
+  getEdgeTerminals,
+  isEntitySelected,
+} from '~/helpers/zustand/NetworkStoreHelpers';
 import { Edge } from '~/types/Network';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelector';
@@ -23,7 +27,7 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
   const [showRoadTooltip, setShowRoadTooltip] = useState(false);
 
-  const isSelected = selector.selected === edge.id;
+  const isSelected = isEntitySelected(edge.id);
 
   const from = network.nodes[edge.from];
   const to = network.nodes[edge.to];
@@ -34,17 +38,20 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
   function handleRoadClick(event: KonvaEventObject<MouseEvent>) {
     event.cancelBubble = true;
-    if (selector.selected !== edge.id) {
-      selector.select(edge.id);
-    } else if (selector.selected === edge.id) {
+    if (!isSelected) {
+      selector.select({ type: 'edge', id: edge.id });
+    } else {
       selector.deselect();
     }
   }
 
-  const roadVector = [to.x - from.x, to.y - from.y];
+  const roadVector: Vector2d = {
+    x: to.x - from.x,
+    y: to.y - from.y,
+  };
 
   const commonProps = {
-    points: [0, 0, roadVector[0], roadVector[1]],
+    points: [0, 0, roadVector.x, roadVector.y],
     pointerLength: 0,
     pointerWidth: 0,
   };
@@ -69,12 +76,17 @@ export function Road({ edge, offset = 0 }: RoadProps) {
   const { leading: fromControlPoints, trailing: toControlPoints } =
     getEdgeTerminals(edge);
 
-  function getConnectionsState() {
+  function isToControlPointsVisible() {
     if (selector.selected === null) {
       return false;
     }
 
-    const selectedEdge = network.edges[selector.selected];
+    if (selector.selected.type === 'connection-control') {
+      const selectedEdge = network.edges[selector.selected.id.split('-')[0]];
+      return selectedEdge.to === edge.from;
+    }
+
+    const selectedEdge = network.edges[selector.selected.id];
 
     if (selectedEdge) {
       return selectedEdge.to === edge.from;
@@ -89,10 +101,47 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     return isBelowXAxis ? index : edge.numLanes - index - 1;
   }
 
-  const showFromControlPoints = isSelected;
-  const showToControlPoints = getConnectionsState();
+  function handleControlPointClick(
+    e: KonvaEventObject<MouseEvent>,
+    id: string,
+  ) {
+    e.cancelBubble = true;
 
-  const isTooltipVisible = showRoadTooltip && !isSelected;
+    if (selector.selected === null) {
+      return;
+    }
+
+    // we have another control point already selected
+    if (selector.selected.type === 'connection-control') {
+      // if the selected control point is clicked again
+      if (selector.selected.id === id) {
+        selector.deselect();
+      }
+      // do not draw connection if its the same edge
+      else if (selector.selected.id.split('-')[0] === id.split('-')[0]) {
+        // do nothing
+      }
+      // draw connection if its another edge
+      else {
+        network.addConnection({
+          from: selector.selected.id.split('-')[0],
+          to: id.split('-')[0],
+          fromLane: parseInt(selector.selected.id.split('-')[2]),
+          toLane: parseInt(id.split('-')[2]),
+        });
+        selector.deselect();
+      }
+    } else {
+      selector.select({ type: 'connection-control', id });
+    }
+  }
+
+  const showFromControlPoints =
+    isSelected || selector.selected?.type === 'connection-control';
+  const showToControlPoints = isToControlPointsVisible();
+
+  const isTooltipVisible =
+    showRoadTooltip && !isSelected && selector.selected === null;
 
   return (
     <Group
@@ -224,41 +273,42 @@ export function Road({ edge, offset = 0 }: RoadProps) {
 
       {/* Show connection control points */}
       {fromControlPoints.map((point, index) => {
-        const laneIndex = getLaneIndex(index) + 1;
+        const laneIndex = edge.numLanes - getLaneIndex(index) - 1;
+        const controlPointId = `${edge.id}-lane-${laneIndex}`;
+
+        const isSelected = isEntitySelected(controlPointId);
 
         return (
           <Circle
-            key={laneIndex}
+            key={controlPointId}
             x={point.x}
             y={point.y}
             radius={4}
             fill="red"
             visible={showFromControlPoints}
             onClick={e => {
-              e.cancelBubble = true; // stops event propagation
-
-              console.log(`FROM index ${laneIndex}`);
+              handleControlPointClick(e, controlPointId);
             }}
+            stroke={isSelected ? highlightColor : 'transparent'}
           />
         );
       })}
 
       {/* show possible connections points for edges connected to non-selected edges */}
       {toControlPoints.map((point, index) => {
-        const laneIndex = getLaneIndex(index) + 1;
+        const laneIndex = edge.numLanes - getLaneIndex(index) - 1;
+        const controlPointId = `${edge.id}-lane-${laneIndex}`;
 
         return (
           <Circle
-            key={laneIndex}
+            key={controlPointId}
             x={point.x}
             y={point.y}
             radius={4}
             fill="red"
             visible={showToControlPoints}
             onClick={e => {
-              e.cancelBubble = true;
-
-              console.log(`TO index ${laneIndex}`);
+              handleControlPointClick(e, controlPointId);
             }}
           />
         );

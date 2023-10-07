@@ -13,15 +13,15 @@ export function RoadPropertiesEditor() {
   const [roadLength, setRoadLength] = useState(0);
   const [newPriority, setNewPriority] = useState(-1);
 
-  const selected = useSelector();
+  const selector = useSelector();
   const network = useNetworkStore();
 
   useEffect(() => {
-    if (selected.selected === null || !network.edges[selected.selected]) {
+    if (selector.selected === null || selector.selected.type !== 'edge') {
       return;
     }
 
-    const edge = network.edges[selected.selected];
+    const edge = network.edges[selector.selected.id];
 
     setNewSpeedLimit(Math.floor(edge.speed * 3.6));
     setNewLanes(edge.numLanes);
@@ -35,23 +35,23 @@ export function RoadPropertiesEditor() {
       Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2),
     );
     setRoadLength(dist);
-  }, [selected.selected, network.nodes]);
+  }, [selector.selected, network.nodes]);
 
   function submitRoadProperties() {
-    if (selected.selected === null || !network.edges[selected.selected]) {
+    if (selector.selected === null || selector.selected.type !== 'edge') {
       return;
     }
 
     const updatedEdge = {
-      ...network.edges[selected.selected],
+      ...network.edges[selector.selected.id],
       numLanes: newLanes,
       speed: newSpeedLimit / 3.6,
       name: newRoadName,
       priority: newPriority,
     };
 
-    network.updateEdge(selected.selected, updatedEdge);
-    selected.deselect();
+    network.updateEdge(selector.selected.id, updatedEdge);
+    selector.deselect();
   }
 
   return (

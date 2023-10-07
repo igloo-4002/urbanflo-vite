@@ -10,31 +10,31 @@ export function IntersectionPropertiesEditor() {
   const [intersectionType, setIntersectionType] =
     useState<IntersectionType>('priority');
 
-  const selected = useSelector();
+  const selector = useSelector();
   const network = useNetworkStore();
 
   useEffect(() => {
-    if (selected.selected === null || !network.nodes[selected.selected]) {
+    if (selector.selected === null || selector.selected.type !== 'node') {
       return;
     }
 
-    const node = network.nodes[selected.selected];
+    const node = network.nodes[selector.selected.id];
 
     setIntersectionType(node.type);
-  }, [selected.selected, network.nodes]);
+  }, [selector.selected, network.nodes]);
 
   function submitIntersectionProperties() {
-    if (selected.selected === null || !network.nodes[selected.selected]) {
+    if (selector.selected === null || !network.nodes[selector.selected.id]) {
       return;
     }
 
     const updatedNode = {
-      ...network.nodes[selected.selected],
+      ...network.nodes[selector.selected.id],
       type: intersectionType,
     };
 
-    network.updateNode(selected.selected, updatedNode);
-    selected.deselect();
+    network.updateNode(selector.selected.id, updatedNode);
+    selector.deselect();
   }
 
   return (
