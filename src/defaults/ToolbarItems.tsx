@@ -1,15 +1,14 @@
-import { CursorArrowRaysIcon } from '@heroicons/react/24/outline';
-import { LinkIcon } from '@heroicons/react/24/solid';
-
+import buildingIcon from '~/assets/building.png';
 import intersectionIcon from '~/assets/intersection.png';
+import pointerIcon from '~/assets/pointer.png';
 import roadIcon from '~/assets/road-icon.png';
+import treeIcon from '~/assets/tree.png';
 import { LabelNames, ToolbarItem } from '~/types/Toolbar';
-import { useToolbarStore } from '~/zustand/useToolbar';
 
 export const toolbarItems: ToolbarItem[] = [
   {
     label: LabelNames.Pointer,
-    heroIcon: <CursorArrowRaysIcon className="h-6 w-6" />,
+    icon: pointerIcon,
   },
   {
     divider: true,
@@ -21,5 +20,16 @@ export const toolbarItems: ToolbarItem[] = [
   {
     label: LabelNames.Road,
     icon: roadIcon,
+  },
+  {
+    divider: true,
+  },
+  {
+    label: LabelNames.Tree,
+    icon: treeIcon,
+  },
+  {
+    label: LabelNames.Building,
+    icon: buildingIcon,
   },
 ];

@@ -21,6 +21,18 @@ export function formatISOString(dateString: string) {
   };
 }
 
+export function formatSimulationTime(milliseconds: number) {
+  const remainingMilliseconds = Math.floor(milliseconds / 10) % 100;
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const seconds = totalSeconds % 60;
+  const minutes = Math.floor(totalSeconds / 60);
+
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(
+    2,
+    '0',
+  )}:${String(remainingMilliseconds).padStart(2, '0')}`;
+}
+
 export function prettyPrintIntersectionType(type: IntersectionType) {
   // Replace underscores with spaces and capitalize the first letter
   return type.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());

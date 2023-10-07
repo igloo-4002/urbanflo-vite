@@ -48,3 +48,89 @@ export type SimulationAnalytics = {
   totalNumberOfCarsThatCompleted: number;
   simulationLength: number;
 };
+
+type Performance = {
+  clockBegin: string;
+  clockEnd: string;
+  clockDuration: number;
+  traciDuration: number;
+  realTimeFactor: number;
+  vehicleUpdatesPerSecond: number;
+  personUpdatesPerSecond: number;
+  begin: number;
+  end: number;
+  duration: number;
+};
+
+type Vehicles = {
+  loaded: number;
+  inserted: number;
+  running: number;
+  waiting: number;
+};
+
+type Teleports = {
+  total: number;
+  jam: number;
+  yield: number;
+  wrongLane: number;
+};
+
+type Safety = {
+  collisions: number;
+  emergencyStops: number;
+  emergencyBraking: number;
+};
+
+type Persons = {
+  loaded: number;
+  running: number;
+  jammed: number;
+};
+
+type PersonTeleports = {
+  total: number;
+  abortWait: number;
+  wrongDest: number;
+};
+
+type VehicleTripStatistics = {
+  count: number;
+  routeLength: number;
+  speed: number;
+  duration: number;
+  waitingTime: number;
+  timeLoss: number;
+  departDelay: number;
+  departDelayWaiting: number;
+  totalTravelTime: number;
+  totalDepartDelay: number;
+};
+
+type PedestrianStatistics = {
+  number: number;
+  routeLength: number;
+  duration: number;
+  timeLoss: number;
+};
+
+type RideStatistics = {
+  number: number;
+};
+
+type TransportStatistics = {
+  number: number;
+};
+
+export type SimulationStatistics = {
+  performance: Performance;
+  vehicles: Vehicles;
+  teleports: Teleports;
+  safety: Safety;
+  persons: Persons;
+  personTeleports: PersonTeleports;
+  vehicleTripStatistics: VehicleTripStatistics;
+  pedestrianStatistics: PedestrianStatistics;
+  rideStatistics: RideStatistics;
+  transportStatistics: TransportStatistics;
+};
