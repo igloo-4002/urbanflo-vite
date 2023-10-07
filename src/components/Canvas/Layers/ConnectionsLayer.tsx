@@ -2,6 +2,7 @@ import { Layer, Line } from 'react-konva';
 
 import { highlightColor } from '~/colors';
 import {
+  createConnectionId,
   getEdgeTerminals,
   isEntitySelected,
 } from '~/helpers/zustand/NetworkStoreHelpers';
@@ -38,7 +39,7 @@ export function ConnectionsLayer() {
           y: network.nodes[inward.to].y,
         };
 
-        const connectionId = `${connection.from}_${connection.to}_${connection.fromLane}_${connection.toLane}`;
+        const connectionId = createConnectionId(connection);
         const isSelected = isEntitySelected(connectionId);
 
         return (

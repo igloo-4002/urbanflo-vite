@@ -6,6 +6,8 @@ import { AddNodeCommand } from '~/helpers/commands/AddNodeCommand';
 import { RemoveEdgeCommand } from '~/helpers/commands/RemoveEdgeCommand';
 import { RemoveNodeCommand } from '~/helpers/commands/RemoveNodeCommand';
 import {
+  checkNecessaryLaneConnections,
+  createConnectionId,
   edgeDoesIntersect,
   removeItems,
   updateAssociatesOnConnectionDelete,
@@ -292,6 +294,20 @@ export const useNetworkStore = create<Network>((set, get) => ({
       const newConnections = { ...state.connections };
       delete newConnections[id];
 
+      const from = state.edges[deletedConnection.from];
+      const to = state.edges[deletedConnection.to];
+
+      const necessaryConnectionsExist = checkNecessaryLaneConnections(
+        newConnections,
+        from.id,
+        to.id,
+        Math.min(from.numLanes, to.numLanes),
+      );
+
+      if (!necessaryConnectionsExist) {
+        return state;
+      }
+
       // update flow and route when a connection is deleted
       const { newFlow, newRoute } = updateAssociatesOnConnectionDelete(
         deletedConnection,
@@ -311,7 +327,7 @@ export const useNetworkStore = create<Network>((set, get) => ({
     set(state => ({
       connections: {
         ...state.connections,
-        [`${from}_${to}`]: {
+        [createConnectionId({ from, to, fromLane, toLane })]: {
           from,
           to,
           fromLane,

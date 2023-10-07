@@ -358,6 +358,29 @@ export function updateAssociatesOnConnectionDelete(
   return { newFlow, newRoute };
 }
 
+export function checkNecessaryLaneConnections(
+  connections: Record<string, Connection>,
+  fromEdge: string,
+  toEdge: string,
+  numLanes: number,
+): boolean {
+  for (let i = 0; i < numLanes; i++) {
+    const necessaryConnections = Object.values(connections).some(
+      conn =>
+        conn.from === fromEdge &&
+        conn.to === toEdge &&
+        conn.fromLane === i &&
+        conn.toLane === i,
+    );
+
+    if (!necessaryConnections) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function isEntitySelected(id: string): boolean {
   const selector = useSelector.getState();
 

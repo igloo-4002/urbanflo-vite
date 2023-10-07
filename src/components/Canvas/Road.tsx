@@ -128,12 +128,14 @@ export function Road({ edge, offset = 0 }: RoadProps) {
       }
       // draw connection if its another edge
       else {
-        network.addConnection({
+        const newConnection = {
           from: controlEdge.id,
           to: currentEdge.id,
           fromLane: getLaneFromControlId(selector.selected.id),
           toLane: getLaneFromControlId(id),
-        });
+        };
+
+        network.addConnection(newConnection);
         selector.deselect();
       }
     } else {

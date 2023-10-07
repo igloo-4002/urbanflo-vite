@@ -49,6 +49,9 @@ export function Canvas() {
         } else if (selector.selected.type === 'connection') {
           network.deleteConnection(selector.selected.id);
           selector.deselect();
+        } else if (selector.selected.type === 'decoration') {
+          decorationsStore.deleteItem(selector.selected.id);
+          selector.deselect();
         } else {
           throw new Error("cannot delete selected because it doesn't exist");
         }
