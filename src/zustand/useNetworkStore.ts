@@ -301,7 +301,6 @@ export const useNetworkStore = create<Network>((set, get) => ({
         newConnections,
         from.id,
         to.id,
-        Math.min(from.numLanes, to.numLanes),
       );
 
       if (!necessaryConnectionsExist) {
