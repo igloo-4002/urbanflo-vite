@@ -8,6 +8,7 @@ import { RemoveNodeCommand } from '~/helpers/commands/RemoveNodeCommand';
 import {
   checkNecessaryLaneConnections,
   createConnectionId,
+  createEdgeId,
   edgeDoesIntersect,
   removeItems,
   updateAssociatesOnConnectionDelete,
@@ -74,7 +75,7 @@ export const useNetworkStore = create<Network>((set, get) => ({
     const undoStore = useUndoStore.getState();
 
     set(state => {
-      const newEdgeId = `${from.id}_${to.id}`;
+      const newEdgeId = createEdgeId(from.id, to.id);
 
       if (newEdgeId in state.edges) {
         return state;

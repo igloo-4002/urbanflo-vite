@@ -390,6 +390,10 @@ export function isEntitySelected(id: string): boolean {
   return false;
 }
 
+export function createEdgeId(from: string, to: string) {
+  return `${from}_${to}`;
+}
+
 export function createConnectionId({ from, to, fromLane, toLane }: Connection) {
   return `${from}_${to}_${fromLane}_${toLane}`;
 }
