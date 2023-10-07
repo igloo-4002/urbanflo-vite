@@ -33,6 +33,9 @@ export function Tree(props: TreeProps) {
   }));
 
   function handleTreeMove(event: KonvaEventObject<DragEvent>) {
+    const deltaX = event.target.x() - props.tree.x;
+    const deltaY = event.target.y() - props.tree.y;
+
     const updatedTree = {
       ...props.tree,
       x: event.target.x(),
@@ -40,12 +43,25 @@ export function Tree(props: TreeProps) {
     };
 
     decorationsStore.updateItem(props.tree.id, updatedTree);
+
+    // Update the positions of the leaves
+    leaves.forEach(leaf => {
+      leaf.x += deltaX;
+      leaf.y += deltaY;
+    });
   }
 
   return (
-    <Group onDragMove={handleTreeMove} draggable>
+    <Group>
       {/* Tree trunk */}
-      <Circle x={props.tree.x} y={props.tree.y} radius={20} fill="brown" />
+      <Circle
+        onDragMove={handleTreeMove}
+        draggable
+        x={props.tree.x}
+        y={props.tree.y}
+        radius={20}
+        fill="brown"
+      />
 
       {/* Leaves */}
       {leaves.map((leaf, index) => (
