@@ -18,11 +18,17 @@ export function Building(props: BuildingProps) {
   return (
     <Group>
       {/* Building structure */}
-      <Rect x={x} y={y} width={width} height={height} fill={'darkgray'} />
+      <Rect
+        x={x - width / 2}
+        y={y - height / 2}
+        width={width}
+        height={height}
+        fill={'darkgray'}
+      />
       {/* Letter "B" on the roof */}
       <Text
-        x={x + width / 4}
-        y={y + height / 4}
+        x={x - width / 4}
+        y={y - height / 4}
         width={width / 2}
         height={height / 2}
         text="B"
