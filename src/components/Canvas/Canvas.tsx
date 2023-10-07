@@ -3,9 +3,11 @@ import { Stage } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
 
+import { toolbarItemToDecoration } from '~/helpers/decorationTypes';
 import { createId } from '~/id';
 import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
+import { useDecorationStore } from '~/zustand/useDecorations';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 import {
@@ -19,6 +21,7 @@ import { useUndoStore } from '~/zustand/useUndoStore';
 
 import { CarLayer } from './Layers/CarLayer';
 import { ConnectionsLayer } from './Layers/ConnectionsLayer';
+import { DecorationsLayer } from './Layers/DecorationsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
 
@@ -28,6 +31,7 @@ export function Canvas() {
   const nodes = Object.values(network.nodes);
   const toolbarState = useToolbarStore();
   const undoStore = useUndoStore();
+  const decorationsStore = useDecorationStore();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -72,8 +76,35 @@ export function Canvas() {
     event.cancelBubble = true;
 
     if (
+      [LabelNames.Tree, LabelNames.Building].includes(
+        // @ts-expect-error - Typescript thinks we are trying to assign, but really we are checking if it exists in the array
+        toolbarState.selectedToolBarItem,
+      )
+    ) {
+      if (!toolbarState.selectedToolBarItem) {
+        return;
+      }
+
+      const point = event.currentTarget.getRelativePointerPosition();
+
+      const decorationType = toolbarItemToDecoration(
+        toolbarState.selectedToolBarItem,
+      );
+
+      const newNode = {
+        id: createId(),
+        x: point.x,
+        y: point.y,
+        type: decorationType,
+      };
+
+      decorationsStore.addItem(newNode);
+      return;
+    }
+
+    if (
       ![LabelNames.Road, LabelNames.Intersection].includes(
-        // @ts-expect-error - Typescript things we are trying to assign, but really we are checking if it exists in the array
+        // @ts-expect-error - Typescript thinks we are trying to assign, but really we are checking if it exists in the array
         toolbarState.selectedToolBarItem,
       )
     ) {
@@ -156,6 +187,7 @@ export function Canvas() {
       <IntersectionsLayer />
       {/* <ConnectionsLayer /> */}
       <CarLayer />
+      <DecorationsLayer />
     </Stage>
   );
 }

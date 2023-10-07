@@ -4,22 +4,22 @@ import { Command } from '~/zustand/useUndoStore';
 
 export class RemoveEdgeCommand implements Command {
   constructor(
-    private network: Network,
+    private networkStore: Network,
     private edge: Edge,
   ) {}
 
   execute() {
-    this.network.deleteEdge(this.edge.id);
+    this.networkStore.deleteEdge(this.edge.id);
   }
 
   unexecute() {
-    const fromNode = this.network.nodes[this.edge.from];
-    const toNode = this.network.nodes[this.edge.to];
+    const fromNode = this.networkStore.nodes[this.edge.from];
+    const toNode = this.networkStore.nodes[this.edge.to];
 
     if (!fromNode && !toNode) {
       return;
     }
 
-    this.network.drawEdge(fromNode, toNode);
+    this.networkStore.drawEdge(fromNode, toNode);
   }
 }
