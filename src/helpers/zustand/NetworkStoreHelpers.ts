@@ -173,7 +173,7 @@ export function updateAssociatesOnNewEdge(
         route: newRouteId,
         begin: 0,
         end: 86400,
-        period: 1,
+        vehsPerHour: 1000,
       };
     }
   }

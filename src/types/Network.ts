@@ -69,5 +69,5 @@ export type Flow = {
   route: string;
   begin: number;
   end: number;
-  period: number;
+  vehsPerHour: number;
 };
