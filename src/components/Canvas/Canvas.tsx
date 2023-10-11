@@ -36,7 +36,7 @@ export function Canvas() {
   // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      const isCommandDelete = (e.metaKey || e.ctrlKey) && e.key === 'Backspace';
+      const isCommandDelete = (e.metaKey && e.key === 'Backspace') || e.key === 'Delete';
       const isEsc = e.key === 'Escape';
 
       if (isCommandDelete && selector.selected) {
