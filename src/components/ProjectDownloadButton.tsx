@@ -1,8 +1,8 @@
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid';
 
+import { handleDownloadEvent } from '~/helpers/zustand/NetworkStoreHelpers.ts';
 import useJsonDownloader from '~/hooks/useJsonDownloader';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
-import { handleDownloadEvent } from "~/helpers/zustand/NetworkStoreHelpers.ts";
 
 export function ProjectDownloadButton() {
   const downloadJson = useJsonDownloader();
