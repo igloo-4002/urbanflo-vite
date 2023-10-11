@@ -4,6 +4,8 @@ import { Stage } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 
 import { toolbarItemToDecoration } from '~/helpers/decorationTypes';
+import { handleDownloadEvent } from '~/helpers/zustand/NetworkStoreHelpers.ts';
+import useJsonDownloader from '~/hooks/useJsonDownloader.ts';
 import { createId } from '~/id';
 import { NodeType } from '~/types/Network';
 import { LabelNames } from '~/types/Toolbar';
@@ -23,8 +25,6 @@ import { CarLayer } from './Layers/CarLayer';
 import { DecorationsLayer } from './Layers/DecorationsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
-import useJsonDownloader from "~/hooks/useJsonDownloader.ts";
-import { handleDownloadEvent } from "~/helpers/zustand/NetworkStoreHelpers.ts";
 
 export function Canvas() {
   const selector = useSelector();
@@ -38,7 +38,8 @@ export function Canvas() {
   // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      const isCommandDelete = (e.metaKey && e.key === 'Backspace') || e.key === 'Delete';
+      const isCommandDelete =
+        (e.metaKey && e.key === 'Backspace') || e.key === 'Delete';
       const isEsc = e.key === 'Escape';
       const isSave = (e.metaKey || e.ctrlKey) && e.key === 's';
 
