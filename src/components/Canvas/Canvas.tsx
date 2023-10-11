@@ -20,10 +20,11 @@ import { useToolbarStore } from '~/zustand/useToolbar';
 import { useUndoStore } from '~/zustand/useUndoStore';
 
 import { CarLayer } from './Layers/CarLayer';
-import { ConnectionsLayer } from './Layers/ConnectionsLayer';
 import { DecorationsLayer } from './Layers/DecorationsLayer';
 import { IntersectionsLayer } from './Layers/IntersectionsLayer';
 import { RoadsLayer } from './Layers/RoadsLayer';
+import useJsonDownloader from "~/hooks/useJsonDownloader.ts";
+import { handleDownloadEvent } from "~/helpers/zustand/NetworkStoreHelpers.ts";
 
 export function Canvas() {
   const selector = useSelector();
@@ -32,12 +33,19 @@ export function Canvas() {
   const toolbarState = useToolbarStore();
   const undoStore = useUndoStore();
   const decorationsStore = useDecorationStore();
+  const downloadJson = useJsonDownloader();
 
   // Keyboard shortcuts
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       const isCommandDelete = (e.metaKey && e.key === 'Backspace') || e.key === 'Delete';
       const isEsc = e.key === 'Escape';
+      const isSave = (e.metaKey || e.ctrlKey) && e.key === 's';
+
+      if (isSave) {
+        e.preventDefault(); // override browser's save page dialog
+        handleDownloadEvent(downloadJson, network);
+      }
 
       if (isCommandDelete && selector.selected) {
         if (network.nodes[selector.selected]) {

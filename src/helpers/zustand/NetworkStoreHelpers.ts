@@ -1,6 +1,7 @@
 import { laneWidth } from '~/components/Canvas/Constants/Road';
 import { Connection, Edge, Flow, Point, Route } from '~/types/Network';
 import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
+import {getUrbanFloFileContents} from "~/logic/urbanflo-file-logic.ts";
 
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
@@ -306,4 +307,9 @@ export function getEdgeTerminals(
     leading,
     trailing,
   };
+}
+
+export function handleDownloadEvent(downloadJson: (jsonString: string, fileName: string) => void, network: Network) {
+  const jsonString = getUrbanFloFileContents();
+  downloadJson(jsonString, network.documentName);
 }
