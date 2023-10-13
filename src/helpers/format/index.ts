@@ -3,17 +3,17 @@ import { format as formatTz, utcToZonedTime } from 'date-fns-tz';
 
 import { IntersectionType } from '~/types/Network';
 
-export function formatISOString(dateString: string) {
+export function formatISOString(dateString: string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone) {
   const date = parseISO(dateString);
 
   if (!isValid(date)) {
     throw new Error('Invalid date string');
   }
 
-  const utcDate = utcToZonedTime(date, 'Etc/UTC');
+  const localDate = utcToZonedTime(date, timeZone);
 
-  const formattedDate = formatTz(utcDate, 'dd/MM/yy', { timeZone: 'Etc/UTC' });
-  const formattedTime = formatTz(utcDate, 'h:mm aa', { timeZone: 'Etc/UTC' });
+  const formattedDate = formatTz(localDate, 'dd/MM/yy', { timeZone: timeZone });
+  const formattedTime = formatTz(localDate, 'h:mm aa', { timeZone: timeZone });
 
   return {
     date: formattedDate,
