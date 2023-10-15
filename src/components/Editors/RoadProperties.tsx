@@ -10,6 +10,8 @@ export function RoadPropertiesEditor() {
   const [newLanes, setNewLanes] = useState(0);
   const [roadLength, setRoadLength] = useState(0);
   const [newPriority, setNewPriority] = useState(-1);
+  const [newVehiclesPerHour, setNewVehiclesPerHour] = useState<number[]>();
+  const [matchingFlowIDs, setMatchingFlowIDs] = useState<string[]>();
 
   const selected = useSelector();
   const network = useNetworkStore();
@@ -26,6 +28,11 @@ export function RoadPropertiesEditor() {
     setNewRoadName(edge.name);
     setNewPriority(edge.priority);
 
+    const matchingIDs = Object.keys(network.flow).filter(flowID =>
+      flowID.startsWith(`flow_${edge.id}`)
+    );
+    setMatchingFlowIDs(matchingIDs)
+    setNewVehiclesPerHour(matchingIDs.map(id => network.flow[id]?.vehsPerHour))
     const from = network.nodes[edge.from];
     const to = network.nodes[edge.to];
 
@@ -49,6 +56,18 @@ export function RoadPropertiesEditor() {
     };
 
     network.updateEdge(selected.selected, updatedEdge);
+
+    if (newVehiclesPerHour) {
+      matchingFlowIDs?.forEach((id, index) => {
+        const updatedFlow = {
+          ...network.flow[id], // Use id to access the specific flow
+          vehsPerHour: newVehiclesPerHour[index] // Use index to access the new vehsPerHour value
+        };
+    
+        network.updateFlow(id, updatedFlow);
+      });
+    }
+
     selected.deselect();
   }
 
@@ -104,6 +123,25 @@ export function RoadPropertiesEditor() {
           max={20}
         />
       </RowStack>
+      {/* {matchingFlowIDs && ( */}
+      <><p>Vehicles per hour</p>
+          {matchingFlowIDs && newVehiclesPerHour && matchingFlowIDs.map((id, index) => (
+            <RowStack>
+            <><p> {index} </p><input
+              className="w-[30%] rounded-md p-1"
+              type="number"
+              value={newVehiclesPerHour[index]}
+              onChange={e => {
+                const updatedVehiclesPerHour = [...newVehiclesPerHour];
+                updatedVehiclesPerHour[index] = parseInt(e.target.value);
+                setNewVehiclesPerHour(updatedVehiclesPerHour);
+              }}
+              min={0}
+              max={9999999} /></>
+              </RowStack>
+          ))}
+        </>
+      {/* )} */}
       <button
         className="rounded-full py-2 px-4 my-2 text-white z-10 bg-amber-400"
         onClick={submitRoadProperties}
