@@ -1,3 +1,4 @@
+import { Decoration, useDecorationStore } from '~/zustand/useDecorations';
 import { NetworkData, useNetworkStore } from '~/zustand/useNetworkStore';
 import {
   SimulationHistory,
@@ -8,6 +9,9 @@ interface UrbanFloFile {
   version: number;
   networkData: NetworkData;
   simulationHistory: SimulationHistory[];
+  decrations: {
+    items: Decoration[];
+  };
 }
 
 export function getUrbanFloFileContents(): string {
@@ -21,6 +25,7 @@ export function getUrbanFloFileContents(): string {
 function getFileContents(): UrbanFloFile {
   const networkStore = useNetworkStore.getState();
   const simulationHistoryStore = useSimulationHistory.getState();
+  const decorationStore = useDecorationStore.getState();
 
   return {
     version: 1,
@@ -34,6 +39,9 @@ function getFileContents(): UrbanFloFile {
       flow: networkStore.flow,
     },
     simulationHistory: simulationHistoryStore.history,
+    decrations: {
+      items: decorationStore.items,
+    },
   };
 }
 

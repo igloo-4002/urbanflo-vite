@@ -1,6 +1,7 @@
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
 
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
+import { useDecorationStore } from '~/zustand/useDecorations';
 import { useErrorModal } from '~/zustand/useErrorModal.ts';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
@@ -9,6 +10,7 @@ import { useUndoStore } from '~/zustand/useUndoStore';
 export function ProjectUploadButton() {
   const networkStore = useNetworkStore();
   const simulationHistoryStore = useSimulationHistory();
+  const decorationStore = useDecorationStore();
   const undoStore = useUndoStore();
   const errorModal = useErrorModal();
 
@@ -48,6 +50,9 @@ export function ProjectUploadButton() {
               simulationHistoryStore.updateHistory(historyItem);
             },
           );
+          uploadedNetwork.decrations.items.forEach(decoration => {
+            decorationStore.addItem(decoration, decoration.seed);
+          });
 
           // Since the deleteNode, addNode, and drawEdge methods add to the undo stack,
           // we want to clear after building the network.
