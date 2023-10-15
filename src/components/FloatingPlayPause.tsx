@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { CircleLoader } from 'react-spinners';
 
-import { PlayIcon, StopIcon } from '@heroicons/react/24/outline';
+import {
+  ExclamationTriangleIcon,
+  PlayIcon,
+  StopIcon,
+} from '@heroicons/react/24/outline';
 
 import {
   getSimulationAnalytics,
@@ -28,7 +32,7 @@ export const FloatingPlayPause = () => {
   const network = useNetworkStore();
   const carStore = useCarsStore();
   const player = usePlaying();
-  const { subscribe, publish, isConnected } = useSimulation({
+  const { subscribe, publish, isConnected, error } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
@@ -143,11 +147,21 @@ export const FloatingPlayPause = () => {
   };
 
   return (
-    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex py-2 px-4 z-10 bg-orange-500">
+    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex z-10 gap-4">
+      {error && (
+        <div className="flex items-center bg-red-100 p-2 rounded-full shadow-lg animate-fadeIn transform-gpu">
+          <ExclamationTriangleIcon
+            width={24}
+            height={24}
+            className="text-red-500 animate-bounce"
+          />
+          <span className="text-red-500 font-bold ml-2">{error.message}</span>
+        </div>
+      )}
       <button
         onClick={player.isPlaying ? handleOutput : handleUpload}
-        className="flex items-center text-white font-sans w-16 font-bold h-8 justify-between"
-        disabled={loading}
+        className="flex items-center bg-orange-500 text-white font-sans w-18 rounded-full font-bold h-10 px-4 py-2 justify-between disabled:cursor-not-allowed disabled:text-gray-700 disabled:bg-gray-300"
+        disabled={loading || !!error}
       >
         {loading ? (
           <CircleLoader size={20} color="white" />
