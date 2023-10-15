@@ -3,7 +3,7 @@ import { Fragment, useRef } from 'react';
 
 
 import { Dialog, Transition } from '@headlessui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/24/outline';
 
 
 
@@ -52,7 +52,7 @@ export default function ErrorModal() {
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <ExclamationTriangleIcon
+                      <XCircleIcon
                         className="h-6 w-6 text-red-600"
                         aria-hidden="true"
                       />
@@ -62,13 +62,11 @@ export default function ErrorModal() {
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        Deactivate account
+                        {errorModal.heading}
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Are you sure you want to deactivate your account? All
-                          of your data will be permanently removed. This action
-                          cannot be undone.
+                          {errorModal.body}
                         </p>
                       </div>
                     </div>
