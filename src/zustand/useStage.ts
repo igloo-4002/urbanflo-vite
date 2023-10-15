@@ -6,7 +6,7 @@ import { create } from 'zustand';
 import { Point } from '~/types/Network';
 
 export const SCALE_FACTOR = 1.05;
-export const MIN_SCALE = 2;
+export const MIN_SCALE = 2.7;
 export const MAX_SCALE = 1 / MIN_SCALE;
 
 type StageState = {
