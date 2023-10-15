@@ -1,12 +1,13 @@
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
-import { BottomLeftPill } from './components/BottomLeftPill';
-import { Canvas } from './components/Canvas/Canvas';
-import { FloatingPlayPause } from './components/FloatingPlayPause';
-import { Header } from './components/Header';
-import { LeftSideBar } from './components/SideBar';
-import { SimulationTimer } from './components/SimulationTimer';
-import { Toolbar } from './components/Toolbar/Toolbar';
+import { BottomLeftPill } from '~/components/BottomLeftPill';
+import { Canvas } from '~/components/Canvas/Canvas';
+import ErrorModal from '~/components/ErrorModal.tsx';
+import { FloatingPlayPause } from '~/components/FloatingPlayPause';
+import { Header } from '~/components/Header';
+import { LeftSideBar } from '~/components/SideBar';
+import { SimulationTimer } from '~/components/SimulationTimer';
+import { Toolbar } from '~/components/Toolbar/Toolbar';
 
 function MobileBlocker() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
         <SimulationTimer />
         <FloatingPlayPause />
         <BottomLeftPill />
+        <ErrorModal />
       </div>
     </div>
   );
