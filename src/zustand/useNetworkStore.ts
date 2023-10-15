@@ -299,17 +299,19 @@ export const useNetworkStore = create<Network>((set, get) => ({
   updateFlow: (flowId, flow) =>
     set(state => ({ flow: { ...state.flow, [flowId]: flow } })),
   clearNetwork: () => {
-    useUndoStore.getState().clearStacks();
+    set(() => {
+      useUndoStore.getState().clearStacks();
 
-    return {
-      documentName: 'Untitled Document',
-      nodes: {},
-      edges: {},
-      connections: {},
-      vType: {},
-      route: {},
-      flow: {},
-      grid: {},
-    };
+      return {
+        documentName: 'Untitled Document',
+        nodes: {},
+        edges: {},
+        connections: {},
+        vType: {},
+        route: {},
+        flow: {},
+        grid: {},
+      };
+    });
   },
 }));
