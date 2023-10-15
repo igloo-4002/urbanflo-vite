@@ -12,6 +12,9 @@ export function RoadPropertiesEditor() {
   const [newPriority, setNewPriority] = useState(-1);
   const [newVehiclesPerHour, setNewVehiclesPerHour] = useState<number[]>();
   const [matchingFlowIDs, setMatchingFlowIDs] = useState<string[]>();
+  // Create an array filled with empty strings of the same length as matchingIDs
+  var matchingRoadNames = new Array(1000).fill('');
+  const [matchingRoadNameNames, setMatchingRoadNameNames] = useState<string[]>(new Array(1000).fill(''));
 
   const selected = useSelector();
   const network = useNetworkStore();
@@ -20,27 +23,57 @@ export function RoadPropertiesEditor() {
     if (selected.selected === null || !network.edges[selected.selected]) {
       return;
     }
-
+  
     const edge = network.edges[selected.selected];
-
+  
     setNewSpeedLimit(Math.floor(edge.speed * 3.6));
     setNewLanes(edge.numLanes);
     setNewRoadName(edge.name);
     setNewPriority(edge.priority);
-
+  
     const matchingIDs = Object.keys(network.flow).filter(flowID =>
       flowID.startsWith(`flow_${edge.id}`)
     );
-    setMatchingFlowIDs(matchingIDs)
-    setNewVehiclesPerHour(matchingIDs.map(id => network.flow[id]?.vehsPerHour))
+    setMatchingFlowIDs(matchingIDs);
+    setNewVehiclesPerHour(matchingIDs.map(id => network.flow[id]?.vehsPerHour));
+  
+    for (let index = 0; index < matchingIDs.length; index++) {
+      const flowId = matchingIDs[index];
+      const matchedFlow = network.flow[flowId];
+    
+      if (matchedFlow) {
+        const route = matchedFlow.route;
+    
+        // Use a regular expression to find the string that follows "to_"
+        const match = /to_(.+)/.exec(route);
+    
+        if (match) {
+          const destination = match[1];
+          // Update the matchingRoadNames array directly at the corresponding index
+          matchingRoadNames[index] = destination;
+                // Find the edge with a matching ID
+                const matchingEdge = Object.values(network.edges).find(
+                  edge => edge.id.endsWith(`_${destination}`)
+                );                
+      if (matchingEdge) {
+        // Assign the matching edge's name to matchingRoadNameNames[index]
+        matchingRoadNameNames[index] = matchingEdge.name;
+      } 
+        } else {
+          console.log(`For flow ${flowId}, no destination found`);
+        }
+      } else {
+        console.log(`Flow with ID ${flowId} not found in network.flow`);
+      }
+    }
     const from = network.nodes[edge.from];
     const to = network.nodes[edge.to];
-
+  
     const dist = Math.sqrt(
-      Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2),
+      Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2)
     );
     setRoadLength(dist);
-  }, [selected.selected, network.nodes]);
+  }, [selected.selected, network.nodes]);  
 
   function submitRoadProperties() {
     if (selected.selected === null || !network.edges[selected.selected]) {
@@ -124,10 +157,10 @@ export function RoadPropertiesEditor() {
         />
       </RowStack>
       {/* {matchingFlowIDs && ( */}
-      <><p>Vehicles per hour</p>
+      <><p>Vehicles per hour to</p>
           {matchingFlowIDs && newVehiclesPerHour && matchingFlowIDs.map((id, index) => (
             <RowStack>
-            <><p> {index} </p><input
+            <><p> {matchingRoadNameNames[index]} </p><input
               className="w-[30%] rounded-md p-1"
               type="number"
               value={newVehiclesPerHour[index]}
