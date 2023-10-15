@@ -1,3 +1,5 @@
+import ErrorModal from '~/components/ErrorModal.tsx';
+
 import { BottomLeftPill } from './components/BottomLeftPill';
 import { Canvas } from './components/Canvas/Canvas';
 import { FloatingPlayPause } from './components/FloatingPlayPause';
@@ -5,6 +7,7 @@ import { Header } from './components/Header';
 import { LeftSideBar } from './components/SideBar';
 import { SimulationTimer } from './components/SimulationTimer';
 import { Toolbar } from './components/Toolbar/Toolbar';
+
 
 export default function App() {
   return (
@@ -16,6 +19,7 @@ export default function App() {
       <SimulationTimer />
       <FloatingPlayPause />
       <BottomLeftPill />
+      <ErrorModal />
     </div>
   );
 }

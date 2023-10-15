@@ -22,6 +22,7 @@ import { useCarsStore } from '~/zustand/useCarStore';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
+import {useErrorModal} from "~/zustand/useErrorModal.ts";
 
 export const FloatingPlayPause = () => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,7 @@ export const FloatingPlayPause = () => {
   });
 
   const simulationHistory = useSimulationHistory();
+  const errorModal = useErrorModal();
 
   const [startTime, setStartTime] = useState<string | null>(null);
   const [simulationInfo, setSimulationInfo] = useState<SimulationInfo | null>(
@@ -60,6 +62,7 @@ export const FloatingPlayPause = () => {
       });
       subscribe(SIMULATION_ERROR_TOPIC, message => {
         console.error(message);
+        errorModal.open('An error occurred while simulation is running', message);
       });
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
@@ -100,8 +103,9 @@ export const FloatingPlayPause = () => {
       setSimulationInfo(simInfo);
       player.changeSimulationId(simInfo.id);
       player.play();
-    } catch (error: unknown) {
+    } catch (error) {
       console.error(error);
+      errorModal.open('Unable to start simulation', (error as Error).message)
     } finally {
       setLoading(false);
     }
@@ -135,8 +139,9 @@ export const FloatingPlayPause = () => {
           },
         });
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error(error);
+      errorModal.open('Unable to get simulation output', (error as Error).message)
     } finally {
       setLoading(false);
     }
