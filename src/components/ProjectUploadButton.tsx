@@ -1,10 +1,10 @@
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid';
 
 import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
+import { useErrorModal } from '~/zustand/useErrorModal.ts';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
 import { useUndoStore } from '~/zustand/useUndoStore';
-import {useErrorModal} from "~/zustand/useErrorModal.ts";
 
 export function ProjectUploadButton() {
   const networkStore = useNetworkStore();
@@ -22,7 +22,9 @@ export function ProjectUploadButton() {
           const uploadedNetwork = getNetworkFromUploadedFile(parsedJson);
 
           // Set document name
-          networkStore.setDocumentName(uploadedNetwork.networkData.documentName);
+          networkStore.setDocumentName(
+            uploadedNetwork.networkData.documentName,
+          );
 
           // Clear the current canvas
           const nodeIds = Object.keys(networkStore.nodes);
@@ -50,13 +52,11 @@ export function ProjectUploadButton() {
           // Since the deleteNode, addNode, and drawEdge methods add to the undo stack,
           // we want to clear after building the network.
           undoStore.clearStacks();
-        } catch (error) {
-          const message = 'An error occurred while parsing the JSON file OR the file is invalid';
-          console.error(
-            message,
-            error,
-          );
-          errorModal.open('Cannot upload network', message)
+        } catch (error: unknown) {
+          const message =
+            'An error occurred while parsing the JSON file OR the file is invalid';
+          console.error(message, error);
+          errorModal.open('Cannot upload network', message);
         }
       };
       reader.readAsText(file);
