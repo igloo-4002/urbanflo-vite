@@ -45,6 +45,9 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
       stompClient.onConnect = () => {
         setIsConnected(true);
         setReconnectAttempts(0);
+        if (error) {
+          setError(null);
+        }
         callback?.();
       };
 

@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { CircleLoader } from 'react-spinners';
 
-import { PlayIcon, StopIcon } from '@heroicons/react/24/outline';
+import {
+  ExclamationTriangleIcon,
+  PlayIcon,
+  StopIcon,
+} from '@heroicons/react/24/outline';
 
 import {
   getSimulationAnalytics,
@@ -10,6 +14,7 @@ import {
   uploadNetwork,
 } from '~/api/network';
 import { extractCarsFromSumoMessage } from '~/helpers/sumo';
+import { networkHasData } from '~/helpers/zustand/NetworkStoreHelpers';
 import { useSimulation } from '~/hooks/useSimulation';
 import {
   BASE_SIMULATION_DATA_TOPIC,
@@ -19,17 +24,17 @@ import {
 } from '~/simulation-urls';
 import { SimulationInfo } from '~/types/Simulation';
 import { useCarsStore } from '~/zustand/useCarStore';
+import { useErrorModal } from '~/zustand/useErrorModal.ts';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { usePlaying } from '~/zustand/usePlaying';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
-import {useErrorModal} from "~/zustand/useErrorModal.ts";
 
 export const FloatingPlayPause = () => {
   const [loading, setLoading] = useState(false);
   const network = useNetworkStore();
   const carStore = useCarsStore();
   const player = usePlaying();
-  const { subscribe, publish, isConnected } = useSimulation({
+  const { subscribe, publish, isConnected, error } = useSimulation({
     brokerURL: SIMULATION_SOCKET_URL,
   });
 
@@ -62,7 +67,10 @@ export const FloatingPlayPause = () => {
       });
       subscribe(SIMULATION_ERROR_TOPIC, message => {
         console.error(message);
-        errorModal.open('An error occurred while simulation is running', message);
+        errorModal.open(
+          'An error occurred while simulation is running',
+          message,
+        );
       });
 
       publish(SIMULATION_DESTINATION_PATH, { status: 'START' });
@@ -105,7 +113,7 @@ export const FloatingPlayPause = () => {
       player.play();
     } catch (error) {
       console.error(error);
-      errorModal.open('Unable to start simulation', (error as Error).message)
+      errorModal.open('Unable to start simulation', (error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -139,29 +147,46 @@ export const FloatingPlayPause = () => {
           },
         });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      errorModal.open('Unable to get simulation output', (error as Error).message)
+      errorModal.open(
+        'Unable to get simulation output',
+        (error as Error).message,
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  const buttonDisabled = loading || !!error || !networkHasData(network);
+
   return (
-    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex py-2 px-4 z-10 bg-orange-500">
+    <div className="absolute bottom-4 right-4 py-2 items-center justify-center rounded-full flex z-10 gap-4">
+      {error && (
+        <div className="flex items-center bg-red-100 p-2 rounded-full shadow-lg animate-fadeIn transform-gpu">
+          <ExclamationTriangleIcon
+            width={24}
+            height={24}
+            className="text-red-500 animate-bounce"
+          />
+          <span className="text-red-500 font-bold ml-2">{error.message}</span>
+        </div>
+      )}
       <button
         onClick={player.isPlaying ? handleOutput : handleUpload}
-        className="flex items-center text-white font-sans w-16 font-bold h-8 justify-between"
-        disabled={loading}
+        className={`flex items-center bg-orange-500 text-white font-sans w-24 rounded-full font-bold h-10 px-4 py-2 ${
+          loading ? 'justify-center' : 'justify-between'
+        } disabled:cursor-not-allowed disabled:text-gray-700 disabled:bg-gray-300`}
+        disabled={buttonDisabled}
       >
         {loading ? (
-          <CircleLoader size={20} color="white" />
+          <CircleLoader size={20} />
         ) : player.isPlaying ? (
           'End'
         ) : (
           'Start'
         )}
-        {player.isPlaying ? (
+        {loading ? null : player.isPlaying ? (
           <StopIcon className="h-5 ml-2" strokeWidth={3} />
         ) : (
           <PlayIcon className="h-5 ml-2" strokeWidth={3} />

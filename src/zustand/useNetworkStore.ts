@@ -37,6 +37,7 @@ export interface Network extends NetworkData {
   deleteEdge: (id: string) => void;
   addConnection: (from: Edge, to: Edge) => void;
   updateFlow: (flowId: string, flow: Flow) => void;
+  clearNetwork: () => void;
 }
 
 export const useNetworkStore = create<Network>((set, get) => ({
@@ -297,4 +298,20 @@ export const useNetworkStore = create<Network>((set, get) => ({
     })),
   updateFlow: (flowId, flow) =>
     set(state => ({ flow: { ...state.flow, [flowId]: flow } })),
+  clearNetwork: () => {
+    set(() => {
+      useUndoStore.getState().clearStacks();
+
+      return {
+        documentName: 'Untitled Document',
+        nodes: {},
+        edges: {},
+        connections: {},
+        vType: {},
+        route: {},
+        flow: {},
+        grid: {},
+      };
+    });
+  },
 }));

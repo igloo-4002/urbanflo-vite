@@ -316,3 +316,13 @@ export function handleDownloadEvent(
   const jsonString = getUrbanFloFileContents();
   downloadJson(jsonString, network.documentName);
 }
+
+export function networkHasData(network: Network) {
+  return [
+    network.nodes,
+    network.edges,
+    network.route,
+    network.connections,
+    network.flow,
+  ].some(record => Object.values(record).length > 0);
+}
