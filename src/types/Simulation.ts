@@ -25,7 +25,7 @@ export type SumoTripInfo = {
   devices: string;
   vehicleType: string;
   speedFactor: number;
-  vaporized?: boolean;
+  vaporized: string | null;
 };
 
 export type SumoNetstate = { time: number; edges: SumoNetstateEdge[] };
