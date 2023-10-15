@@ -159,7 +159,7 @@ export function RoadPropertiesEditor() {
       {/* {matchingFlowIDs && ( */}
       <><p>Vehicles per hour to</p>
           {matchingFlowIDs && newVehiclesPerHour && matchingFlowIDs.map((id, index) => (
-            <RowStack>
+            <RowStack key={id}>
             <><p> {matchingRoadNameNames[index]} </p><input
               className="w-[30%] rounded-md p-1"
               type="number"
