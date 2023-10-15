@@ -9,7 +9,7 @@ interface UrbanFloFile {
   version: number;
   networkData: NetworkData;
   simulationHistory: SimulationHistory[];
-  decrations: {
+  decorations: {
     items: Decoration[];
   };
 }
@@ -39,7 +39,7 @@ function getFileContents(): UrbanFloFile {
       flow: networkStore.flow,
     },
     simulationHistory: simulationHistoryStore.history,
-    decrations: {
+    decorations: {
       items: decorationStore.items,
     },
   };

@@ -50,7 +50,7 @@ export function ProjectUploadButton() {
               simulationHistoryStore.updateHistory(historyItem);
             },
           );
-          uploadedNetwork.decrations.items.forEach(decoration => {
+          uploadedNetwork.decorations.items.forEach(decoration => {
             decorationStore.addItem(decoration, decoration.seed);
           });
 
