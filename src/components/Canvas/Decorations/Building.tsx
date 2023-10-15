@@ -1,3 +1,4 @@
+import React from 'react';
 import { Group, Rect, Text } from 'react-konva';
 
 import { Decoration } from '~/zustand/useDecorations';
@@ -6,7 +7,7 @@ interface BuildingProps {
   building: Decoration;
 }
 
-export function Building(props: BuildingProps) {
+function BuildingComponent(props: BuildingProps) {
   const { x, y } = props.building;
 
   // Squares!
@@ -41,3 +42,5 @@ export function Building(props: BuildingProps) {
     </Group>
   );
 }
+
+export const Building = React.memo(BuildingComponent);

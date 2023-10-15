@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Arrow, Group } from 'react-konva';
 
@@ -16,7 +17,7 @@ interface RoadProps {
   offset?: number;
 }
 
-export function Road({ edge, offset = 0 }: RoadProps) {
+function RoadComponent({ edge, offset = 0 }: RoadProps) {
   const network = useNetworkStore();
   const selector = useSelector();
 
@@ -146,3 +147,5 @@ export function Road({ edge, offset = 0 }: RoadProps) {
     </Group>
   );
 }
+
+export const Road = React.memo(RoadComponent);

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Circle, Group } from 'react-konva';
 
 import seedrandom from 'seedrandom';
@@ -19,7 +20,7 @@ interface TreeProps {
   tree: Decoration;
 }
 
-export function Tree(props: TreeProps) {
+function TreeComponent(props: TreeProps) {
   const rng = seedrandom(props.tree.seed);
 
   const leaves = Array.from({ length: 50 }).map(() => ({
@@ -41,3 +42,5 @@ export function Tree(props: TreeProps) {
     </Group>
   );
 }
+
+export const Tree = React.memo(TreeComponent);

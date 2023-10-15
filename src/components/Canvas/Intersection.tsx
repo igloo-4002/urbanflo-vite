@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import React from 'react';
 import { Circle, Group } from 'react-konva';
 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -19,7 +20,7 @@ interface IntersectionProps {
   node: Node;
 }
 
-export function Intersection({ node }: IntersectionProps) {
+function IntersectionComponent({ node }: IntersectionProps) {
   const network = useNetworkStore();
   const selector = useSelector();
   const toolbarState = useToolbarStore();
@@ -127,3 +128,5 @@ export function Intersection({ node }: IntersectionProps) {
     </Group>
   );
 }
+
+export const Intersection = React.memo(IntersectionComponent);
