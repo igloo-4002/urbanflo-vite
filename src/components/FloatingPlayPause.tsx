@@ -147,7 +147,7 @@ export const FloatingPlayPause = () => {
   };
 
   return (
-    <div className="absolute bottom-4 right-4 items-center justify-center rounded-full flex z-10 gap-4">
+    <div className="absolute bottom-4 right-4 py-2 items-center justify-center rounded-full flex z-10 gap-4">
       {error && (
         <div className="flex items-center bg-red-100 p-2 rounded-full shadow-lg animate-fadeIn transform-gpu">
           <ExclamationTriangleIcon
