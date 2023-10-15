@@ -14,6 +14,7 @@ import {
   uploadNetwork,
 } from '~/api/network';
 import { extractCarsFromSumoMessage } from '~/helpers/sumo';
+import { networkHasData } from '~/helpers/zustand/NetworkStoreHelpers';
 import { useSimulation } from '~/hooks/useSimulation';
 import {
   BASE_SIMULATION_DATA_TOPIC,
@@ -157,6 +158,8 @@ export const FloatingPlayPause = () => {
     }
   };
 
+  const buttonDisabled = loading || !!error || !networkHasData(network);
+
   return (
     <div className="absolute bottom-4 right-4 py-2 items-center justify-center rounded-full flex z-10 gap-4">
       {error && (
@@ -171,17 +174,19 @@ export const FloatingPlayPause = () => {
       )}
       <button
         onClick={player.isPlaying ? handleOutput : handleUpload}
-        className="flex items-center bg-orange-500 text-white font-sans w-18 rounded-full font-bold h-10 px-4 py-2 justify-between disabled:cursor-not-allowed disabled:text-gray-700 disabled:bg-gray-300"
-        disabled={loading || !!error}
+        className={`flex items-center bg-orange-500 text-white font-sans w-24 rounded-full font-bold h-10 px-4 py-2 ${
+          loading ? 'justify-center' : 'justify-between'
+        } disabled:cursor-not-allowed disabled:text-gray-700 disabled:bg-gray-300`}
+        disabled={buttonDisabled}
       >
         {loading ? (
-          <CircleLoader size={20} color="white" />
+          <CircleLoader size={20} />
         ) : player.isPlaying ? (
           'End'
         ) : (
           'Start'
         )}
-        {player.isPlaying ? (
+        {loading ? null : player.isPlaying ? (
           <StopIcon className="h-5 ml-2" strokeWidth={3} />
         ) : (
           <PlayIcon className="h-5 ml-2" strokeWidth={3} />

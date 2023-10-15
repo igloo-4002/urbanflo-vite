@@ -13,27 +13,21 @@ export function ClearCanvasButton() {
     }
   }
 
-  const isNetworkEmpty = networkHasData(network);
+  const isNetworkEmpty = !networkHasData(network);
 
   return (
     <span
-      className="fixed top-32 shadow-md p-2 rounded-xl flex z-100 left-4"
+      className="fixed top-32 shadow-md p-2 rounded-xl z-100 left-4"
       style={{
         backgroundColor: canvasComponentBg,
+        display: isNetworkEmpty ? 'none' : 'flex',
       }}
     >
       <button
-        className={`${
-          isNetworkEmpty && 'hover:bg-gray-300'
-        } p-1 rounded-md duration-200`}
+        className="p-1 hover:bg-gray-300 rounded-md duration-200"
         onClick={onClear}
-        disabled={!isNetworkEmpty}
       >
-        <TrashIcon
-          className={`${
-            isNetworkEmpty ? 'text-red-500' : 'text-gray-700'
-          } w-6 h-6 disabled:text-gray-700`}
-        />
+        <TrashIcon className="text-red-500 w-6 h-6" />
       </button>
     </span>
   );

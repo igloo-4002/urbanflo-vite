@@ -7,6 +7,7 @@ import { useNetworkStore } from '~/zustand/useNetworkStore';
 export function ProjectDownloadButton() {
   const downloadJson = useJsonDownloader();
   const network = useNetworkStore();
+
   function handleDownloadClick() {
     handleDownloadEvent(downloadJson, network);
   }
