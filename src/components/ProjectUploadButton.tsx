@@ -4,11 +4,13 @@ import { getNetworkFromUploadedFile } from '~/logic/urbanflo-file-logic';
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
 import { useUndoStore } from '~/zustand/useUndoStore';
+import {useErrorModal} from "~/zustand/useErrorModal.ts";
 
 export function ProjectUploadButton() {
   const networkStore = useNetworkStore();
   const simulationHistoryStore = useSimulationHistory();
   const undoStore = useUndoStore();
+  const errorModal = useErrorModal();
 
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -49,10 +51,12 @@ export function ProjectUploadButton() {
           // we want to clear after building the network.
           undoStore.clearStacks();
         } catch (error) {
+          const message = 'An error occurred while parsing the JSON file OR the file is invalid';
           console.error(
-            'An error occurred while parsing the JSON file OR the file is invalid',
+            message,
             error,
           );
+          errorModal.open('Cannot upload network', message)
         }
       };
       reader.readAsText(file);
