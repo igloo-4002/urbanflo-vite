@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
@@ -38,16 +38,6 @@ export function Header() {
             value={network.documentName.replace('.json', '')}
             onChange={e => network.setDocumentName(e.target.value)}
           />
-        </div>
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-            onClick={() => console.log('this does nothing')}
-          >
-            <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-          </button>
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-4">
