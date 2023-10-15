@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 import { useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSimulationHistory } from '~/zustand/useSimulationHistory';
