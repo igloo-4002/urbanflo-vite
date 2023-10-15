@@ -5,7 +5,7 @@ import { DEFAULT_ROAD_NAME, useNetworkStore } from '~/zustand/useNetworkStore';
 import { useSelector } from '~/zustand/useSelected';
 
 export function RoadPropertiesEditor() {
-  const [newRoadName, setNewRoadName] = useState<string>('New Road');
+  const [newRoadName, setNewRoadName] = useState(DEFAULT_ROAD_NAME);
   const [newSpeedLimit, setNewSpeedLimit] = useState(0);
   const [newLanes, setNewLanes] = useState(0);
   const [roadLength, setRoadLength] = useState(0);
