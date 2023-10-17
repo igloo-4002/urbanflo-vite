@@ -326,3 +326,12 @@ export function networkHasData(network: Network) {
     network.flow,
   ].some(record => Object.values(record).length > 0);
 }
+
+export function getEdgesAssociatedWithNode(
+  nodeId: string,
+  edges: Record<string, Edge>,
+): Edge[] {
+  const edgeIds = getAllEdgeIdsForNode(nodeId, edges);
+
+  return edgeIds.map(id => edges[id]);
+}

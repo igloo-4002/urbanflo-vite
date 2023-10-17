@@ -7,6 +7,7 @@ import { RemoveEdgeCommand } from '~/helpers/commands/RemoveEdgeCommand';
 import { RemoveNodeCommand } from '~/helpers/commands/RemoveNodeCommand';
 import {
   edgeDoesIntersect,
+  getEdgesAssociatedWithNode,
   removeItems,
   updateAssociatesOnNewEdge,
   updateConnectionsOnLaneChange,
@@ -34,7 +35,7 @@ export interface Network extends NetworkData {
   drawEdge: (
     from: Node,
     to: Node,
-    edgeProperties: Omit<Edge, 'id' | 'from' | 'to'>,
+    edgeProperties?: Omit<Edge, 'id' | 'from' | 'to'>,
   ) => void;
   updateEdge: (edgeId: string, edge: Edge) => void;
   deleteNode: (id: string) => void;
@@ -227,7 +228,10 @@ export const useNetworkStore = create<Network>((set, get) => ({
   },
   deleteNode: (id: string) => {
     const undoStore = useUndoStore.getState();
-    undoStore.pushCommand(new RemoveNodeCommand(get(), get().nodes[id]));
+    const edgesAssociatedWithNode = getEdgesAssociatedWithNode(id, get().edges);
+    undoStore.pushCommand(
+      new RemoveNodeCommand(get(), get().nodes[id], edgesAssociatedWithNode),
+    );
     set(state => {
       const newNodes = { ...state.nodes };
       delete newNodes[id];
