@@ -13,13 +13,15 @@ export class RemoveEdgeCommand implements Command {
   }
 
   unexecute() {
-    const fromNode = this.networkStore.nodes[this.edge.from];
-    const toNode = this.networkStore.nodes[this.edge.to];
+    const { id: _id, from: fromId, to: toId, ...rest } = this.edge;
+
+    const fromNode = this.networkStore.nodes[fromId];
+    const toNode = this.networkStore.nodes[toId];
 
     if (!fromNode && !toNode) {
       return;
     }
 
-    this.networkStore.drawEdge(fromNode, toNode);
+    this.networkStore.drawEdge(fromNode, toNode, rest);
   }
 }

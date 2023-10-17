@@ -31,7 +31,11 @@ export interface Network extends NetworkData {
   setDocumentName: (name: string) => void;
   addNode: (node: Node) => void;
   updateNode: (nodeID: string, node: Node) => void;
-  drawEdge: (from: Node, to: Node) => void;
+  drawEdge: (
+    from: Node,
+    to: Node,
+    edgeProperties: Omit<Edge, 'id' | 'from' | 'to'>,
+  ) => void;
   updateEdge: (edgeId: string, edge: Edge) => void;
   deleteNode: (id: string) => void;
   deleteEdge: (id: string) => void;
@@ -67,7 +71,18 @@ export const useNetworkStore = create<Network>((set, get) => ({
       };
     });
   },
-  drawEdge: (from, to) => {
+  drawEdge: (
+    from,
+    to,
+    edgeProperties = {
+      priority: -1,
+      numLanes: 1,
+      spreadType: 'center',
+      width: laneWidth,
+      speed: 13.89,
+      name: DEFAULT_ROAD_NAME,
+    },
+  ) => {
     const undoStore = useUndoStore.getState();
 
     set(state => {
@@ -81,12 +96,7 @@ export const useNetworkStore = create<Network>((set, get) => ({
         id: newEdgeId,
         from: from.id,
         to: to.id,
-        priority: -1,
-        numLanes: 1,
-        spreadType: 'center',
-        width: laneWidth,
-        speed: 13.89,
-        name: DEFAULT_ROAD_NAME,
+        ...edgeProperties,
       };
 
       const pointA = { x: from.x, y: from.y };
