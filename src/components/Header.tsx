@@ -8,11 +8,7 @@ import Logo from '../assets/UrbanFloLogoB&W.svg';
 import { ProjectDownloadButton } from './ProjectDownloadButton';
 import { ProjectUploadButton } from './ProjectUploadButton';
 import { SimulationHistoryButton } from './SimulationHistory/SimulationHistoryButton';
-import { SimulationSummary } from './SimulationHistory/SimulationSummary';
-
-export function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { SimulationSummary } from './SimulationHistory/SimulationSummary';}
 
 export function Header() {
   const network = useNetworkStore();
