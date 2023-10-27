@@ -12,7 +12,6 @@ export const useErrorModal = create<ErrorModal>(set => ({
   isOpen: false,
   heading: '',
   body: '',
-  open: (heading: string, body: string) =>
-    set({ isOpen: true, heading, body }),
+  open: (heading: string, body: string) => set({ isOpen: true, heading, body }),
   close: () => set({ isOpen: false }),
 }));
