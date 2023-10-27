@@ -3,7 +3,17 @@ import { format as formatTz, utcToZonedTime } from 'date-fns-tz';
 
 import { IntersectionType } from '~/types/Network';
 
-export function formatISOString(dateString: string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone) {
+/**
+ * Formats an ISO date string to a local date and time.
+ * @param {string} dateString - The ISO date string to format.
+ * @param {string} [timeZone=Intl.DateTimeFormat().resolvedOptions().timeZone] - The timezone to format the date to.
+ * @returns {Object} An object containing the formatted date and time.
+ * @throws {Error} Throws an error if the date string is invalid.
+ */
+export function formatISOString(
+  dateString: string,
+  timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone,
+) {
   const date = parseISO(dateString);
 
   if (!isValid(date)) {
@@ -21,6 +31,11 @@ export function formatISOString(dateString: string, timeZone: string = Intl.Date
   };
 }
 
+/**
+ * Formats simulation time given in milliseconds to a MM:SS:MS format.
+ * @param {number} milliseconds - The number of milliseconds to format.
+ * @returns {string} The formatted time in MM:SS:MS format.
+ */
 export function formatSimulationTime(milliseconds: number) {
   const remainingMilliseconds = Math.floor(milliseconds / 10) % 100;
   const totalSeconds = Math.floor(milliseconds / 1000);
@@ -33,6 +48,11 @@ export function formatSimulationTime(milliseconds: number) {
   )}:${String(remainingMilliseconds).padStart(2, '0')}`;
 }
 
+/**
+ * Converts an intersection type enum to a human-readable string.
+ * @param {IntersectionType} type - The intersection type to convert.
+ * @returns {string} A human-readable string representation of the intersection type.
+ */
 export function prettyPrintIntersectionType(type: IntersectionType) {
   // Replace underscores with spaces and capitalize the first letter
   return type.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());

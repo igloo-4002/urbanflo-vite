@@ -6,6 +6,11 @@ import { Network, useNetworkStore } from '~/zustand/useNetworkStore';
 /**
  * Given pointA and pointB and a line drawn between edges from C to D
  * find if the line intersects with the hypothetical line drawn between A and B
+
+ * @param {Network} network - The network containing all edges.
+ * @param {Point} pointA - The start point of the edge.
+ * @param {Point} pointB - The end point of the edge.
+ * @returns {boolean} - Returns true if there is an intersection, otherwise false.
  */
 export function edgeDoesIntersect(
   network: Network,
@@ -37,6 +42,13 @@ export function edgeDoesIntersect(
   return false;
 }
 
+/**
+ * Checks if point q lies on the line segment formed by points p and r.
+ * @param {Point} p - The starting point of the segment.
+ * @param {Point} q - The point to check.
+ * @param {Point} r - The ending point of the segment.
+ * @returns {boolean} - Returns true if q lies on the segment, otherwise false.
+ */
 export function onSegment(p: Point, q: Point, r: Point): boolean {
   return (
     q.x <= Math.max(p.x, r.x) &&
@@ -46,6 +58,13 @@ export function onSegment(p: Point, q: Point, r: Point): boolean {
   );
 }
 
+/**
+ * Determines the orientation of an ordered triplet of points.
+ * @param {Point} p - First point.
+ * @param {Point} q - Second point.
+ * @param {Point} r - Third point.
+ * @returns {number} - Returns 0 for colinear, 1 for clockwise, and 2 for counterclockwise.
+ */
 export function orientation(p: Point, q: Point, r: Point): number {
   const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
   if (val === 0) {
@@ -53,6 +72,14 @@ export function orientation(p: Point, q: Point, r: Point): number {
   } // colinear
   return val > 0 ? 1 : 2; // clockwise or counterclockwise
 }
+
+/**
+ * @param {Point} A - Start point of the first segment.
+ * @param {Point} B - End point of the first segment.
+ * @param {Point} C - Start point of the second segment.
+ * @param {Point} D - End point of the second segment.
+ * @returns {boolean} - Returns true if segments intersect, otherwise false.
+ */
 
 export function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
   const o1 = orientation(A, B, C);
@@ -88,10 +115,22 @@ export function doIntersect(A: Point, B: Point, C: Point, D: Point): boolean {
   return false;
 }
 
+/**
+ * Checks if two points are equal.
+ * @param {Point} p1 - The first point.
+ * @param {Point} p2 - The second point.
+ * @returns {boolean} - Returns true if points are equal, otherwise false.
+ */
 export function arePointsEqual(p1: Point, p2: Point) {
   return p1.x === p2.x && p1.y === p2.y;
 }
 
+/**
+ * Generates a route ID based on the provided from and to strings.
+ * @param {string} from - The source string.
+ * @param {string} to - The sink string.
+ * @returns {string} - Returns the generated route ID.
+ */
 export function createRouteId(from: string, to: string) {
   const source = from.split('_');
   const sink = to.split('_');
@@ -99,7 +138,13 @@ export function createRouteId(from: string, to: string) {
   return `${source[0]}_to_${sink[1]}`;
 }
 
-// TODO: Add more data to the store so we can get O(1) retrieval of edges for a node
+// TODO: Add more data to the store so we can get O(1) retrieval of edges for a node/**
+/**
+ * Retrieves all edge IDs associated with a given node.
+ * @param {string} nodeId - The node's ID.
+ * @param {Record<string, Edge>} edges - All edges in the network.
+ * @returns {string[]} - Returns an array of edge IDs associated with the node.
+ */
 export function getAllEdgeIdsForNode(
   nodeId: string,
   edges: Record<string, Edge>,
@@ -115,6 +160,13 @@ export function getAllEdgeIdsForNode(
   return edgeIds;
 }
 
+/**
+ * @param {Record<string, Route>} routes - All routes in the network.
+ * @param {Record<string, Connection>} connections - All connections in the network.
+ * @param {Record<string, Flow>} flow - The network flow.
+ * @param {Edge} newEdge - The newly added edge.
+ * @returns {Object} - Returns updated connections, routes, and flows.
+ */
 export function updateAssociatesOnNewEdge(
   edges: Record<string, Edge>,
   routes: Record<string, Route>,
@@ -182,6 +234,13 @@ export function updateAssociatesOnNewEdge(
   return { newConnections, newRoutes, newFlows };
 }
 
+/**
+ * @param {string} to - Destination edge ID.
+ * @param {number} fromNumLanes - Number of lanes in the source edge.
+ * @param {number} toNumLanes - Number of lanes in the destination edge.
+ * @param {Record<string, Connection>} connections - All connections in the network.
+ * @returns {Record<string, Connection>} - Returns updated connections.
+ */
 export function updateConnectionsOnLaneChange(
   from: string,
   to: string,
@@ -236,6 +295,13 @@ export function updateConnectionsOnLaneChange(
   return newConnections;
 }
 
+/**
+ * Removes items from a record based on a condition.
+ * @template T
+ * @param {Record<string, T>} items - The items to process.
+ * @param {function(T): boolean} condition - The condition to test each item against.
+ * @returns {Record<string, T>} - Returns the record without the removed items.
+ */
 export function removeItems<T>(
   items: Record<string, T>,
   condition: (item: T) => boolean,
@@ -250,6 +316,13 @@ export function removeItems<T>(
   return newItems;
 }
 
+/**
+ * Determines the leading and trailing terminals for a given edge.
+ * @param {Edge} edge - The edge to process.
+ * @param {number} [lambdat=50] - Parameter affecting the calculation.
+ * @param {number} [lambdal=50] - Parameter affecting the calculation.
+ * @returns {Object} - Returns an object containing arrays of leading and trailing terminals.
+ */
 export function getEdgeTerminals(
   edge: Edge,
   lambdat: number = 50,
@@ -309,6 +382,11 @@ export function getEdgeTerminals(
   };
 }
 
+/**
+ * Handles the download event for the network data.
+ * @param {function(string, string)} downloadJson - Function to trigger the download.
+ * @param {Network} network - The network data.
+ */
 export function handleDownloadEvent(
   downloadJson: (jsonString: string, fileName: string) => void,
   network: Network,
@@ -317,6 +395,11 @@ export function handleDownloadEvent(
   downloadJson(jsonString, network.documentName);
 }
 
+/**
+ * Determines if the network has any data.
+ * @param {Network} network - The network to check.
+ * @returns {boolean} - Returns true if the network has data, otherwise false.
+ */
 export function networkHasData(network: Network) {
   return [
     network.nodes,
@@ -327,6 +410,12 @@ export function networkHasData(network: Network) {
   ].some(record => Object.values(record).length > 0);
 }
 
+/**
+ * Retrieves all edges associated with a given node.
+ * @param {string} nodeId - The node's ID.
+ * @param {Record<string, Edge>} edges - All edges in the network.
+ * @returns {Edge[]} - Returns an array of edges associated with the node.
+ */
 export function getEdgesAssociatedWithNode(
   nodeId: string,
   edges: Record<string, Edge>,

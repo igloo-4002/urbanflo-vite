@@ -10,10 +10,6 @@ import { ProjectUploadButton } from './ProjectUploadButton';
 import { SimulationHistoryButton } from './SimulationHistory/SimulationHistoryButton';
 import { SimulationSummary } from './SimulationHistory/SimulationSummary';
 
-export function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 export function Header() {
   const network = useNetworkStore();
 

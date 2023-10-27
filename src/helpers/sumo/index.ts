@@ -17,6 +17,12 @@ export type SumoMessage = {
   };
 };
 
+/**
+ * Extracts and transforms cars from a SUMO message to match the required Car format.
+ * @param {string} sumoMessage - The SUMO message as a JSON string.
+ * @returns {Car[]} An array of cars transformed from the SUMO message.
+ * @throws {Error} Throws an error if the SUMO message is in an invalid format or cannot be parsed.
+ */
 export function extractCarsFromSumoMessage(sumoMessage: string): Car[] {
   let parsedJson: SumoMessage;
   const cars: Car[] = [];
