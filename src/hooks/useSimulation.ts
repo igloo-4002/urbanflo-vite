@@ -8,11 +8,11 @@ import {
 } from '@stomp/stompjs';
 
 /**
- * USAGE
+ * Hook to connect, subscribe, publish, and manage WebSocket communications via STOMP protocol.
  *
- * connect to the socket URL by const {} = useStomp({ brokerURL: SIMULATION_SOCKET_URL })
- * subscribe to the topic
- * publish SUBSCRIBE or UNSUBSCRIBE to the topic
+ * @param {StompConfig} config - Configuration object for the STOMP client.
+ * @param {() => void} [callback] - Optional callback function to be called when connection is established.
+ * @returns {object} - Contains utility methods to manage WebSocket communication and connection state.
  */
 
 // the data returned from the server for each car
@@ -38,6 +38,9 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
   const [error, setError] = useState<ErrorType | null>(null);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
+  /**
+   * Initiates the connection to the WebSocket using the provided configuration.
+   */
   const connect = useCallback(() => {
     if (!stompClient) {
       stompClient = new Client(config);
@@ -91,6 +94,13 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     // };
   }, [callback, config, reconnectAttempts]);
 
+  /**
+   * Publishes a message to the specified path on the WebSocket.
+   *
+   * @param {string} path - The destination path to publish the message.
+   * @param {{ status: 'START' | 'STOP' }} body - The message body to publish.
+   * @param {StompHeaders} [headers] - Optional headers to include with the message.
+   */
   const publish = useCallback(
     (
       path: string,
@@ -106,6 +116,12 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     [],
   );
 
+  /**
+   * Subscribes to messages from a specified path on the WebSocket.
+   *
+   * @param {string} path - The destination path to subscribe to.
+   * @param {(msg: string) => void} callback - Callback function to handle incoming messages.
+   */
   const subscribe = useCallback(
     (path: string, callback: (msg: string) => void) => {
       if (!stompClient) {
@@ -125,11 +141,19 @@ export function useSimulation(config: StompConfig, callback?: () => void) {
     [],
   );
 
+  /**
+   * Unsubscribes from messages from a specified path on the WebSocket.
+   *
+   * @param {string} path - The destination path to unsubscribe from.
+   */
   const unsubscribe = useCallback((path: string) => {
     subscriptions[path].unsubscribe();
     delete subscriptions[path];
   }, []);
 
+  /**
+   * Deactivates the STOMP client, terminating the WebSocket connection.
+   */
   const deactivate = useCallback(() => {
     stompClient.deactivate();
   }, []);
