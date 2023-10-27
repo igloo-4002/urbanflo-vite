@@ -1,14 +1,42 @@
 import { create } from 'zustand';
 
-type ErrorModal = {
+
+/**
+ * Store definition for {@link useErrorModal}.
+ *
+ * @see useErrorModal
+ */
+type ErrorModalStore = {
+  /**
+   * Determines if the modal box is visible.
+   */
   isOpen: boolean;
+  /**
+   * Heading for the modal box.
+   */
   heading: string;
+  /**
+   * Body of the modal box.
+   */
   body: string;
-  open: (heading: string, content: string) => void;
+  /**
+   * Open the modal box.
+   * @param heading message heading
+   * @param body message body
+   */
+  open: (heading: string, body: string) => void;
+  /**
+   * Close the modal box.
+   */
   close: () => void;
 };
 
-export const useErrorModal = create<ErrorModal>(set => ({
+/**
+ * Zustand store for error modal box component.
+ *
+ * @see ErrorModal
+ */
+export const useErrorModal = create<ErrorModalStore>(set => ({
   isOpen: false,
   heading: '',
   body: '',

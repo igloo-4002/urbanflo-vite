@@ -5,9 +5,13 @@ import { XCircleIcon } from '@heroicons/react/24/outline';
 
 import { useErrorModal } from '~/zustand/useErrorModal.ts';
 
-// https://tailwindui.com/components/application-ui/overlays/modals
-
-// https://tailwindui.com/components/application-ui/overlays/modals
+/**
+ * Component for displaying error dialog boxes.
+ *
+ * Source/adapted from: {@link https://tailwindui.com/components/application-ui/overlays/modals}
+ *
+ * @see useErrorModal
+ */
 export default function ErrorModal() {
   const cancelButtonRef = useRef(null);
   const errorModal = useErrorModal();
