@@ -9,7 +9,7 @@ collect information on the networks efficiency.
 
 ## Features
 
-- Backed by [SUMO](https://sumo.dlr.de) for simulation engine
+- Backed by [SUMO](https://sumo.dlr.de) simulation engine
 - 100% web based - no need for complicated installation
 - Simulation statistics
 - Save and load your network to your device at any time
