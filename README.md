@@ -1,6 +1,7 @@
 # Urban Flo
 
-![CI Status](https://img.shields.io/github/actions/workflow/status/igloo-4002/urbanflo-vite/ci.yml?style=flat-square)
+![CI Status](https://img.shields.io/github/actions/workflow/status/igloo-4002/urbanflo-vite/ci.yml?style=flat-square) 
+![Licence badge](https://img.shields.io/github/license/igloo-4002/urbanflo-vite?style=flat-square)
 
 ![UrbanFlo Logo](docs/images/urbanflo-logo.png)
 
