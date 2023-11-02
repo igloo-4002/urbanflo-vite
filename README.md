@@ -46,7 +46,13 @@ pnpm dev
 
 A developer has two options, either to connect and run simulations on the cloud server running on `sumo-server.urbanflo.app` or run the server locally.
 
-To run the server locally, follow the instructions in the [server's repository](https://github.com/igloo-4002/urbanflo-sumo-server)
+To run the server locally, follow the instructions in the [server's repository](https://github.com/igloo-4002/urbanflo-sumo-server) and change the following variables in [`src/simulation-urls.ts`](src/simulation-urls.ts)
+
+```typescript
+export const DOMAIN_NAME = 'localhost:8080';
+export const BASE_URL = `http://${DOMAIN_NAME}`;
+export const SIMULATION_SOCKET_URL = `ws://${DOMAIN_NAME}/simulation-socket`;
+```
 
 ## Contributors
 
