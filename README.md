@@ -26,6 +26,10 @@ Simulation statistics:
 
 ![Simulation statistics](docs/images/statistics.png)
 
+## User guide
+
+Refer to the [user guide document](docs/user-guide.md).
+
 ## Development
 
 To start development on Urban Flo
